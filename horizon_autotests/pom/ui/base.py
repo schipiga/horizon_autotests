@@ -1,4 +1,5 @@
 from selenium.webdriver import ActionChains
+from horizon_autotests.pom.utils import Container
 
 
 class UI(object):
@@ -12,41 +13,45 @@ class UI(object):
         self.container = container
 
     def click(self):
-        self.web_element.click()
+        self.webelement.click()
 
     def right_click(self):
-        self._action_chains.context_click(self.web_element).perform()
+        self._action_chains.context_click(self.webelement).perform()
 
     def double_click(self):
-        self._action_chains.double_click(self.web_element).perform()
+        self._action_chains.double_click(self.webelement).perform()
 
     @property
     def is_present(self):
         try:
-            self.web_element.is_displayed()
+            self.webelement.is_displayed()
             return True
         except Exception:
             return False
 
     @property
     def is_enabled(self):
-        return self.web_element.is_enabled()
+        return self.webelement.is_enabled()
 
     @property
     def is_visible(self):
-        return self.web_element.is_displayed()
+        return self.webelement.is_displayed()
 
     @property
     def web_driver(self):
         return self.container.web_driver
 
     @property
-    def web_element(self):
-        self.container.find_element(self.locator)
+    def webelement(self):
+        return self.container.find_element(self.locator)
 
     @property
     def _action_chains(self):
         return ActionChains(self.web_driver)
 
-    def clone(self, locator=None, container=None):
-        return type(self)(locator or self.locator, container or self.container)
+    def clone(self):
+        return self.__class__(*self.locator)
+
+
+class Block(UI, Container):
+    pass

@@ -14,7 +14,7 @@ class App(object):
         self.app_url = url.strip('/')
         self.webdriver = browsers[browser](*args, **kwgs)
 
-    def open_url(self, url):
+    def open(self, url):
         self.webdriver.get(self.app_url + url)
 
     def quit(self):

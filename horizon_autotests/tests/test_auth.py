@@ -1,2 +1,3 @@
 def test_login(auth_steps):
-    pass
+    auth_steps.login('admin', 'admin')
+    auth_steps.logout()
