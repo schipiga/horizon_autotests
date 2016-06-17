@@ -14,9 +14,7 @@ class AuthSteps(object):
 
     @property
     def base_page(self):
-        if not isinstance(self.app.current_page, BasePage):
-            self.app.open(BasePage)
-        return self.app.current_page
+        return BasePage(self.app)
 
     def login(self, username, password):
         self.login_page.login_form.username.value = username
