@@ -1,7 +1,9 @@
 from horizon_autotests.app.pages import UsersPage
-from horizon_autotests.pom import ui
-
+from horizon_autotests.app.pages.base import ERROR, INFO, SUCCESS
+from horizon_autotests.pom.utils import Waiter
 from .base import BaseSteps
+
+waiter = Waiter(polling=0.1)
 
 
 class UsersSteps(BaseSteps):
@@ -19,19 +21,21 @@ class UsersSteps(BaseSteps):
             form.password_field.value = password
             form.password_confirm_field.value = password
             form.submit()
-        self.base_page.spinner.fade_out()
+        self.base_page.modal_spinner.wait_for_absence()
+        self.base_page.notification.level(SUCCESS).close_button.click()
 
         row = self.users_page.users_table.row(name=username)
-        assert ui.wait_for(10, lambda: row.is_present)
+        assert waiter.exe(10, lambda: row.is_present)
 
     def delete_user(self, username):
-        row = self.users_page.users_table.row(name=username)
-        row.dropdown_actions.toggle_button.click()
-        row.dropdown_actions.delete_item.click()
+        with self.users_page.users_table.row(name=username) as row:
+            row.dropdown_actions.toggle_button.click()
+            row.dropdown_actions.delete_item.click()
         self.users_page.delete_user_confirm_form.submit()
-        self.base_page.spinner.fade_out()
+        self.base_page.modal_spinner.wait_for_absence()
+        self.base_page.notification.level(SUCCESS).close_button.click()
 
-        assert ui.wait_for(10, lambda: not row.is_present)
+        assert waiter.exe(10, lambda: not row.is_present)
 
     def delete_users(self, *usernames):
         rows = []
@@ -41,7 +45,19 @@ class UsersSteps(BaseSteps):
             row.checkbox.select()
         self.users_page.delete_users_button.click()
         self.users_page.delete_user_confirm_form.submit()
-        self.base_page.spinner.fade_out()
+        self.base_page.modal_spinner.wait_for_absence()
+        self.base_page.notification.level(SUCCESS).close_button.click()
 
         for row in rows:
-            assert ui.wait_for(10, lambda: not row.is_present)
+            assert waiter.exe(10, lambda: not row.is_present)
+
+    def change_user_password(self, username, new_password):
+        with self.users_page.users_table.row(name=username) as row:
+            row.dropdown_actions.toggle_button.click()
+            row.dropdown_actions.change_password_item.click()
+        with self.users_page.change_password_form as form:
+            form.password_field.value = new_password
+            form.confirm_password_field.value = new_password
+            form.submit()
+        self.base_page.modal_spinner.wait_for_absence()
+        self.base_page.notification.level(SUCCESS).close_button.click()

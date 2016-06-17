@@ -4,24 +4,31 @@ from horizon_autotests import pom
 from horizon_autotests.pom import ui
 
 
+ERROR = 'alert-danger'
+INFO = 'alert-info'
+SUCCESS = 'alert-success'
+
+
+@pom.register_ui(
+    exit_item=ui.UI(By.CSS_SELECTOR, 'a[href*="/auth/logout/"]'))
 class AccountDropdown(ui.Block):
     pass
 
-AccountDropdown.register_ui(
-    exit_item=ui.UI(By.CSS_SELECTOR, 'a[href*="/auth/logout/"]'))
+
+@pom.register_ui(close_button=ui.Button(By.CSS_SELECTOR, 'a.close'))
+class Notification(ui.Block):
+
+    def level(self, level):
+        by, selector = self.locator
+        selector = selector.format(level)
+        self.locator = by, selector
+        return self
 
 
-class Spinner(ui.UI):
-
-    def fade_out(self):
-        if not ui.wait_for(30, lambda: not self.is_present):
-            raise Exception('Spinner still present')
-
-
-class BasePage(pom.Page):
-    url = '/'
-
-BasePage.register_ui(
+@pom.register_ui(
     account_dropdown=AccountDropdown(
         By.CSS_SELECTOR, 'ul.navbar-nav.navbar-right > li.dropdown'),
-    spinner=Spinner(By.CSS_SELECTOR, 'div.modal-dialog'))
+    modal_spinner=ui.UI(By.CSS_SELECTOR, 'div.modal-dialog'),
+    notification=Notification(By.CSS_SELECTOR, 'div.alert.{}'))
+class BasePage(pom.Page):
+    url = '/'

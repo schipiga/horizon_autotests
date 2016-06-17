@@ -10,7 +10,7 @@ class Horizon(pom.App):
         self.webdriver.maximize_window()
         self.webdriver.implicitly_wait(5)
         self.webdriver.set_page_load_timeout(30)
-        self.webdriver.get(url)
+        self.webdriver.get(self.app_url)
 
     def open(self, page):
         if issubclass(page, pom.Page):

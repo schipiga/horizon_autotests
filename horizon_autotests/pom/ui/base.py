@@ -1,25 +1,16 @@
-import time
 from selenium.webdriver import ActionChains
-from horizon_autotests.pom.utils import Container
 
+from horizon_autotests.pom.base import Container
+from horizon_autotests.pom.utils import Waiter
 
-def wait_for(timeout, func, *args, **kwgs):
-    if not timeout:
-        return func(*args, **kwgs) or False
-    limit = int(time.time()) + timeout
-    while int(time.time()) <= limit:
-        result = func(*args, **kwgs)
-        if result:
-            return result
-        time.sleep(0.1)
-    return False
+waiter = Waiter(polling=0.1)
 
 
 def wait_for_visibility(func):
 
     def wrapper(self, *args, **kwgs):
         if not self.webelement.is_displayed():
-            if not wait_for(5, lambda: self.is_visible):
+            if not waiter.exe(5, lambda: self.is_visible):
                 raise Exception("{} is not visible", self.locator)
         return func(self, *args, **kwgs)
 
@@ -93,6 +84,14 @@ class UI(object):
 
     def clone(self):
         return self.__class__(*self.locator)
+
+    def wait_for_presence(self):
+        if not waiter.exe(5, lambda: self.is_present):
+            raise Exception("{!r} is absent".format(self.locator))
+
+    def wait_for_absence(self):
+        if not waiter.exe(15, lambda: not self.is_present):
+            raise Exception("{!r} is present".format(self.locator))
 
 
 class Block(UI, Container):

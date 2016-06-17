@@ -1,3 +1,32 @@
+from selenium import webdriver
+
+__all__ = [
+    'App',
+    'Page',
+    'register_ui'
+]
+
+
+browsers = {
+    'firefox': webdriver.Firefox,
+    'phantom': webdriver.PhantomJS,
+    'Chrome': webdriver.Chrome,
+}
+
+
+class App(object):
+
+    def __init__(self, url, browser, *args, **kwgs):
+        self.app_url = url.strip('/')
+        self.webdriver = browsers[browser](*args, **kwgs)
+
+    def open(self, url):
+        self.webdriver.get(self.app_url + url)
+
+    def quit(self):
+        self.webdriver.quit()
+
+
 def register_ui(**ui):
 
     def wrapper(cls):
@@ -35,3 +64,13 @@ class Container(object):
             raise AttributeError("Attribute {!r} isn't defined".format(name))
         ui_obj.set_container(self)
         return ui_obj
+
+
+class Page(Container):
+
+    url = None
+
+    def __init__(self, app):
+        self.app = app
+        self.webdriver = app.webdriver
+        self.webelement = self.webdriver

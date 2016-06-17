@@ -19,3 +19,9 @@ def test_create_user(users_steps, username, password):
 def test_delete_users(users_steps, username, password):
     users_steps.create_user(username, password)
     users_steps.delete_users(username)
+
+
+def test_change_user_password(users_steps, username, password):
+    users_steps.create_user(username, password)
+    users_steps.change_user_password(username, 'new-' + password)
+    users_steps.delete_users(username)
