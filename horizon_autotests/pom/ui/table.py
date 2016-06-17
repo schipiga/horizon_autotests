@@ -4,7 +4,13 @@ from .base import Block
 
 
 class Row(Block):
-    pass
+
+    def cell(self, name):
+        position = self.container.columns[name]
+        cell_selector = '//{}[{}]'.format(self.container.cell_tag, position)
+        cell = Block(By.XPATH, cell_selector)
+        cell.set_container(self)
+        return cell
 
 
 class Table(Block):

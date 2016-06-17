@@ -52,6 +52,11 @@ class UI(object):
         self._action_chains.double_click(self.webelement).perform()
 
     @property
+    @wait_for_visibility
+    def value(self):
+        return self.webelement.get_attribute('innerHTML').strip()
+
+    @property
     @immediately
     def is_present(self):
         try:
