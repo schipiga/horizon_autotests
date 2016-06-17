@@ -1,4 +1,4 @@
-from horizon_autotests.app.pages import LoginPage, BasePage
+from horizon_autotests.app.pages import LoginPage
 
 from .base import BaseSteps
 
@@ -9,16 +9,13 @@ class AuthSteps(BaseSteps):
     def login_page(self):
         if not isinstance(self.app.current_page, LoginPage):
             self.app.open(LoginPage)
-        return self.app.current_page
-
-    @property
-    def base_page(self):
-        return BasePage(self.app)
+        return LoginPage(self.app)
 
     def login(self, username, password):
-        self.login_page.login_form.username.value = username
-        self.login_page.login_form.password.value = password
-        self.login_page.login_form.submit()
+        with self.login_page.login_form as form:
+            form.username.value = username
+            form.password.value = password
+            form.submit()
 
     def logout(self):
         self.base_page.account_dropdown.click()
