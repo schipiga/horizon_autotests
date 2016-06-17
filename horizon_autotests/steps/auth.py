@@ -1,10 +1,9 @@
 from horizon_autotests.app.pages import LoginPage, BasePage
 
+from .base import BaseSteps
 
-class AuthSteps(object):
 
-    def __init__(self, app):
-        self.app = app
+class AuthSteps(BaseSteps):
 
     @property
     def login_page(self):
