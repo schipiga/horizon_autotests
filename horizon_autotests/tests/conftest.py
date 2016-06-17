@@ -3,7 +3,7 @@ import os
 import pytest
 
 from horizon_autotests.app import Horizon
-from horizon_autotests.steps import AuthSteps, UsersSteps
+from horizon_autotests.steps import AuthSteps, UsersSteps, VolumesSteps
 
 DASHBOARD_URL = os.environ.get('DASHBOARD_URL')
 
@@ -24,4 +24,11 @@ def auth_steps(horizon):
 def users_steps(auth_steps, horizon):
     auth_steps.login('admin', 'admin')
     yield UsersSteps(horizon)
+    auth_steps.logout()
+
+
+@pytest.yield_fixture
+def volumes_steps(auth_steps, horizon):
+    auth_steps.login('admin', 'admin')
+    yield VolumesSteps(horizon)
     auth_steps.logout()
