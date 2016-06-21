@@ -7,9 +7,7 @@ class AuthSteps(BaseSteps):
 
     @property
     def login_page(self):
-        if not isinstance(self.app.current_page, LoginPage):
-            self.app.open(LoginPage)
-        return LoginPage(self.app)
+        return self._open(LoginPage)
 
     def login(self, username, password):
         with self.login_page.login_form as form:

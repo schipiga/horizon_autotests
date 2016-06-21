@@ -39,3 +39,18 @@ def settings_steps(auth_steps, horizon):
     auth_steps.login('admin', 'admin')
     yield SettingsSteps(horizon)
     auth_steps.logout()
+
+
+@pytest.yield_fixture
+def update_settings(settings_steps):
+    current_settings = {}
+
+    def _update_settings(lang=None, timezone=None, items_per_page=None,
+                         instance_log_length=None):
+        current_settings.update(settings_steps.current_settings)
+        settings_steps.update_settings(lang, timezone, items_per_page,
+                                       instance_log_length)
+
+    yield _update_settings
+
+    settings_steps.update_settings(**current_settings)

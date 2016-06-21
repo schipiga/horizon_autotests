@@ -5,6 +5,7 @@ from six import moves
 from .auth import AuthSteps
 from .users import UsersSteps
 from .volumes import VolumesSteps
+from .settings import SettingsSteps
 
 
 # TODO(svchipiga): maybe need to move it to another module.

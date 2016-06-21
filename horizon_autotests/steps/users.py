@@ -10,9 +10,7 @@ class UsersSteps(BaseSteps):
 
     @property
     def users_page(self):
-        if not isinstance(self.app.current_page, UsersPage):
-            self.app.open(UsersPage)
-        return self.app.current_page
+        return self._open(UsersPage)
 
     def create_user(self, username, password):
         self.users_page.create_user_button.click()

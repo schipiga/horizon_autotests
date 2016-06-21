@@ -11,9 +11,7 @@ class VolumesSteps(BaseSteps):
 
     @property
     def volumes_page(self):
-        if not isinstance(self.app.current_page, VolumesPage):
-            self.app.open(VolumesPage)
-        return VolumesPage(self.app)
+        return self._open(VolumesPage)
 
     def create_volume(self, name, source_type='Image'):
         self.volumes_page.create_volume_button.click()
