@@ -40,3 +40,11 @@ class VolumesSteps(BaseSteps):
         self.base_page.notification.level(SUCCESS).close_button.click()
 
         assert waiter.exe(30, lambda: not row.is_present)
+
+    def edit_volume(self, name, new_name):
+        self.volumes_page.volumes_table.row(name=name).dropdown_actions.edit_volume_button.click()
+        self.volumes_page.edit_volume_form.name_field.value = new_name
+        self.volumes_page.edit_volume_form.submit()
+
+        row = self.volumes_page.volumes_table.row(name=new_name)
+        assert waiter.exe(30, lambda: row.is_present)
