@@ -6,13 +6,41 @@ import attrdict
 from horizon_autotests.app import Horizon
 from horizon_autotests.steps import (AuthSteps,
                                      UsersSteps, VolumesSteps, SettingsSteps)
+from horizon_autotests.steps import generate_ids
 
-DASHBOARD_URL = os.environ.get('DASHBOARD_URL')
+DASHBOARD_URL = os.environ.get['DASHBOARD_URL']
+
+ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT = ['admin'] * 3
+DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT = list(generate_ids('demo', count=3))
+
+
+def _create_test_user(app):
+    pass
+
+
+@pytest.fixture(params=('admin', 'demo'))
+def any_user(request):
+    if request.param == 'admin':
+        os.environ['OS_LOGIN'] = ADMIN_NAME
+        os.environ['OS_PASSWD'] = ADMIN_PASSWD
+        os.environ['OS_PROJECT'] = ADMIN_PROJECT
+    if request.param == 'demo':
+        os.environ['OS_LOGIN'] = DEMO_NAME
+        os.environ['OS_PASSWD'] = DEMO_PASSWD
+        os.environ['OS_PROJECT'] = DEMO_PROJECT
+
+
+@pytest.fixture
+def admin_only():
+    os.environ['OS_LOGIN'] = ADMIN_NAME
+    os.environ['OS_PASSWD'] = ADMIN_PASSWD
+    os.environ['OS_PROJECT'] = ADMIN_PROJECT
 
 
 @pytest.yield_fixture(scope='session')
 def horizon():
     app = Horizon(DASHBOARD_URL)
+    _create_test_user(app)
     yield app
     app.quit()
 
@@ -20,6 +48,14 @@ def horizon():
 @pytest.fixture
 def auth_steps(horizon):
     return AuthSteps(horizon)
+
+
+@pytest.yield_fixture
+def login(auth_steps):
+    auth_steps.login(os.environ['OS_LOGIN'], os.environ['OS_PASSWD'])
+    auth_steps.switch_project(os.environ['OS_PROJECT'])
+    yield
+    auth_steps.logout()
 
 
 @pytest.yield_fixture
@@ -73,3 +109,17 @@ def create_volumes(volumes_steps):
     yield volumes
 
     volumes_steps.delete_volumes(*[volume.name for volume in volumes])
+
+
+import attrdict
+import pytest
+from horizon_autotests.steps import generate_ids
+
+
+@pytest.yield_fixture
+def volume(volumes_steps):
+    volume_name = generate_ids(prefix='volume').next()
+    volumes_steps.create_volume(volume_name)
+    volume = attrdict.AttrDict(name=volume_name)
+    yield volume
+    volumes_steps.delete_volume(volume.name)
