@@ -1,9 +1,11 @@
 import os
 
 import pytest
+import attrdict
 
 from horizon_autotests.app import Horizon
-from horizon_autotests.steps import AuthSteps, UsersSteps, VolumesSteps, SettingsSteps
+from horizon_autotests.steps import (AuthSteps,
+                                     UsersSteps, VolumesSteps, SettingsSteps)
 
 DASHBOARD_URL = os.environ.get('DASHBOARD_URL')
 
@@ -54,3 +56,20 @@ def update_settings(settings_steps):
     yield _update_settings
 
     settings_steps.update_settings(**current_settings)
+
+
+@pytest.yield_fixture
+def create_volumes(volumes_steps):
+
+    volumes = []
+
+    def _create_volumes(names):
+        for name in names:
+            volumes_steps.create_volume(name)
+            volumes.append(attrdict.AttrDict(name=name))
+
+        return volumes
+
+    yield volumes
+
+    volumes_steps.delete_volumes(*[volume.name for volume in volumes])
