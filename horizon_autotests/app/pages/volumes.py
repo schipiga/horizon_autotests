@@ -14,6 +14,11 @@ class CreateVolumeForm(_ui.Form):
     pass
 
 
+@pom.register_ui(name_field=ui.TextField(By.NAME, 'name'))
+class EditVolumeForm(_ui.Form):
+    pass
+
+
 @pom.register_ui(
     toggle_button=ui.Button(By.CSS_SELECTOR, 'a.dropdown-toggle'),
     delete_item=ui.UI(By.CSS_SELECTOR, '*[id*="action_delete"]'))
@@ -23,7 +28,8 @@ class DropdownActions(ui.Block):
 
 @pom.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
-    dropdown_actions=DropdownActions(By.CSS_SELECTOR, 'div.btn-group'))
+    dropdown_actions=DropdownActions(By.CSS_SELECTOR, 'div.btn-group'),
+    edit_volume_item=ui.UI(By.CSS_SELECTOR, '*[id*="action_edit"]'))
 class VolumesRow(ui.Row):
     pass
 
@@ -35,9 +41,11 @@ class VolumesTable(ui.Table):
 
 @pom.register_ui(
     create_volume_button=ui.Button(By.ID, 'volumes__action_create'),
+    delete_volumes_button=ui.Button(By.ID, 'volumes__action_delete'),
     create_volume_form=CreateVolumeForm(By.CSS_SELECTOR,
                                         'form[action*="volumes/create"]'),
     delete_volume_confirm_form=_ui.Form(By.CSS_SELECTOR, 'div.modal-content'),
-    volumes_table=VolumesTable(By.ID, 'volumes'))
+    volumes_table=VolumesTable(By.ID, 'volumes'),
+    edit_volume_form=EditVolumeForm(By.CSS_SELECTOR, 'form[action*="update"]'))
 class VolumesPage(pom.Page):
     url = "/project/volumes/"

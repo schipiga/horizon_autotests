@@ -1,3 +1,4 @@
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import ActionChains
 
 from horizon_autotests.pom.base import Container
@@ -27,6 +28,30 @@ def immediately(func):
             self.webdriver.implicitly_wait(5)
 
     return wrapper
+
+
+class WebElementProxy(object):
+
+    def __init__(self, webelement_getter):
+        self._webelement_getter = webelement_getter
+
+    def __getattr__(self, name):
+
+        try:
+            result = getattr(self._webelement_getter(), name)
+        except StaleElementReferenceException:
+            result = getattr(self._webelement_getter(), name)
+
+        if not callable(result):
+            return result
+
+        def method(*args, **kwgs):
+            try:
+                return result(*args, **kwgs)
+            except StaleElementReferenceException:
+                return getattr(self._webelement_getter(), name)(*args, **kwgs)
+
+        return method
 
 
 class UI(object):
@@ -81,7 +106,8 @@ class UI(object):
 
     @property
     def webelement(self):
-        return self.container.find_element(self.locator)
+        return WebElementProxy(
+            lambda: self.container.find_element(self.locator))
 
     @property
     def _action_chains(self):

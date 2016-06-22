@@ -39,9 +39,25 @@ class VolumesSteps(BaseSteps):
         assert waiter.exe(30, lambda: not row.is_present)
 
     def edit_volume(self, name, new_name):
-        self.volumes_page.volumes_table.row(name=name).dropdown_actions.edit_volume_button.click()
+        self.volumes_page.volumes_table.row(name=name).edit_volume_item.click()
         self.volumes_page.edit_volume_form.name_field.value = new_name
         self.volumes_page.edit_volume_form.submit()
+        self.base_page.modal_spinner.wait_for_absence()
+        self.close_notification('info')
 
         row = self.volumes_page.volumes_table.row(name=new_name)
         assert waiter.exe(30, lambda: row.is_present)
+
+    def delete_volumes(self, *volume_names):
+        rows = []
+        for volume_name in volume_names:
+            row = self.volumes_page.volumes_table.row(name=volume_name)
+            rows.append(row)
+            row.checkbox.select()
+        self.volumes_page.delete_volumes_button.click()
+        self.volumes_page.delete_volume_confirm_form.submit()
+        self.base_page.modal_spinner.wait_for_absence()
+        self.close_notification('success')
+
+        for row in rows:
+            assert waiter.exe(10, lambda: not row.is_present)

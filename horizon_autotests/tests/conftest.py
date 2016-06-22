@@ -52,25 +52,19 @@ def login(auth_steps):
     auth_steps.logout()
 
 
-@pytest.yield_fixture
-def users_steps(auth_steps, horizon):
-    auth_steps.login('admin', 'admin')
-    yield UsersSteps(horizon)
-    auth_steps.logout()
+@pytest.fixture
+def users_steps(login, horizon):
+    return UsersSteps(horizon)
 
 
-@pytest.yield_fixture
-def volumes_steps(auth_steps, horizon):
-    auth_steps.login('admin', 'admin')
-    yield VolumesSteps(horizon)
-    auth_steps.logout()
+@pytest.fixture
+def volumes_steps(login, horizon):
+    return VolumesSteps(horizon)
 
 
-@pytest.yield_fixture
-def settings_steps(auth_steps, horizon):
-    auth_steps.login('admin', 'admin')
-    yield SettingsSteps(horizon)
-    auth_steps.logout()
+@pytest.fixture
+def settings_steps(login, horizon):
+    return SettingsSteps(horizon)
 
 
 @pytest.yield_fixture
@@ -100,7 +94,7 @@ def create_volumes(volumes_steps):
 
         return volumes
 
-    yield volumes
+    yield _create_volumes
 
     volumes_steps.delete_volumes(*[volume.name for volume in volumes])
 
@@ -112,3 +106,25 @@ def volume(volumes_steps):
     volume = attrdict.AttrDict(name=volume_name)
     yield volume
     volumes_steps.delete_volume(volume.name)
+
+
+@pytest.yield_fixture
+def create_users(users_steps):
+
+    users = []
+
+    def _create_users(names):
+        for name in names:
+            users_steps.create_user(name, name, 'admin')
+            users.append(attrdict.AttrDict(name=name, password=name))
+        return users
+
+    yield _create_users
+
+    users_steps.delete_users(*[user.name for user in users])
+
+
+@pytest.fixture
+def user(create_users):
+    user_names = list(generate_ids('user'))
+    return create_users(user_names)[0]

@@ -9,4 +9,5 @@ class TextField(UI):
 
     @value.setter
     def value(self, text):
+        self.webelement.clear()
         self.webelement.send_keys(text)
