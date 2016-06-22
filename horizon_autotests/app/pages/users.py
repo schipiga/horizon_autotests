@@ -29,7 +29,8 @@ class UsersTable(ui.Table):
 @pom.register_ui(
     name_field=ui.TextField(By.NAME, 'name'),
     password_field=ui.TextField(By.NAME, 'password'),
-    password_confirm_field=ui.TextField(By.NAME, 'confirm_password'))
+    password_confirm_field=ui.TextField(By.NAME, 'confirm_password'),
+    project_combobox=ui.ComboBox(By.NAME, 'project'))
 class CreateUserForm(_ui.Form):
     pass
 

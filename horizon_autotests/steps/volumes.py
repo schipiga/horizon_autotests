@@ -1,5 +1,4 @@
 from horizon_autotests.app.pages import VolumesPage
-from horizon_autotests.app.pages.base import ERROR, INFO, SUCCESS
 from horizon_autotests.pom.utils import Waiter
 
 from .base import BaseSteps
@@ -24,7 +23,7 @@ class VolumesSteps(BaseSteps):
             form.volume_type_combobox.value = volume_types[-1]
             form.submit()
         self.base_page.modal_spinner.wait_for_absence()
-        self.base_page.notification.level(INFO).close_button.click()
+        self.close_notification('info')
 
         cell = self.volumes_page.volumes_table.row(name=name).cell('status')
         assert waiter.exe(60, lambda: cell.value == 'Available')
@@ -35,7 +34,7 @@ class VolumesSteps(BaseSteps):
             row.dropdown_actions.delete_item.click()
         self.volumes_page.delete_volume_confirm_form.submit()
         self.base_page.modal_spinner.wait_for_absence()
-        self.base_page.notification.level(SUCCESS).close_button.click()
+        self.close_notification('success')
 
         assert waiter.exe(30, lambda: not row.is_present)
 

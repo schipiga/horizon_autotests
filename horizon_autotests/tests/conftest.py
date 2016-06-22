@@ -6,16 +6,10 @@ import attrdict
 from horizon_autotests.app import Horizon
 from horizon_autotests.steps import (AuthSteps,
                                      UsersSteps, VolumesSteps, SettingsSteps)
-from horizon_autotests.steps import generate_ids
 
-DASHBOARD_URL = os.environ.get['DASHBOARD_URL']
-
-ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT = ['admin'] * 3
-DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT = list(generate_ids('demo', count=3))
-
-
-def _create_test_user(app):
-    pass
+from .config import (ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT, DASHBOARD_URL,
+                     DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)
+from .utils import create_demo_user, generate_ids
 
 
 @pytest.fixture(params=('admin', 'demo'))
@@ -40,7 +34,7 @@ def admin_only():
 @pytest.yield_fixture(scope='session')
 def horizon():
     app = Horizon(DASHBOARD_URL)
-    _create_test_user(app)
+    create_demo_user(app)
     yield app
     app.quit()
 
@@ -109,11 +103,6 @@ def create_volumes(volumes_steps):
     yield volumes
 
     volumes_steps.delete_volumes(*[volume.name for volume in volumes])
-
-
-import attrdict
-import pytest
-from horizon_autotests.steps import generate_ids
 
 
 @pytest.yield_fixture

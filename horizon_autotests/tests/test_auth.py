@@ -1,3 +1,6 @@
-def test_login(auth_steps):
-    auth_steps.login('admin', 'admin')
-    auth_steps.logout()
+import pytest
+
+
+@pytest.mark.usefixtures('any_user')
+def test_login(login):
+    pass

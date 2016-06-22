@@ -1,4 +1,4 @@
-from selenium.webdriver.common import By
+from selenium.webdriver.common.by import By
 from horizon_autotests import pom
 from horizon_autotests.app import ui as _ui
 from horizon_autotests.pom import ui

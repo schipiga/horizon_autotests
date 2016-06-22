@@ -1,5 +1,4 @@
 from horizon_autotests.app.pages import UsersPage
-from horizon_autotests.app.pages.base import ERROR, INFO, SUCCESS
 from horizon_autotests.pom.utils import Waiter
 from .base import BaseSteps
 
@@ -12,15 +11,17 @@ class UsersSteps(BaseSteps):
     def users_page(self):
         return self._open(UsersPage)
 
-    def create_user(self, username, password):
+    def create_user(self, username, password, project=None):
         self.users_page.create_user_button.click()
         with self.users_page.create_user_form as form:
             form.name_field.value = username
             form.password_field.value = password
             form.password_confirm_field.value = password
+            if project:
+                form.project_combobox.value = project
             form.submit()
         self.base_page.modal_spinner.wait_for_absence()
-        self.base_page.notification.level(SUCCESS).close_button.click()
+        self.close_notification('success')
 
         row = self.users_page.users_table.row(name=username)
         assert waiter.exe(10, lambda: row.is_present)
@@ -31,7 +32,7 @@ class UsersSteps(BaseSteps):
             row.dropdown_actions.delete_item.click()
         self.users_page.delete_user_confirm_form.submit()
         self.base_page.modal_spinner.wait_for_absence()
-        self.base_page.notification.level(SUCCESS).close_button.click()
+        self.close_notification('success')
 
         assert waiter.exe(10, lambda: not row.is_present)
 
@@ -44,7 +45,7 @@ class UsersSteps(BaseSteps):
         self.users_page.delete_users_button.click()
         self.users_page.delete_user_confirm_form.submit()
         self.base_page.modal_spinner.wait_for_absence()
-        self.base_page.notification.level(SUCCESS).close_button.click()
+        self.close_notification('success')
 
         for row in rows:
             assert waiter.exe(10, lambda: not row.is_present)
@@ -58,4 +59,4 @@ class UsersSteps(BaseSteps):
             form.confirm_password_field.value = new_password
             form.submit()
         self.base_page.modal_spinner.wait_for_absence()
-        self.base_page.notification.level(SUCCESS).close_button.click()
+        self.close_notification('success')
