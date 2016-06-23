@@ -3,3 +3,4 @@ selenium
 pytest
 ipdb
 attrdict
+requests
