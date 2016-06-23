@@ -4,6 +4,7 @@ from .users import UsersPage
 from .volumes import VolumesPage
 from .settings import SettingsPage
 from .projects import ProjectsPage
+from .instances import InstancesPage
 
 
 pages = [
@@ -11,5 +12,6 @@ pages = [
     VolumesPage,
     UsersPage,
     SettingsPage,
-    ProjectsPage
+    ProjectsPage,
+    InstancesPage
 ]

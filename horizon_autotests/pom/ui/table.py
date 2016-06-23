@@ -7,7 +7,7 @@ class Row(Block):
 
     def cell(self, name):
         position = self.container.columns[name]
-        cell_selector = '//{}[{}]'.format(self.container.cell_tag, position)
+        cell_selector = './/{}[{}]'.format(self.container.cell_tag, position)
         cell = Block(By.XPATH, cell_selector)
         cell.set_container(self)
         return cell
@@ -33,4 +33,4 @@ class Table(Block):
             cell_selectors.append(
                 self.cell_tag + pos_tmpl.format(position, value))
 
-        return '//{}[{}]'.format(self.row_tag, " and ".join(cell_selectors))
+        return './/{}[{}]'.format(self.row_tag, " and ".join(cell_selectors))

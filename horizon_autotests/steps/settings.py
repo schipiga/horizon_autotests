@@ -21,6 +21,7 @@ class SettingsSteps(BaseSteps):
             if instance_log_length:
                 form.instance_log_length_field.value = instance_log_length
             form.submit()
+        self.close_notification('success')
 
     @property
     def current_settings(self):

@@ -11,3 +11,15 @@ class TextField(UI):
     def value(self, text):
         self.webelement.clear()
         self.webelement.send_keys(text)
+
+
+class IntegerField(UI):
+
+    @property
+    def value(self):
+        return self.webelement.get_attribute('value')
+
+    @value.setter
+    def value(self, text):
+        self.webelement.clear()
+        self.webelement.send_keys(text)

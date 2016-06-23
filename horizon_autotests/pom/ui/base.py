@@ -116,12 +116,12 @@ class UI(object):
     def clone(self):
         return self.__class__(*self.locator)
 
-    def wait_for_presence(self):
-        if not waiter.exe(5, lambda: self.is_present):
+    def wait_for_presence(self, timeout=5):
+        if not waiter.exe(timeout, lambda: self.is_present):
             raise Exception("{!r} is absent".format(self.locator))
 
-    def wait_for_absence(self):
-        if not waiter.exe(15, lambda: not self.is_present):
+    def wait_for_absence(self, timeout=5):
+        if not waiter.exe(timeout, lambda: not self.is_present):
             raise Exception("{!r} is present".format(self.locator))
 
 

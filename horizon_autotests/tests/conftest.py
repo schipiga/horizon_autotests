@@ -3,9 +3,13 @@ import os
 import pytest
 import attrdict
 
+from six import moves
 from horizon_autotests.app import Horizon
 from horizon_autotests.steps import (AuthSteps,
-                                     UsersSteps, VolumesSteps, SettingsSteps)
+                                     UsersSteps,
+                                     VolumesSteps,
+                                     InstancesSteps,
+                                     SettingsSteps)
 
 from .config import (ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT, DASHBOARD_URL,
                      DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)
@@ -34,7 +38,7 @@ def admin_only():
 @pytest.yield_fixture(scope='session')
 def horizon():
     app = Horizon(DASHBOARD_URL)
-    create_demo_user(app)
+    # create_demo_user(app)
     yield app
     app.quit()
 
@@ -84,7 +88,6 @@ def update_settings(settings_steps):
 
 @pytest.yield_fixture
 def create_volumes(volumes_steps):
-
     volumes = []
 
     def _create_volumes(names):
@@ -96,7 +99,8 @@ def create_volumes(volumes_steps):
 
     yield _create_volumes
 
-    volumes_steps.delete_volumes(*[volume.name for volume in volumes])
+    if volumes:
+        volumes_steps.delete_volumes(*[volume.name for volume in volumes])
 
 
 @pytest.yield_fixture
@@ -110,7 +114,6 @@ def volume(volumes_steps):
 
 @pytest.yield_fixture
 def create_users(users_steps):
-
     users = []
 
     def _create_users(names):
@@ -121,10 +124,45 @@ def create_users(users_steps):
 
     yield _create_users
 
-    users_steps.delete_users(*[user.name for user in users])
+    if users:
+        users_steps.delete_users(*[user.name for user in users])
 
 
 @pytest.fixture
 def user(create_users):
     user_names = list(generate_ids('user'))
     return create_users(user_names)[0]
+
+
+@pytest.yield_fixture
+def create_instances(instances_steps):
+    instances = []
+
+    def _create_instances(name, count=1):
+        instances_steps.create_instance(name, count)
+        if count == 1:
+            instances.append(attrdict.AttrDict(name=name))
+        else:
+            for i in moves.range(1, count + 1):
+                instance_name = '{}-{}'.format(name, i)
+                instances.append(attrdict.AttrDict(name=instance_name))
+        return instances
+
+    yield _create_instances
+
+    if instances:
+        instances_steps.delete_instances(*[i.name for i in instances])
+
+
+@pytest.fixture
+def instances_steps(login, horizon):
+    return InstancesSteps(horizon)
+
+
+@pytest.yield_fixture
+def instance(instances_steps):
+    name = generate_ids('instance').next()
+    instances_steps.create_instance(name)
+    instance = attrdict.AttrDict(name=name)
+    yield instance
+    instances_steps.delete_instance(instance.name)

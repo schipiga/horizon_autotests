@@ -1,6 +1,6 @@
 from .base import UI, Block, immediately
 from .form import Form
-from .text import TextField
+from .text import TextField, IntegerField
 from .button import Button
 from .table import Row, Table
 from .checkbox import CheckBox

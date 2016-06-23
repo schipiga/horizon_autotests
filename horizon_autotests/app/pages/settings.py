@@ -6,11 +6,11 @@ from horizon_autotests.pom import ui
 from .base import BasePage
 
 
-@pom.register_ui(lang_combobox=ui.ComboBox(By.NAME, 'language'),
-                 timezone_combobox=ui.ComboBox(By.NAME, 'timezone'),
-                 items_per_page_field=ui.TextField(By.NAME, 'pagesize'),
-                 instance_log_length_field=ui.TextField(By.NAME,
-                                                        'instance_log_length'))
+@pom.register_ui(
+    lang_combobox=ui.ComboBox(By.NAME, 'language'),
+    timezone_combobox=ui.ComboBox(By.NAME, 'timezone'),
+    items_per_page_field=ui.IntegerField(By.NAME, 'pagesize'),
+    instance_log_length_field=ui.IntegerField(By.NAME, 'instance_log_length'))
 class SettingsForm(_ui.Form):
     pass
 
