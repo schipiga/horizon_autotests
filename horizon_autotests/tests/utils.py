@@ -13,6 +13,10 @@ def generate_ids(prefix=None, count=1):
         yield uid
 
 
+def generate_files():
+    pass
+
+
 def create_demo_user(app):
     from .config import (ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
                          DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)

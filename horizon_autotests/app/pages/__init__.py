@@ -1,7 +1,7 @@
 from .base import BasePage
 from .login import LoginPage
 from .users import UsersPage
-from .volumes import VolumesPage
+from .volumes import VolumesPage, AdminVolumesPage
 from .settings import SettingsPage
 from .projects import ProjectsPage
 from .instances import InstancesPage
@@ -13,5 +13,6 @@ pages = [
     UsersPage,
     SettingsPage,
     ProjectsPage,
-    InstancesPage
+    InstancesPage,
+    AdminVolumesPage
 ]
