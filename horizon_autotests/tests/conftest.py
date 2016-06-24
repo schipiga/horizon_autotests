@@ -1,7 +1,9 @@
+import logging
 import os
 
-import pytest
 import attrdict
+import pytest
+import xvfbwrapper
 
 from six import moves
 from horizon_autotests.app import Horizon
@@ -11,10 +13,13 @@ from horizon_autotests.steps import (AuthSteps,
                                      InstancesSteps,
                                      SettingsSteps,
                                      VolumeTypesSteps)
+from horizon_autotests.third_party import VideoRecorder
 
 from .config import (ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT, DASHBOARD_URL,
-                     DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)
+                     DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT, VIRTUAL_DISPLAY)
 from .utils import create_demo_user, generate_ids
+
+LOGGER = logging.getLogger(__name__)
 
 
 @pytest.fixture(params=('admin', 'demo'))
@@ -36,8 +41,44 @@ def admin_only():
     os.environ['OS_PROJECT'] = ADMIN_PROJECT
 
 
+@pytest.fixture(scope="session")
+def virtual_display(request):
+    if not VIRTUAL_DISPLAY:
+        return
+
+    _virtual_display = xvfbwrapper.Xvfb(width=1920, height=1080)
+    # workaround for memory leak in Xvfb taken from:
+    # http://blog.jeffterrace.com/2012/07/xvfb-memory-leak-workaround.html
+    # and disables X access control
+    args = ["-noreset", "-ac"]
+
+    if hasattr(_virtual_display, 'extra_xvfb_args'):
+        _virtual_display.extra_xvfb_args.extend(args)  # xvfbwrapper>=0.2.8
+    else:
+        _virtual_display.xvfb_cmd.extend(args)
+
+    _virtual_display.start()
+
+    def fin():
+        LOGGER.info('Stop xvfb')
+        _virtual_display.stop()
+
+    request.addfinalizer(fin)
+
+
 @pytest.yield_fixture(scope='session')
-def horizon():
+def video_capture(virtual_display):
+    recorder = VideoRecorder()
+    recorder.start()
+
+    yield recorder
+
+    LOGGER.info("Stop video recording")
+    recorder.stop()
+
+
+@pytest.yield_fixture(scope='session')
+def horizon(video_capture):
     app = Horizon(DASHBOARD_URL)
     # create_demo_user(app)
     yield app

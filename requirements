@@ -4,3 +4,4 @@ pytest
 ipdb
 attrdict
 requests
+xvfbwrapper

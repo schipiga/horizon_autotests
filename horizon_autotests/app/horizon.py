@@ -8,6 +8,7 @@ class Horizon(pom.App):
     def __init__(self, url, *args, **kwgs):
         super(Horizon, self).__init__(url, 'firefox', *args, **kwgs)
         self.webdriver.maximize_window()
+        self.webdriver.set_window_size(1920, 1080)
         self.webdriver.implicitly_wait(5)
         self.webdriver.set_page_load_timeout(30)
         self.webdriver.get(self.app_url)
