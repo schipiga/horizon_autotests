@@ -1,2 +1,2 @@
-from .checkbox import CheckBox
-from .form import Form
+from .checkbox import CheckBox  # noqa
+from .form import Form  # noqa

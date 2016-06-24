@@ -1,1 +1,1 @@
-from .horizon import Horizon
+from .horizon import Horizon  # noqa

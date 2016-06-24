@@ -17,7 +17,7 @@ class TestAdminOnly(object):
 # def test_view_instance(instance, instances_steps):
 #     instances_steps.view_instance(instance.name)
 
-    def test_instances_pagination(self, instances_steps, create_instances, 
+    def test_instances_pagination(self, instances_steps, create_instances,
                                   update_settings):
         instance_name = generate_ids('instance').next()
         create_instances(instance_name, count=3)

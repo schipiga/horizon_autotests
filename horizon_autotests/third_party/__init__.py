@@ -1,1 +1,1 @@
-from .video_recorder import VideoRecorder
+from .video_recorder import VideoRecorder  # noqa

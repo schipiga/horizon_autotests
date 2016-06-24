@@ -1,5 +1,5 @@
 from .access import AccessPage
-from .base import BasePage
+from .base import BasePage  # noqa
 from .instances import InstancesPage
 from .login import LoginPage
 from .projects import ProjectsPage

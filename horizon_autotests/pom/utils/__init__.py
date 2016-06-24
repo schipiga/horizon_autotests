@@ -1,1 +1,1 @@
-from .waiter import Waiter
+from .waiter import Waiter  # noqa
