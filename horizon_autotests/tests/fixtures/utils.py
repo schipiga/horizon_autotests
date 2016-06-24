@@ -1,5 +1,6 @@
 import uuid
 
+import attrdict
 from six import moves
 
 from horizon_autotests.steps import AuthSteps, ProjectsSteps, UsersSteps
@@ -37,3 +38,22 @@ def create_demo_user(app):
     users_steps.create_user(DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)
 
     auth_steps.logout()
+
+
+class AttrDict(attrdict.AttrDict):
+
+    _updated_fields = {}
+
+    def __init__(self, *args, **kwgs):
+        super(AttrDict, self).__init__(*args, **kwgs)
+
+    def put(self, **kwgs):
+        self._updated_fields[id(self)] = kwgs
+        return self
+
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        updated_fields = self._updated_fields.pop(id(self))
+        self.update(updated_fields)

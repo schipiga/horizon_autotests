@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from .utils import generate_ids, generate_files
+from .fixtures.utils import generate_ids, generate_files
 
 
 @pytest.mark.usefixtures('any_user')

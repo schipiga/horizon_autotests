@@ -1,4 +1,4 @@
-from .utils import generate_ids
+from .fixtures.utils import generate_ids
 
 
 # def test_edit_image(image, images_steps):

@@ -18,7 +18,7 @@ __all__ = [
 @pytest.yield_fixture(scope='session')
 def horizon():
     app = Horizon(DASHBOARD_URL)
-    # create_demo_user(app)
+    create_demo_user(app)
     yield app
     app.quit()
 

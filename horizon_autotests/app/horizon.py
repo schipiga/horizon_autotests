@@ -22,6 +22,12 @@ class Horizon(pom.App):
 
     @property
     def current_page(self):
+        current_url = self.webdriver.current_url
         for page in pages:
-            if self.webdriver.current_url.startswith(self.app_url + page.url):
-                return page(self)
+            url = self.app_url + page.url
+
+            if current_url.startswith(url):
+                url_end = current_url.split(url)[-1]
+
+                if not (url_end and url_end[0].isalpha()):
+                    return page(self)

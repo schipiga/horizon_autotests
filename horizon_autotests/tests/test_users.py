@@ -1,7 +1,7 @@
 import pytest
 
-from .config import ADMIN_NAME, ADMIN_PASSWD
-from .utils import generate_ids
+from .fixtures.config import ADMIN_NAME, ADMIN_PASSWD
+from .fixtures.utils import generate_ids
 
 
 @pytest.mark.usefixtures('admin_only')

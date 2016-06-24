@@ -1,6 +1,6 @@
 import pytest
 
-from .utils import generate_ids
+from .fixtures.utils import generate_ids
 
 
 @pytest.mark.usefixtures('any_user')

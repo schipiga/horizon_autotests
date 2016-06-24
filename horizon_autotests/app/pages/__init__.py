@@ -1,18 +1,19 @@
+from .access import AccessPage
 from .base import BasePage
-from .login import LoginPage
-from .users import UsersPage
-from .volumes import VolumesPage, AdminVolumesPage
-from .settings import SettingsPage
-from .projects import ProjectsPage
 from .instances import InstancesPage
-
+from .login import LoginPage
+from .projects import ProjectsPage
+from .settings import SettingsPage
+from .users import UsersPage
+from .volumes import AdminVolumesPage, VolumesPage
 
 pages = [
-    LoginPage,
-    VolumesPage,
-    UsersPage,
-    SettingsPage,
-    ProjectsPage,
+    AccessPage,
+    AdminVolumesPage,
     InstancesPage,
-    AdminVolumesPage
+    LoginPage,
+    ProjectsPage,
+    SettingsPage,
+    UsersPage,
+    VolumesPage
 ]
