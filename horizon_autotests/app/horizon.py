@@ -29,5 +29,5 @@ class Horizon(pom.App):
             if current_url.startswith(url):
                 url_end = current_url.split(url)[-1]
 
-                if not (url_end and url_end[0].isalpha()):
+                if not (url_end and url_end[0].isalnum()):
                     return page(self)

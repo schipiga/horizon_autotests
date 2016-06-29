@@ -20,6 +20,6 @@ class ProjectsSteps(BaseSteps):
         with self.projects_page.projects_table.row(name=name) as row:
             row.dropdown_actions.toggle_button.click()
             row.dropdown_actions.delete_item.click()
-        self.projects_page.delete_user_confirm_form.submit()
+        self.projects_page.delete_project_confirm_form.submit()
         self.base_page.modal_spinner.wait_for_absence()
         self.close_notification('success')

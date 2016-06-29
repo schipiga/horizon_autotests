@@ -84,7 +84,7 @@ class NetworkTab(ui.Block):
     network_tab=NetworkTab(By.CSS_SELECTOR,
                            'ng-include[ng-form="launchInstanceNetworkForm"]'))
 class LaunchInstanceForm(_ui.Form):
-    pass
+    submit_locator = By.CSS_SELECTOR, 'button.btn.btn-primary.finish'
 
 
 @pom.register_ui(

@@ -6,7 +6,7 @@ from horizon_autotests.app import Horizon
 from horizon_autotests.steps import AuthSteps
 
 from .config import DASHBOARD_URL
-from .utils import create_demo_user
+from .utils import create_demo_user, delete_demo_user
 
 __all__ = [
     'auth_steps',
@@ -18,8 +18,9 @@ __all__ = [
 @pytest.yield_fixture(scope='session')
 def horizon():
     app = Horizon(DASHBOARD_URL)
-    create_demo_user(app)
+    #create_demo_user(app)
     yield app
+    #delete_demo_user(app)
     app.quit()
 
 

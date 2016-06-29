@@ -2,6 +2,7 @@ from .api_access import *  # noqa
 from .app import *  # noqa
 from .auto_use import *  # noqa
 from .credentials import *  # noqa
+from .images import *  # noqa
 from .instances import *  # noqa
 from .keypairs import *  # noqa
 from .settings import *  # noqa

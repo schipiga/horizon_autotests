@@ -1,5 +1,6 @@
 from .api_access import ApiAccessSteps  # noqa
 from .auth import AuthSteps  # noqa
+from .images import ImagesSteps  # noqa
 from .instances import InstancesSteps  # noqa
 from .keypairs import KeypairsSteps  # noqa
 from .projects import ProjectsSteps  # noqa
