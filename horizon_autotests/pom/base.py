@@ -1,5 +1,7 @@
 from selenium import webdriver
 
+from .utils import cache
+
 __all__ = [
     'App',
     'Page',
@@ -38,13 +40,18 @@ def register_ui(**ui):
 
 class Container(object):
 
-    _registered_ui = None
-
     @classmethod
     def register_ui(cls, **ui):
-        if not cls._registered_ui:
-            cls._registered_ui = {}
-        cls._registered_ui.update(ui)
+        for ui_name, ui_obj in ui.iteritems():
+
+            def ui_getter(self, ui_obj=ui_obj):
+                ui_clone = ui_obj.clone()
+                ui_clone.set_container(self)
+                return ui_clone
+
+            ui_getter.__name__ = ui_name
+            ui_getter = property(cache(ui_getter))
+            setattr(cls, ui_name, ui_getter)
 
     def __enter__(self):
         return self
@@ -57,13 +64,6 @@ class Container(object):
 
     def find_elements(self, locator):
         return self.webelement.find_elements(*locator)
-
-    def __getattr__(self, name):
-        ui_obj = self._registered_ui.get(name)
-        if not ui_obj:
-            raise AttributeError("Attribute {!r} isn't defined".format(name))
-        ui_obj.set_container(self)
-        return ui_obj
 
 
 class Page(Container):
