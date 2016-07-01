@@ -5,12 +5,12 @@ from horizon_autotests.app import ui as _ui
 from horizon_autotests.pom import ui
 
 
-@pom.register_ui(username=ui.TextField(By.NAME, 'username'),
-                 password=ui.TextField(By.NAME, 'password'))
-class LoginForm(_ui.Form):
+@ui.register_ui(field_username=ui.TextField(By.NAME, 'username'),
+                field_password=ui.TextField(By.NAME, 'password'))
+class FormLogin(_ui.Form):
     pass
 
 
-@pom.register_ui(login_form=LoginForm(By.CSS_SELECTOR, 'form'))
+@ui.register_ui(form_login=FormLogin(By.CSS_SELECTOR, 'form'))
 class LoginPage(pom.Page):
     url = "/auth/login"

@@ -1,20 +1,20 @@
 from selenium.webdriver.common.by import By
-from horizon_autotests import pom
+
 from horizon_autotests.app import ui as _ui
 from horizon_autotests.pom import ui
 
 from .base import BasePage
 
 
-@pom.register_ui(
-    lang_combobox=ui.ComboBox(By.NAME, 'language'),
-    timezone_combobox=ui.ComboBox(By.NAME, 'timezone'),
-    items_per_page_field=ui.IntegerField(By.NAME, 'pagesize'),
-    instance_log_length_field=ui.IntegerField(By.NAME, 'instance_log_length'))
-class SettingsForm(_ui.Form):
+@ui.register_ui(
+    combobox_lang=ui.ComboBox(By.NAME, 'language'),
+    combobox_timezone=ui.ComboBox(By.NAME, 'timezone'),
+    field_items_per_page=ui.IntegerField(By.NAME, 'pagesize'),
+    field_instance_log_length=ui.IntegerField(By.NAME, 'instance_log_length'))
+class FormSettings(_ui.Form):
     pass
 
 
-@pom.register_ui(settings_form=SettingsForm(By.ID, 'user_settings_modal'))
+@ui.register_ui(form_settings=FormSettings(By.ID, 'user_settings_modal'))
 class SettingsPage(BasePage):
     url = "/settings/"

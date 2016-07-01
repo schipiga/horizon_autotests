@@ -10,9 +10,9 @@ class AuthSteps(BaseSteps):
         return self._open(LoginPage)
 
     def login(self, username, password):
-        with self.login_page.login_form as form:
-            form.username.value = username
-            form.password.value = password
+        with self.login_page.form_login as form:
+            form.field_username.value = username
+            form.field_password.value = password
             form.submit()
 
     def logout(self):

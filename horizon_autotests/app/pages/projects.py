@@ -1,41 +1,33 @@
 from selenium.webdriver.common.by import By
 
-from horizon_autotests import pom
 from horizon_autotests.app import ui as _ui
 from horizon_autotests.pom import ui
 
 from .base import BasePage
 
 
-@pom.register_ui(
-    toggle_button=ui.Button(By.CSS_SELECTOR, 'a.dropdown-toggle'),
-    delete_item=ui.UI(By.CSS_SELECTOR, '*[id*="action_delete"]'))
-class DropdownActions(ui.Block):
+@ui.register_ui(
+    checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
+    dropdown_menu=_ui.DropdownMenu())
+class RowProject(ui.Row):
     pass
 
 
-@pom.register_ui(
-    dropdown_actions=DropdownActions(By.CSS_SELECTOR, 'div.btn-group'),
-    checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'))
-class ProjectsRow(ui.Row):
-    pass
-
-
-class ProjectsTable(ui.Table):
+class TableProjects(ui.Table):
     columns = {'name': 2}
-    Row = ProjectsRow
+    Row = RowProject
 
 
-@pom.register_ui(name_field=ui.TextField(By.NAME, 'name'))
-class CreateProjectForm(_ui.Form):
+@ui.register_ui(field_name=ui.TextField(By.NAME, 'name'))
+class FormCreateProject(_ui.Form):
     submit_locator = By.CSS_SELECTOR, 'input.btn.btn-primary'
 
 
-@pom.register_ui(
-    create_project_button=ui.Button(By.ID, 'tenants__action_create'),
-    projects_table=ProjectsTable(By.ID, 'tenants'),
-    create_project_form=CreateProjectForm(By.CSS_SELECTOR,
+@ui.register_ui(
+    button_create_project=ui.Button(By.ID, 'tenants__action_create'),
+    form_create_project=FormCreateProject(By.CSS_SELECTOR,
                                           'form[action*="identity/create"]'),
-    delete_project_confirm_form=_ui.Form(By.CSS_SELECTOR, 'div.modal-content'))
+    form_delete_project_confirm=_ui.Form(By.CSS_SELECTOR, 'div.modal-content'),
+    table_projects=TableProjects(By.ID, 'tenants'))
 class ProjectsPage(BasePage):
     url = "/identity/"

@@ -25,5 +25,5 @@ class BaseSteps(object):
 
     def close_notification(self, level):
         with self.base_page.notification(level) as notification:
-            notification.close_button.click()
+            notification.button_close.click()
             notification.wait_for_absence()

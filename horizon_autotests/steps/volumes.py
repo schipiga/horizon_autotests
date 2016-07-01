@@ -214,7 +214,7 @@ class VolumesSteps(BaseSteps):
             transfer_id = form.transfer_id_field.value
             transfer_key = form.transfer_key_field.value
 
-        assert row.cell('status') == 'awaiting-transfer'
+        assert row.cell('status').value == 'awaiting-transfer'
 
         return transfer_id, transfer_key
 
@@ -231,7 +231,7 @@ class VolumesSteps(BaseSteps):
 
         with self.volumes_page.volumes_table.row(name=volume_name) as row:
             row.wait_for_presence(30)
-            row.cell('status') == 'Available'
+            row.cell('status').value == 'Available'
 
     def migrate_host(self, volume_name, new_host=None):
         with self.admin_volumes_page.volumes_table.row(
@@ -250,3 +250,61 @@ class VolumesSteps(BaseSteps):
         self.close_notification('success')
 
         return old_host, new_host
+
+    def snapshots_tab(self):
+        self.volumes_page.snapshots_label.click()
+        return self.volumes_page.snapshots_tab
+
+    def create_snapshot(self, volume_name, snapshot_name, description=None):
+        with self.volumes_page.volumes_table.row(name=volume_name) as row:
+            row.dropdown_actions.toggle_button.click()
+            row.dropdown_actions.create_snapshot_item.click()
+
+        with self.volumes_page.create_snapshot_form as form:
+            form.snapshot_name_field.value = snapshot_name
+            if description is not None:
+                self.description_field.value = description
+            form.submit()
+
+        snapshots_tab = self.snapshots_tab()
+
+        with snapshots_tab.snapshots_table.row(name=snapshot_name) as row:
+            assert row.is_present
+            with row.cell('status') as cell:
+                assert waiter.exe(30, cell.value == 'Available')
+
+    def delete_snapshot(self, snapshot_name):
+        snapshots_tab = self.snapshots_tab()
+
+        with snapshots_tab.snapshots_table.row(name=snapshot_name) as row:
+            row.dropdown_actions.toggle_button.click()
+            row.dropdown_actions.delete_snapshot_item.click()
+
+        snapshots_tab.confirm_form.submit()
+        snapshots_tab.modal_spinner.wait_for_absence(30)
+        self.close_notification('success')
+
+        row.wait_for_absence(30)
+
+    def update_snapshot(self, snapshot_name, new_snapshot_name,
+                        description=None):
+        snapshots_tab = self.snapshots_tab()
+
+        with snapshots_tab.snapshots_table.row(
+                name=snapshot_name) as row:
+            row.dropdown_actions.toggle_button.click()
+            row.dropdown_actions.edit_snapshot_item.click()
+
+        with snapshots_tab.edit_snapshot_form as form:
+            form.snapshot_name_field.value = new_snapshot_name
+            if description is not None:
+                form.description_field.value = description
+            form.submit()
+
+        snapshots_tab.modal_spinner.wait_for_absence(30)
+        self.close_notification('info')
+
+        with snapshots_tab.snapshots_table.row(name=new_snapshot_name) as row:
+            assert row.is_present
+            with row.cell('status') as cell:
+                assert waiter.exe(30, cell.value == 'Available')

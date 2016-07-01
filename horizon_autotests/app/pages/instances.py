@@ -1,18 +1,18 @@
 from selenium.webdriver.common.by import By
-from horizon_autotests import pom
+
 from horizon_autotests.app import ui as _ui
 from horizon_autotests.pom import ui
 
 from .base import BasePage
 
 
-@pom.register_ui(name_field=ui.TextField(By.NAME, 'name'),
-                 count_field=ui.TextField(By.NAME, 'count'))
-class DetailsTab(ui.Block):
+@ui.register_ui(field_count=ui.TextField(By.NAME, 'count'),
+                field_name=ui.TextField(By.NAME, 'name'))
+class TabDetails(ui.Block):
     pass
 
 
-class VolumeCreateRadio(ui.UI):
+class RadioVolumeCreate(ui.UI):
 
     @property
     def value(self):
@@ -25,97 +25,93 @@ class VolumeCreateRadio(ui.UI):
             By.XPATH, 'label[text()="{}"]'.format(val)).click()
 
 
-@pom.register_ui(
-    add_button=ui.Button(By.CSS_SELECTOR, 'button.btn.btn-default'))
-class AvailableRow(ui.Row):
+@ui.register_ui(
+    button_add=ui.Button(By.CSS_SELECTOR, 'button.btn.btn-default'))
+class RowAvailable(ui.Row):
     pass
 
 
-class AvailableSourcesTable(ui.Table):
+class TableAvailableSources(ui.Table):
     columns = {'name': 2}
-    Row = AvailableRow
+    Row = RowAvailable
 
 
-@pom.register_ui(
-    boot_source_field=ui.ComboBox(By.NAME, 'boot-source-type'),
-    volume_create_radio=VolumeCreateRadio(
+@ui.register_ui(
+    field_boot_source=ui.ComboBox(By.NAME, 'boot-source-type'),
+    radio_volume_create=RadioVolumeCreate(
         By.XPATH,
         '//div[contains(@class, "btn-group") and label[@id="vol-create"]]'),
-    available_sources_table=AvailableSourcesTable(
+    table_available_sources=TableAvailableSources(
         By.CSS_SELECTOR, 'available table'))
-class SourceTab(ui.Block):
+class TabSource(ui.Block):
     pass
 
 
-class AvailableFlavorsTable(ui.Table):
+class TableAvailableFlavors(ui.Table):
     columns = {'name': 2}
-    Row = AvailableRow
+    Row = RowAvailable
 
 
-@pom.register_ui(
-    available_flavors_table=AvailableFlavorsTable(
+@ui.register_ui(
+    table_available_flavors=TableAvailableFlavors(
         By.CSS_SELECTOR, 'available table'))
-class FlavorTab(ui.Block):
+class TabFlavor(ui.Block):
     pass
 
 
-class AvailableNetworksTable(ui.Table):
+class TableAvailableNetworks(ui.Table):
     columns = {'name': 2}
-    Row = AvailableRow
+    Row = RowAvailable
 
 
-@pom.register_ui(
-    available_networks_table=AvailableNetworksTable(
+@ui.register_ui(
+    table_available_networks=TableAvailableNetworks(
         By.CSS_SELECTOR, 'available table'))
-class NetworkTab(ui.Block):
+class TabNetwork(ui.Block):
     pass
 
 
-@pom.register_ui(
-    source_item=ui.UI(By.XPATH, '//li//span[text()="Source"]'),
-    flavor_item=ui.UI(By.XPATH, '//li//span[text()="Flavor"]'),
-    network_item=ui.UI(By.XPATH, '//li//span[text()="Networks"]'),
-    details_tab=DetailsTab(By.CSS_SELECTOR,
+@ui.register_ui(
+    item_source=ui.UI(By.XPATH, '//li//span[text()="Source"]'),
+    item_flavor=ui.UI(By.XPATH, '//li//span[text()="Flavor"]'),
+    item_network=ui.UI(By.XPATH, '//li//span[text()="Networks"]'),
+    tab_details=TabDetails(By.CSS_SELECTOR,
                            'ng-include[ng-form="launchInstanceDetailsForm"]'),
-    source_tab=SourceTab(By.CSS_SELECTOR,
+    tab_source=TabSource(By.CSS_SELECTOR,
                          'ng-include[ng-form="launchInstanceSourceForm"]'),
-    flavor_tab=FlavorTab(By.CSS_SELECTOR,
+    tab_flavor=TabFlavor(By.CSS_SELECTOR,
                          'ng-include[ng-form="launchInstanceFlavorForm"]'),
-    network_tab=NetworkTab(By.CSS_SELECTOR,
+    tab_network=TabNetwork(By.CSS_SELECTOR,
                            'ng-include[ng-form="launchInstanceNetworkForm"]'))
-class LaunchInstanceForm(_ui.Form):
+class FormLaunchInstance(_ui.Form):
     submit_locator = By.CSS_SELECTOR, 'button.btn.btn-primary.finish'
 
 
-@pom.register_ui(
-    toggle_button=ui.Button(By.CSS_SELECTOR, 'a.dropdown-toggle'),
-    delete_item=ui.UI(By.CSS_SELECTOR, '*[id*="action_delete"]'),
+@ui.register_ui(
     lock_item=ui.UI(By.CSS_SELECTOR, '*[id*="action_lock"]'),
     unlock_item=ui.UI(By.CSS_SELECTOR, '*[id*="action_unlock"]'))
-class DropdownActions(ui.Block):
+class DropdownMenu(_ui.DropdownMenu):
     pass
 
 
-@pom.register_ui(
-    dropdown_actions=DropdownActions(By.CSS_SELECTOR, 'div.btn-group'),
-    checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'))
-class InstancesRow(ui.Row):
+@ui.register_ui(
+    checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
+    dropdown_actions=DropdownMenu())
+class RowInstance(ui.Row):
     pass
 
 
-class InstancesTable(ui.Table):
+class TableInstances(ui.Table):
     columns = {'name': 2, 'status': 7}
-    Row = InstancesRow
+    Row = RowInstance
 
 
-@pom.register_ui(
-    launch_instance_button=ui.Button(By.ID, "instances__action_launch-ng"),
-    delete_instances_button=ui.Button(By.ID, 'instances__action_delete'),
-    delete_instance_confirm_form=_ui.Form(By.CSS_SELECTOR,
-                                          'div.modal-content'),
-    launch_instance_form=LaunchInstanceForm(
+@ui.register_ui(
+    button_delete_instances=ui.Button(By.ID, 'instances__action_delete'),
+    button_launch_instance=ui.Button(By.ID, "instances__action_launch-ng"),
+    form_launch_instance=FormLaunchInstance(
         By.CSS_SELECTOR,
         'wizard[ng-controller="LaunchInstanceWizardController"]'),
-    instances_table=InstancesTable(By.ID, 'instances'))
+    table_instances=TableInstances(By.ID, 'instances'))
 class InstancesPage(BasePage):
     url = "/project/instances/"

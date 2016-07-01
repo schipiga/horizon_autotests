@@ -1,7 +1,6 @@
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import ActionChains
 
-from horizon_autotests.pom.base import Container
 from horizon_autotests.pom.utils import Waiter
 
 waiter = Waiter(polling=0.1)
@@ -28,6 +27,56 @@ def immediately(func):
             self.webdriver.implicitly_wait(5)
 
     return wrapper
+
+
+def register_ui(**ui):
+
+    def wrapper(cls):
+        cls.register_ui(**ui)
+        return cls
+
+    return wrapper
+
+
+def cache(func):
+    attrname = '_cached_' + func.__name__
+
+    def wrapper(self, *args, **kwgs):
+        result = getattr(self, attrname, None)
+        if not result:
+            result = func(self, *args, **kwgs)
+            setattr(self, attrname, result)
+        return result
+
+    return wrapper
+
+
+class Container(object):
+
+    @classmethod
+    def register_ui(cls, **ui):
+        for ui_name, ui_obj in ui.iteritems():
+
+            def ui_getter(self, ui_obj=ui_obj):
+                ui_clone = ui_obj.clone()
+                ui_clone.set_container(self)
+                return ui_clone
+
+            ui_getter.__name__ = ui_name
+            ui_getter = property(cache(ui_getter))
+            setattr(cls, ui_name, ui_getter)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+    def find_element(self, locator):
+        return self.webelement.find_element(*locator)
+
+    def find_elements(self, locator):
+        return self.webelement.find_elements(*locator)
 
 
 class WebElementProxy(object):

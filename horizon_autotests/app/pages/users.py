@@ -1,54 +1,52 @@
 from selenium.webdriver.common.by import By
 
-from horizon_autotests import pom
 from horizon_autotests.app import ui as _ui
 from horizon_autotests.pom import ui
 
+from .base import BasePage
 
-@pom.register_ui(
-    toggle_button=ui.Button(By.CSS_SELECTOR, 'a.dropdown-toggle'),
-    delete_item=ui.UI(By.CSS_SELECTOR, '*[id*="action_delete"]'),
-    change_password_item=ui.UI(By.CSS_SELECTOR,
+
+@ui.register_ui(
+    item_change_password=ui.UI(By.CSS_SELECTOR,
                                '*[id*="action_change_password"]'))
-class DropdownActions(ui.Block):
+class DropdownMenu(_ui.DropdownMenu):
     pass
 
 
-@pom.register_ui(
-    dropdown_actions=DropdownActions(By.CSS_SELECTOR, 'div.btn-group'),
-    checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'))
-class UsersRow(ui.Row):
+@ui.register_ui(
+    checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
+    dropdown_menu=DropdownMenu())
+class RowUser(ui.Row):
     pass
 
 
-class UsersTable(ui.Table):
+class TableUsers(ui.Table):
     columns = {'name': 2, 'email': 4}
-    Row = UsersRow
+    Row = RowUser
 
 
-@pom.register_ui(
-    name_field=ui.TextField(By.NAME, 'name'),
-    password_field=ui.TextField(By.NAME, 'password'),
-    password_confirm_field=ui.TextField(By.NAME, 'confirm_password'),
-    project_combobox=ui.ComboBox(By.NAME, 'project'))
-class CreateUserForm(_ui.Form):
+@ui.register_ui(
+    combobox_project=ui.ComboBox(By.NAME, 'project'),
+    field_name=ui.TextField(By.NAME, 'name'),
+    field_password=ui.TextField(By.NAME, 'password'),
+    field_password_confirm=ui.TextField(By.NAME, 'confirm_password'))
+class FormCreateUser(_ui.Form):
     pass
 
 
-@pom.register_ui(
-    password_field=ui.TextField(By.NAME, 'password'),
-    confirm_password_field=ui.TextField(By.NAME, 'confirm_password'))
-class ChangePasswordForm(_ui.Form):
+@ui.register_ui(
+    field_confirm_password=ui.TextField(By.NAME, 'confirm_password'),
+    field_password=ui.TextField(By.NAME, 'password'))
+class FormChangePassword(_ui.Form):
     pass
 
 
-@pom.register_ui(
-    users_table=UsersTable(By.ID, 'users'),
-    create_user_button=ui.Button(By.ID, 'users__action_create'),
-    create_user_form=CreateUserForm(By.ID, 'create_user_form'),
-    delete_users_button=ui.Button(By.ID, 'users__action_delete'),
-    delete_user_confirm_form=_ui.Form(By.CSS_SELECTOR, 'div.modal-content'),
-    change_password_form=ChangePasswordForm(By.ID,
-                                            'change_user_password_form'))
-class UsersPage(pom.Page):
+@ui.register_ui(
+    button_create_user=ui.Button(By.ID, 'users__action_create'),
+    button_delete_users=ui.Button(By.ID, 'users__action_delete'),
+    form_change_password=FormChangePassword(By.ID,
+                                            'change_user_password_form'),
+    form_create_user=FormCreateUser(By.ID, 'create_user_form'),
+    table_users=TableUsers(By.ID, 'users'))
+class UsersPage(BasePage):
     url = '/identity/users/'

@@ -1,4 +1,4 @@
-from .base import UI, Block, immediately  # noqa
+from .base import UI, Block, immediately, Container, register_ui  # noqa
 from .form import Form  # noqa
 from .text import TextField, IntegerField  # noqa
 from .button import Button  # noqa
