@@ -25,4 +25,5 @@ def update_settings(settings_steps):
 
     yield _update_settings
 
-    settings_steps.update_settings(**current_settings)
+    if current_settings:
+        settings_steps.update_settings(**current_settings)

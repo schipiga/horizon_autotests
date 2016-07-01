@@ -7,7 +7,7 @@ from ..instances import FormLaunchInstance
 
 
 @ui.register_ui(
-    field_name_=ui.TextField(By.NAME, 'name'),
+    field_name=ui.TextField(By.NAME, 'name'),
     combobox_image_source=ui.ComboBox(By.NAME, 'image_source'),
     combobox_source_type=ui.ComboBox(By.NAME, 'volume_source_type'),
     combobox_volume_type=ui.ComboBox(By.NAME, 'type'))
@@ -61,10 +61,19 @@ class FormExtendVolume(_ui.Form):
 
 
 @ui.register_ui(
+    field_description=ui.TextField(By.NAME, 'description'),
+    field_name=ui.TextField(By.NAME, 'name'))
+class FormCreateSnapshot(_ui.Form):
+    pass
+
+
+@ui.register_ui(
     button_create_volume=ui.Button(By.ID, 'volumes__action_create'),
     button_delete_volumes=ui.Button(By.ID, 'volumes__action_delete'),
     form_change_volume_type=FormChangeVolumeType(By.CSS_SELECTOR,
                                                  'form[action*="/retype"]'),
+    form_create_snapshot=FormCreateSnapshot(
+        By.CSS_SELECTOR, 'form[action*="/create_snapshot"]'),
     form_create_volume=FormCreateVolume(By.CSS_SELECTOR,
                                         'form[action*="volumes/create"]'),
     form_extend_volume=FormExtendVolume(By.CSS_SELECTOR,

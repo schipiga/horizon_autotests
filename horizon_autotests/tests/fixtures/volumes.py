@@ -5,6 +5,7 @@ from horizon_autotests.steps import VolumesSteps
 from .utils import generate_ids, AttrDict
 
 __all__ = [
+    'create_snapshots',
     'create_volume',
     'create_volumes',
     'snapshot',
@@ -66,3 +67,36 @@ def snapshot(volume, volumes_steps):
     snapshot = AttrDict(name=snapshot_name)
     yield snapshot
     volumes_steps.delete_snapshot(snapshot.name)
+
+
+@pytest.yield_fixture
+def create_snapshots(volume, volumes_steps):
+    snapshots = []
+
+    def _create_snapshots(snapshot_names):
+        for snapshot_name in snapshot_names:
+            volumes_steps.create_snapshot(volume.name, snapshot_name)
+            snapshots.append(AttrDict(name=snapshot_name))
+
+        return snapshots
+
+    yield _create_snapshots
+
+    if snapshots:
+        volumes_steps.delete_snapshots(
+            *[snapshot.name for snapshot in snapshots])
+
+
+@pytest.yield_fixture
+def create_snapshot(volume, volumes_steps):
+    snapshots = []
+
+    def _create_volume(snapshot_name):
+        volumes_steps.create_snapshot(volume.name, snapshot_name)
+        snapshots.append(AttrDict(name=snapshot_name))
+        return snapshots[-1]
+
+    yield _create_volume
+
+    for snapshot in snapshots:
+        volumes_steps.delete_snapshot(snapshot.name)
