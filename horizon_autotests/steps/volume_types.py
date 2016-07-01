@@ -30,7 +30,7 @@ class VolumeTypesSteps(BaseSteps):
                 name=name).dropdown_actions as actions:
             actions.toggle_button.click()
             actions.delete_item.click()
-        page.confirm_delete_volume_types_form.submit()
+        page.confirm_form.submit()
         self.base_page.modal_spinner.wait_for_absence()
         self.close_notification('success')
         page.volume_types_table.row(
@@ -42,7 +42,7 @@ class VolumeTypesSteps(BaseSteps):
             page.volume_types_table.row(
                 name=name).checkbox.click()
         page.delete_volume_types_button.click()
-        page.confirm_delete_volume_types_form.submit()
+        page.confirm_form.submit()
         self.base_page.modal_spinner.wait_for_absence()
         self.close_notification('success')
 
@@ -69,7 +69,7 @@ class VolumeTypesSteps(BaseSteps):
                 name=name).dropdown_actions as actions:
             actions.toggle_button.click()
             actions.delete_item.click()
-        page.confirm_delete_qos_specs_form.submit()
+        page.confirm_form.submit()
         self.base_page.modal_spinner.wait_for_absence()
         self.close_notification('success')
         page.qos_specs_table.row(

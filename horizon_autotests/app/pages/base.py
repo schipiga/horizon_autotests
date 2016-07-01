@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 
 from horizon_autotests import pom
+from horizon_autotests.app import ui as _ui
 from horizon_autotests.pom import ui
 
 
@@ -33,7 +34,8 @@ class Notification(ui.Block):
         By.CSS_SELECTOR, 'ul.navbar-nav.navbar-right > li.dropdown'),
     project_dropdown=ProjectDropdown(
         By.CSS_SELECTOR, 'ul.navbar-nav > li.dropdown'),
-    modal_spinner=ui.UI(By.CSS_SELECTOR, 'div.modal-dialog'))
+    modal_spinner=ui.UI(By.CSS_SELECTOR, 'div.modal-dialog'),
+    confirm_form=_ui.Form(By.CSS_SELECTOR, 'div.modal-content'))
 class BasePage(pom.Page):
     url = '/'
 

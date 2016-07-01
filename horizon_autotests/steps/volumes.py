@@ -36,7 +36,7 @@ class VolumesSteps(BaseSteps):
         with self.volumes_page.volumes_table.row(name=name) as row:
             row.dropdown_actions.toggle_button.click()
             row.dropdown_actions.delete_item.click()
-        self.volumes_page.delete_volume_confirm_form.submit()
+        self.volumes_page.confirm_form.submit()
         self.base_page.modal_spinner.wait_for_absence(30)
         self.close_notification('success')
 
@@ -59,7 +59,7 @@ class VolumesSteps(BaseSteps):
             rows.append(row)
             row.checkbox.select()
         self.volumes_page.delete_volumes_button.click()
-        self.volumes_page.delete_volume_confirm_form.submit()
+        self.volumes_page.confirm_form.submit()
         self.base_page.modal_spinner.wait_for_absence(30)
         self.close_notification('success')
 
@@ -190,7 +190,7 @@ class VolumesSteps(BaseSteps):
             form.instances_table.row(
                 name=instance_name).detach_volume_button.click()
 
-        self.confirm_detach_volume_form.submit()
+        self.volumes_page.confirm_form.submit()
 
         self.base_page.modal_spinner.wait_for_absence(30)
         self.close_notification('success')

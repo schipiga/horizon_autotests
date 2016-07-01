@@ -4,6 +4,7 @@ from horizon_autotests import pom
 from horizon_autotests.app import ui as _ui
 from horizon_autotests.pom import ui
 
+from .base import BasePage
 from .instances import LaunchInstanceForm
 
 
@@ -82,7 +83,7 @@ class ExtendVolumeForm(_ui.Form):
     launch_instance_form=LaunchInstanceForm(
         By.CSS_SELECTOR,
         'wizard[ng-controller="LaunchInstanceWizardController"]'))
-class VolumesPage(pom.Page):
+class VolumesPage(BasePage):
     url = "/project/volumes/"
 
 
@@ -181,7 +182,7 @@ class UpdateVolumeStatusForm(_ui.Form):
     volumes_table=AdminVolumesTable(By.CSS_SELECTOR, 'table[id="volumes"]'),
     update_volume_status_form=UpdateVolumeStatusForm(
         By.CSS_SELECTOR, 'form[action*="/update_status"]'))
-class AdminVolumesPage(pom.Page):
+class AdminVolumesPage(BasePage):
     url = "/admin/volumes/"
 
 
@@ -193,5 +194,5 @@ class Info(ui.Block):
 @pom.register_ui(
     volume_info=Info(By.CSS_SELECTOR,
                      'div.detail dl.dl-horizontal:nth-of-type(1)'))
-class VolumePage(pom.Page):
+class VolumePage(BasePage):
     url = "/project/volumes/{}/"
