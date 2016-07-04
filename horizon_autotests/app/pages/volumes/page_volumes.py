@@ -15,3 +15,4 @@ from .tab_volumes import TabVolumes
     tab_volumes=TabVolumes())
 class VolumesPage(BasePage):
     url = "/project/volumes/"
+    navigate_item = "Project", "Compute", "Volumes"

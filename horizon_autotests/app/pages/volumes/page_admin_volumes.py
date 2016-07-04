@@ -17,3 +17,4 @@ from ..base import BasePage
     tab_volume_types=TabVolumeTypes())
 class AdminVolumesPage(BasePage):
     url = "/admin/volumes/"
+    navigate_item = "Admin", "System", "Volumes"

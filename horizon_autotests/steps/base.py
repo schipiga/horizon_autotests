@@ -14,8 +14,12 @@ class BaseSteps(object):
         return BasePage(self.app)
 
     def _open(self, page):
-        if not isinstance(self.app.current_page, page):
-            self.app.open(page)
+        current_page = self.app.current_page
+        if not isinstance(current_page, page):
+            if getattr(page, 'navigate_item', None):
+                current_page.navigate(page.navigate_item)
+            else:
+                self.app.open(page)
         return page(self.app)
 
     def switch_project(self, name):

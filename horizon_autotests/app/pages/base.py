@@ -12,11 +12,16 @@ class Notification(ui.Block):
               'success': 'alert-success'}
 
 
+@ui.register_ui(navigate_menu=_ui.NavigateMenu(By.ID, 'sidebar-accordion'))
 class BasePage(pom.Page, _ui.InitiatedUI):
     url = '/'
+    navigate_item = None
 
     def notification(self, level):
         selector = 'div.alert.{}'.format(Notification.levels[level])
         _notification = Notification(By.CSS_SELECTOR, selector)
         _notification.set_container(self)
         return _notification
+
+    def navigate(self, navigate_item):
+        self.navigate_menu.go_to(navigate_item)

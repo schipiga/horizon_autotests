@@ -13,6 +13,9 @@ class RowSnapshot(ui.Row):
     pass
 
 
+@ui.register_ui(
+    link_next=ui.UI(By.CSS_SELECTOR, 'a[href^="?snapshot_marker="]'),
+    link_prev=ui.UI(By.CSS_SELECTOR, 'a[href^="?prev_snapshot_marker="]'))
 class TableSnapshots(_ui.Table):
     columns = {'name': 2,
                'description': 3,

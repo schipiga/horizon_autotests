@@ -13,8 +13,9 @@ class TestAnyUser(object):
 
     def test_edit_volume(self, volume, volumes_steps):
         new_name = volume.name + ' (updated)'
-        volumes_steps.edit_volume(name=volume.name, new_name=new_name)
-        volume.name = new_name
+        with volume.put(name=new_name):
+            volumes_steps.edit_volume(volume_name=volume.name,
+                                      new_volume_name=new_name)
 
     @pytest.mark.parametrize('volumes_count', [1, 2])
     def test_delete_volumes(self, volumes_count, volumes_steps,
