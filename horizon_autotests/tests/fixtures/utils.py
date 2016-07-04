@@ -20,6 +20,10 @@ def generate_files():
     pass
 
 
+def slugify(string):
+    return ''.join(s if s.isalnum() else '_' for s in string).strip('_')
+
+
 def create_demo_user(app):
     from .config import (ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
                          DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)

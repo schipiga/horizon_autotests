@@ -11,9 +11,9 @@ LOGGER = logging.getLogger(__name__)
 
 class VideoRecorder(object):
 
-    def __init__(self, frame_rate=30):
+    def __init__(self, folder, frame_rate=30):
         self.is_launched = False
-        self.file_path = mktemp() + '.mp4'
+        self.file_path = os.path.join(folder, 'video.mp4')
         # avconv -f x11grab -r 15 -s 1920x1080 -i :0.0 -codec libx264 out.mp4
         self._cmd = ['avconv', '-f', 'x11grab', '-r', str(frame_rate),
                      '-s', '{}x{}'.format(1920, 1080),
