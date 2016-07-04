@@ -5,3 +5,4 @@ ipdb
 attrdict
 requests
 xvfbwrapper
+-egit+https://github.com/sergeychipiga/pom.git@master#egg=pom

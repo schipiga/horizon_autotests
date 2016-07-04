@@ -1,7 +1,6 @@
+from pom import ui
+from pom.utils import Waiter
 from selenium.webdriver.common.by import By
-
-from horizon_autotests.pom import ui
-from horizon_autotests.pom.utils import Waiter
 
 waiter = Waiter(polling=0.1)
 

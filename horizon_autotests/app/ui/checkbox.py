@@ -1,6 +1,5 @@
+from pom import ui
 from selenium.webdriver.common.by import By
-
-from horizon_autotests.pom import ui
 
 
 class CheckBox(ui.CheckBox):

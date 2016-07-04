@@ -1,4 +1,4 @@
-from horizon_autotests import pom
+import pom
 
 from .pages import pages
 
