@@ -3,6 +3,7 @@ import os
 import pytest
 
 from horizon_autotests.app import Horizon
+from horizon_autotests.app.pages import LoginPage
 from horizon_autotests.steps import AuthSteps
 
 from .config import DASHBOARD_URL
@@ -31,7 +32,12 @@ def auth_steps(horizon):
 
 @pytest.yield_fixture
 def login(auth_steps):
+    auth_steps.app.flush_session()
+    auth_steps.app.open(LoginPage)
+
     auth_steps.login(os.environ['OS_LOGIN'], os.environ['OS_PASSWD'])
     auth_steps.switch_project(os.environ['OS_PROJECT'])
+
     yield
+
     auth_steps.logout()
