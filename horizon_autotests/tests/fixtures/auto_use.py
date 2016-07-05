@@ -10,6 +10,7 @@ from .config import VIRTUAL_DISPLAY, TESTS_DIR
 from .utils import slugify
 
 __all__ = [
+    'report_dir',
     'sanitizer',
     'video_capture',
     'virtual_display'
@@ -63,6 +64,5 @@ def video_capture(report_dir, virtual_display):
 
 
 @pytest.fixture(autouse=True)
-def sanitizer(virtual_display,
-              video_capture):
+def sanitizer(video_capture):
     pass

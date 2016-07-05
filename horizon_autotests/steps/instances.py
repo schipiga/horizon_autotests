@@ -1,7 +1,7 @@
+from pom.utils import Waiter
 from six import moves
 
 from horizon_autotests.app.pages import InstancesPage
-from horizon_autotests.pom.utils import Waiter
 
 from .base import BaseSteps
 

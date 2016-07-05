@@ -1,5 +1,6 @@
+from pom.utils import Waiter
+
 from horizon_autotests.app.pages import ImagesPage
-from horizon_autotests.pom.utils import Waiter
 
 from .base import BaseSteps
 

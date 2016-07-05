@@ -1,5 +1,7 @@
+from pom.utils import Waiter
+
 from horizon_autotests.app.pages import UsersPage
-from horizon_autotests.pom.utils import Waiter
+
 from .base import BaseSteps
 
 waiter = Waiter(polling=0.1)

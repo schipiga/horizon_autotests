@@ -1,6 +1,5 @@
 import pytest
-
-from horizon_autotests.pom.utils import Waiter
+from pom.utils import Waiter
 
 from .fixtures.config import DEMO_NAME, DEMO_PASSWD
 from .fixtures.utils import generate_ids

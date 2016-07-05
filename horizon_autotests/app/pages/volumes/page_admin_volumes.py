@@ -1,6 +1,5 @@
+from pom import ui
 from selenium.webdriver.common.by import By
-
-from horizon_autotests.pom import ui
 
 from .tab_admin_volumes import TabAdminVolumes
 from .tab_volume_types import TabVolumeTypes
