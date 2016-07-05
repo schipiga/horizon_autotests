@@ -1,43 +1,64 @@
-from pom.utils import Waiter
+"""
+Instances steps.
+
+@author: schipiga@mirantis.com
+"""
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from six import moves
 
-from horizon_autotests.app.pages import InstancesPage
+from horizon_autotests.app.pages import PageInstances
 
+from ._utils import waiter
 from .base import BaseSteps
-
-waiter = Waiter(polling=0.1)
 
 
 class InstancesSteps(BaseSteps):
+    """Instances steps."""
 
-    @property
-    def instances_page(self):
-        return self._open(InstancesPage)
+    def page_instances(self):
+        """Open instances page if it isn't opened."""
+        return self._open(PageInstances)
 
     def create_instance(self, name, count=1):
-        self.instances_page.launch_instance_button.click()
-        with self.instances_page.launch_instance_form as form:
+        """Step to create instance."""
+        page_instances = self.page_instances()
 
-            with form.details_tab as tab:
-                tab.name_field.value = name
-                tab.count_field.value = count
+        page_instances.button_launch_instance.click()
+        with page_instances.form_launch_instance as form:
 
-            form.source_item.click()
-            with form.source_tab as tab:
-                tab.boot_source_field.value = 'Image'
-                tab.volume_create_radio.value = 'No'
-                tab.available_sources_table.row(
-                    name='TestVM').add_button.click()
+            with form.tab_details as tab:
+                tab.field_name.value = name
+                tab.field_count.value = count
 
-            form.flavor_item.click()
-            with form.flavor_tab as tab:
-                tab.available_flavors_table.row(
-                    name='m1.tiny').add_button.click()
+            form.item_source.click()
+            with form.tab_source as tab:
+                tab.form_boot_source.value = 'Image'
+                tab.radio_volume_create.value = 'No'
+                tab.table_available_sources.row(
+                    name='TestVM').button_add.click()
 
-            form.network_item.click()
-            with form.network_tab as tab:
-                tab.available_networks_table.row(
-                    name='admin_internal_net').add_button.click()
+            form.item_flavor.click()
+            with form.tab_flavor as tab:
+                tab.table_available_flavors.row(
+                    name='m1.tiny').button_add.click()
+
+            form.item_network.click()
+            with form.tab_network as tab:
+                tab.table_available_networks.row(
+                    name='admin_internal_net').button_add.click()
 
             form.submit()
 
@@ -46,49 +67,59 @@ class InstancesSteps(BaseSteps):
                 instance_name = name
             else:
                 instance_name = '{}-{}'.format(name, i)
-            self.instances_page.instances_table.row(
+            page_instances.table_instances.row(
                 name=instance_name).wait_for_presence(30)
-            cell = self.instances_page.instances_table.row(
+            cell = page_instances.table_instances.row(
                 name=instance_name).cell('status')
             assert waiter.exe(300, lambda: cell.value == 'Active')
 
     def delete_instances(self, *instance_names):
+        """Step to delete instances."""
+        page_instances = self.page_instances()
+
         for instance_name in instance_names:
-            self.instances_page.instances_table.row(
+            page_instances.table_instances.row(
                 name=instance_name).checkbox.select()
 
-        self.instances_page.delete_instances_button.click()
-        self.instances_page.delete_instance_confirm_form.submit()
+        page_instances.button_delete_instances.click()
+        page_instances.form_confirm.submit()
 
-        self.base_page.modal_spinner.wait_for_absence()
+        page_instances.spinner.wait_for_absence()
         self.close_notification('success')
 
         for instance_name in instance_names:
-            self.instances_page.instances_table.row(
+            page_instances.table_instances.row(
                 name=instance_name).wait_for_absence(120)
 
-    def delete_instance(self, name):
-        with self.instances_page.instances_table.row(
-                name=name).dropdown_actions as actions:
-            actions.toggle_button.click()
-            actions.delete_item.click()
-        self.instances_page.delete_instance_confirm_form.submit()
+    def delete_instance(self, instance_name):
+        """Step to delete instance."""
+        page_instances = self.page_instances()
 
-        self.base_page.modal_spinner.wait_for_absence()
+        with page_instances.table_instances.row(
+                name=instance_name).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_delete.click()
+
+        page_instances.form_confirm.submit()
+        page_instances.spinner.wait_for_absence()
         self.close_notification('success')
 
-        self.instances_page.instances_table.row(name=name).wait_for_absence(60)
+        page_instances.table_instances.row(
+            name=instance_name).wait_for_absence(60)
 
-    def lock_instance(self, name):
-        with self.instances_page.instances_table.row(
-                name=name).dropdown_actions as actions:
-            actions.toggle_button.click()
-            actions.lock_item.click()
+    def lock_instance(self, instance_name):
+        """Step to lock instance."""
+        with self.page_instances().table_instances.row(
+                name=instance_name).dropdown_menu as menu:
+            menu.toggle_button.click()
+            menu.lock_item.click()
+
         self.close_notification('success')
 
-    def unlock_instance(self, name):
-        with self.instances_page.instances_table.row(
-                name=name).dropdown_actions as actions:
-            actions.toggle_button.click()
-            actions.unlock_item.click()
+    def unlock_instance(self, instance_name):
+        with self.page_instances().table_instances.row(
+                name=instance_name).dropdown_menu as menu:
+            menu.toggle_button.click()
+            menu.unlock_item.click()
+
         self.close_notification('success')

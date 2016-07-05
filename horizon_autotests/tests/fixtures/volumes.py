@@ -1,3 +1,22 @@
+"""
+Fixtures for volumes.
+
+@author: schipiga@mirantis.com
+"""
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import pytest
 
 from horizon_autotests.steps import VolumesSteps
@@ -16,11 +35,13 @@ __all__ = [
 
 @pytest.fixture
 def volumes_steps(login, horizon):
+    """Get volumes steps."""
     return VolumesSteps(horizon)
 
 
 @pytest.yield_fixture
 def create_volumes(volumes_steps):
+    """Create volumes."""
     volumes = []
 
     def _create_volumes(names):
@@ -38,6 +59,7 @@ def create_volumes(volumes_steps):
 
 @pytest.yield_fixture
 def create_volume(volumes_steps):
+    """Create volume."""
     volumes = []
 
     def _create_volume(name, volume_type):
@@ -53,6 +75,7 @@ def create_volume(volumes_steps):
 
 @pytest.yield_fixture
 def volume(volumes_steps):
+    """Create volume."""
     volume_name = generate_ids(prefix='volume').next()
     volumes_steps.create_volume(volume_name)
     volume = AttrDict(name=volume_name)
@@ -62,6 +85,7 @@ def volume(volumes_steps):
 
 @pytest.yield_fixture
 def snapshot(volume, volumes_steps):
+    """Create snapshot."""
     snapshot_name = generate_ids('snapshot').next()
     volumes_steps.create_snapshot(volume.name, snapshot_name)
     snapshot = AttrDict(name=snapshot_name)
@@ -71,6 +95,7 @@ def snapshot(volume, volumes_steps):
 
 @pytest.yield_fixture
 def create_snapshots(volume, volumes_steps):
+    """Create snapshots."""
     snapshots = []
 
     def _create_snapshots(snapshot_names):
@@ -89,6 +114,7 @@ def create_snapshots(volume, volumes_steps):
 
 @pytest.yield_fixture
 def create_snapshot(volume, volumes_steps):
+    """Create snapshot."""
     snapshots = []
 
     def _create_volume(snapshot_name):

@@ -1,4 +1,4 @@
-from horizon_autotests.app.pages import AccessPage
+from horizon_autotests.app.pages import PageAccess
 
 from .base import BaseSteps
 
@@ -6,7 +6,7 @@ from .base import BaseSteps
 class ApiAccessSteps(BaseSteps):
 
     def api_access_page(self):
-        access_page = self._open(AccessPage)
+        access_page = self._open(PageAccess)
         access_page.api_access_tab.click()
         return access_page
 

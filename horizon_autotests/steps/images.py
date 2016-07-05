@@ -1,24 +1,44 @@
-from pom.utils import Waiter
+"""
+Images steps.
 
-from horizon_autotests.app.pages import ImagesPage
+@author: schipiga@mirantis.com
+"""
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from horizon_autotests.app.pages import PageImages
 
 from .base import BaseSteps
 
-waiter = Waiter(polling=0.1)
-
 
 class ImagesSteps(BaseSteps):
+    """Images steps."""
 
-    @property
-    def images_page(self):
-        return self._open(ImagesPage)
+    def page_images(self):
+        """Open images page if it isn't opened."""
+        return self._open(PageImages)
 
     def delete_image(self, name):
-        with self.images_page.images_table.row(name=name) as row:
-            row.dropdown_actions.toggle_button.click()
-            row.dropdown_actions.delete_item.click()
-        self.images_page.delete_image_confirm_form.submit()
-        self.base_page.modal_spinner.wait_for_absence(30)
+        """Step to delete image."""
+        page_images = self.page_images()
+
+        with page_images.images_table.row(name=name).dropdown_menu as menu:
+            menu.toggle_button.click()
+            menu.delete_item.click()
+
+        page_images.delete_image_confirm_form.submit()
+        page_images.spinner.wait_for_absence(30)
         self.close_notification('success')
 
-        row.wait_for_absence(30)
+        page_images.images_table.row(name=name).wait_for_absence(30)

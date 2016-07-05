@@ -1,3 +1,22 @@
+"""
+Volumes tab.
+
+@author: schipiga@mirantis.com
+"""
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from pom import ui
 from selenium.webdriver.common.by import By
 
@@ -12,12 +31,12 @@ from ..instances import FormLaunchInstance
     combobox_source_type=ui.ComboBox(By.NAME, 'volume_source_type'),
     combobox_volume_type=ui.ComboBox(By.NAME, 'type'))
 class FormCreateVolume(_ui.Form):
-    pass
+    """Form to create volume."""
 
 
 @ui.register_ui(field_name=ui.TextField(By.NAME, 'name'))
 class FormEditVolume(_ui.Form):
-    pass
+    """Form to edit volume."""
 
 
 @ui.register_ui(
@@ -29,7 +48,7 @@ class FormEditVolume(_ui.Form):
     item_upload_to_image=ui.UI(By.CSS_SELECTOR,
                                '*[id$="action_upload_to_image"]'))
 class DropdownMenu(_ui.DropdownMenu):
-    pass
+    """Dropdown menu for volume row."""
 
 
 @ui.register_ui(
@@ -37,34 +56,36 @@ class DropdownMenu(_ui.DropdownMenu):
     dropdown_menu=DropdownMenu(),
     link_volume=ui.UI(By.CSS_SELECTOR, 'td > a'))
 class RowVolume(ui.Row):
-    pass
+    """Volume row of volumes table."""
 
 
 class TableVolume(_ui.Table):
+    """Volumes table."""
+
     columns = {'name': 2, 'size': 4, 'status': 5, 'type': 6}
-    Row = RowVolume
+    row_cls = RowVolume
 
 
 @ui.register_ui(combobox_volume_type=ui.ComboBox(By.NAME, 'volume_type'))
 class FormChangeVolumeType(_ui.Form):
-    pass
+    """Form to change volume type."""
 
 
 @ui.register_ui(field_image_name=ui.TextField(By.NAME, 'image_name'))
 class FormUploadToImage(_ui.Form):
-    pass
+    """Form to upload volume to image."""
 
 
 @ui.register_ui(field_new_size=ui.IntegerField(By.NAME, 'new_size'))
 class FormExtendVolume(_ui.Form):
-    pass
+    """Form extend volume."""
 
 
 @ui.register_ui(
     field_description=ui.TextField(By.NAME, 'description'),
     field_name=ui.TextField(By.NAME, 'name'))
 class FormCreateSnapshot(_ui.Form):
-    pass
+    """Form create volume snapshot."""
 
 
 @ui.register_ui(
@@ -85,4 +106,4 @@ class FormCreateSnapshot(_ui.Form):
                                            'form[action*="/upload_to_image"]'),
     table_volumes=TableVolume(By.ID, 'volumes'))
 class TabVolumes(_ui.Tab):
-    pass
+    """Volumes tab."""

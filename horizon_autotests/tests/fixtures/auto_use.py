@@ -1,3 +1,22 @@
+"""
+Auto use fixtures.
+
+@author: schipiga@mirantis.com
+"""
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import logging
 import os
 
@@ -21,6 +40,7 @@ LOGGER = logging.getLogger(__name__)
 
 @pytest.fixture
 def report_dir(request):
+    """Create report dir to put test logs."""
     _report_dir = os.path.join(TESTS_DIR, slugify(request.node.name))
     if not os.path.isdir(_report_dir):
         os.makedirs(_report_dir)
@@ -29,6 +49,7 @@ def report_dir(request):
 
 @pytest.fixture(scope="session")
 def virtual_display(request):
+    """Run test in virtual X server if env var is defined."""
     if not VIRTUAL_DISPLAY:
         return
 
@@ -54,6 +75,7 @@ def virtual_display(request):
 
 @pytest.yield_fixture
 def video_capture(report_dir, virtual_display):
+    """Capture video of test."""
     recorder = VideoRecorder(report_dir)
     recorder.start()
 
@@ -65,4 +87,4 @@ def video_capture(report_dir, virtual_display):
 
 @pytest.fixture(autouse=True)
 def sanitizer(video_capture):
-    pass
+    """Fixture to aggregate sanity fixtures."""

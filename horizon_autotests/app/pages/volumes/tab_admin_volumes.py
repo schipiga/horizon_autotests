@@ -1,3 +1,22 @@
+"""
+Admin volumes tab.
+
+@author: schipiga@mirantis.com
+"""
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from pom import ui
 from selenium.webdriver.common.by import By
 
@@ -8,29 +27,31 @@ from horizon_autotests.app import ui as _ui
     item_update_volume_status=ui.UI(
         By.CSS_SELECTOR, '*[id*="action_update_status"]'))
 class DropdownMenu(_ui.DropdownMenu):
-    pass
+    """Dropdown menu for admin volume row."""
 
 
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu())
 class RowVolume(ui.Row):
-    pass
+    """Row of admin volume."""
 
 
 class TableVolumes(ui.Table):
+    """Admin volumes table."""
+
     columns = {'name': 4, 'size': 5, 'status': 6, 'type': 7}
-    Row = RowVolume
+    row_cls = RowVolume
 
 
-@ui.register_ui(status_combobox=ui.ComboBox(By.NAME, 'status'))
-class UpdateVolumeStatusForm(_ui.Form):
-    pass
+@ui.register_ui(combobox_status=ui.ComboBox(By.NAME, 'status'))
+class FormUpdateVolumeStatus(_ui.Form):
+    """For to update volume status."""
 
 
 @ui.register_ui(
     table_volumes=TableVolumes(By.CSS_SELECTOR, 'table[id="volumes"]'),
-    form_update_volume_status=UpdateVolumeStatusForm(
+    form_update_volume_status=FormUpdateVolumeStatus(
         By.CSS_SELECTOR, 'form[action*="/update_status"]'))
 class TabAdminVolumes(_ui.Tab):
-    pass
+    """Admin volumes tab."""

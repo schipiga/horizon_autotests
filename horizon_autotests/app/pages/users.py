@@ -1,44 +1,65 @@
+"""
+Users page.
+
+@author: schipiga@mirantis.com
+"""
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from pom import ui
 from selenium.webdriver.common.by import By
 
 from horizon_autotests.app import ui as _ui
 
-from .base import BasePage
+from .base import PageBase
 
 
 @ui.register_ui(
     item_change_password=ui.UI(By.CSS_SELECTOR,
                                '*[id*="action_change_password"]'))
 class DropdownMenu(_ui.DropdownMenu):
-    pass
+    """Dropdown menu for user row."""
 
 
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu())
 class RowUser(ui.Row):
-    pass
+    """User row of users table."""
 
 
 class TableUsers(ui.Table):
+    """Users table."""
+
     columns = {'name': 2, 'email': 4}
-    Row = RowUser
+    row_cls = RowUser
 
 
 @ui.register_ui(
     combobox_project=ui.ComboBox(By.NAME, 'project'),
+    field_confirm_password=ui.TextField(By.NAME, 'confirm_password'),
     field_name=ui.TextField(By.NAME, 'name'),
-    field_password=ui.TextField(By.NAME, 'password'),
-    field_password_confirm=ui.TextField(By.NAME, 'confirm_password'))
+    field_password=ui.TextField(By.NAME, 'password'))
 class FormCreateUser(_ui.Form):
-    pass
+    """Form to create new user."""
 
 
 @ui.register_ui(
     field_confirm_password=ui.TextField(By.NAME, 'confirm_password'),
     field_password=ui.TextField(By.NAME, 'password'))
 class FormChangePassword(_ui.Form):
-    pass
+    """Form to change user password."""
 
 
 @ui.register_ui(
@@ -48,5 +69,7 @@ class FormChangePassword(_ui.Form):
                                             'change_user_password_form'),
     form_create_user=FormCreateUser(By.ID, 'create_user_form'),
     table_users=TableUsers(By.ID, 'users'))
-class UsersPage(BasePage):
+class PageUsers(PageBase):
+    """Users page."""
+
     url = '/identity/users/'
