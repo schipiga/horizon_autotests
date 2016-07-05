@@ -1,5 +1,5 @@
 """
-Aggregates fixtures.
+Fixtures aggregator.
 
 @author: schipiga@mirantis.com
 """

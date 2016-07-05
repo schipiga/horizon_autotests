@@ -28,35 +28,35 @@ class KeypairsSteps(BaseSteps):
     def tab_keypairs(self):
         """Open keypairs tab."""
         with self._open(PageAccess) as page:
-            page.keypairs_tab.click()
-            return page
+            page.label_keypairs.click()
+            return page.tab_keypairs
 
     def create_keypair(self, keypair_name):
         """Step to create keypair."""
         tab_keypairs = self.tab_keypairs()
         tab_keypairs.button_create_keypair.click()
 
-        with tab_keypairs.create_keypair_form as form:
+        with tab_keypairs.form_create_keypair as form:
             form.field_name.value = keypair_name
             form.submit()
 
         tab_keypairs.spinner.wait_for_absence()
 
-        self.tab_keypairs().keypairs_table.row(
+        self.tab_keypairs().table_keypairs.row(
             name=keypair_name).wait_for_presence()
 
     def delete_keypair(self, keypair_name):
         """Step to delete keypair."""
         tab_keypairs = self.tab_keypairs()
 
-        tab_keypairs.keypairs_table.row(
+        tab_keypairs.table_keypairs.row(
             name=keypair_name).button_delete_keypair.click()
         tab_keypairs.form_confirm.submit()
 
         tab_keypairs.spinner.wait_for_absence()
         self.close_notification('success')
 
-        tab_keypairs.keypairs_table.row(
+        tab_keypairs.table_keypairs.row(
             name=keypair_name).wait_for_absence()
 
     def import_keypair(self, keypair_name, public_key):
@@ -64,7 +64,7 @@ class KeypairsSteps(BaseSteps):
         tab_keypairs = self.tab_keypairs()
         tab_keypairs.button_import_keypair.click()
 
-        with tab_keypairs.import_keypair_form as form:
+        with tab_keypairs.form_import_keypair as form:
             form.field_name.value = keypair_name
             form.field_public_key.value = public_key
             form.submit()
@@ -72,7 +72,7 @@ class KeypairsSteps(BaseSteps):
         tab_keypairs.spinner.wait_for_absence()
         self.close_notification('success')
 
-        tab_keypairs.keypairs_table.row(
+        tab_keypairs.table_keypairs.row(
             name=keypair_name).wait_for_presence()
 
     def delete_keypairs(self, *keypair_names):
@@ -80,7 +80,7 @@ class KeypairsSteps(BaseSteps):
         tab_keypairs = self.tab_keypairs()
 
         for keypair_name in keypair_names:
-            tab_keypairs.keypairs_table.row(
+            tab_keypairs.table_keypairs.row(
                 name=keypair_name).checkbox.select()
 
         tab_keypairs.button_delete_keypairs.click()

@@ -19,7 +19,7 @@ Horizon application implementation.
 
 import pom
 
-from .pages import pages
+from .pages import PageBase, pages
 
 
 class Horizon(pom.App):
@@ -57,6 +57,7 @@ class Horizon(pom.App):
 
                 if not (url_end and url_end[0].isalnum()):
                     return page(self)
+        return PageBase(self)
 
     def flush_session(self):
         """Delete all cookies.

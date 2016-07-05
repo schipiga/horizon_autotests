@@ -57,9 +57,16 @@ class FormImportKeypair(ui.Form):
     form_confirm_delete=_ui.Form(By.CSS_SELECTOR, 'div.modal-content'),
     form_create_keypair=FormCreateKeypair(By.ID, 'create_keypair_form'),
     form_import_keypair=FormImportKeypair(By.ID, 'import_keypair_form'),
-    tab_keypairs=ui.UI(By.CSS_SELECTOR, '[data-target*="keypairs_tab"]'),
     table_keypairs=TableKeypairs(By.ID, 'keypairs'))
+class TabKeypairs(_ui.Tab):
+    """Keypairs tab."""
+
+
+@ui.register_ui(
+    label_keypairs=ui.UI(By.CSS_SELECTOR, '[data-target*="keypairs_tab"]'),
+    tab_keypairs=TabKeypairs())
 class PageAccess(PageBase):
     """Access & security page."""
 
     url = "/project/access_and_security/"
+    navigate_items = "Project", "Compute", "Access & Security"
