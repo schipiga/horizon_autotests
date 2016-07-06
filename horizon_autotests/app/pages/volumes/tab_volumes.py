@@ -42,6 +42,8 @@ class FormEditVolume(_ui.Form):
 @ui.register_ui(
     item_change_volume_type=ui.UI(By.CSS_SELECTOR, '*[id$="action_retype"]'),
     item_create_snapshot=ui.UI(By.CSS_SELECTOR, 'a[id$="action_snapshots"]'),
+    item_create_transfer=ui.UI(By.CSS_SELECTOR,
+                               '[id$="action_create_transfer"]'),
     item_extend_volume=ui.UI(By.CSS_SELECTOR, '*[id$="action_extend"]'),
     item_launch_volume_as_instance=ui.UI(By.CSS_SELECTOR,
                                          '*[id$="action_launch_volume_ng"]'),
@@ -114,13 +116,30 @@ class FormManageAttachments(_ui.Form):
     """Form to manage volume attachments."""
 
 
+@ui.register_ui(field_name=ui.TextField(By.NAME, 'name'))
+class FormCreateTransfer(_ui.Form):
+    """Form to create transfer."""
+
+
 @ui.register_ui(
+    field_transfer_id=ui.TextField(By.NAME, 'transfer_id'),
+    field_transfer_key=ui.TextField(By.NAME, 'auth_key'))
+class FormAcceptTransfer(_ui.Form):
+    """Form to accept transfer."""
+
+
+@ui.register_ui(
+    button_accept_transfer=ui.Button(By.ID, 'volumes__action_accept_transfer'),
     button_create_volume=ui.Button(By.ID, 'volumes__action_create'),
     button_delete_volumes=ui.Button(By.ID, 'volumes__action_delete'),
+    form_accept_transfer=FormAcceptTransfer(
+        By.CSS_SELECTOR, 'form[action*="/accept_transfer"]'),
     form_change_volume_type=FormChangeVolumeType(By.CSS_SELECTOR,
                                                  'form[action*="/retype"]'),
     form_create_snapshot=FormCreateSnapshot(
         By.CSS_SELECTOR, 'form[action*="/create_snapshot"]'),
+    form_create_transfer=FormCreateTransfer(
+        By.CSS_SELECTOR, 'form[action*="/create_transfer"]'),
     form_create_volume=FormCreateVolume(By.CSS_SELECTOR,
                                         'form[action*="volumes/create"]'),
     form_edit_volume=FormEditVolume(By.CSS_SELECTOR,
@@ -131,7 +150,7 @@ class FormManageAttachments(_ui.Form):
         By.CSS_SELECTOR,
         'wizard[ng-controller="LaunchInstanceWizardController"]'),
     form_manage_attachments=FormManageAttachments(By.CSS_SELECTOR,
-                                                  'form[action*="/attach"]'),
+                                                  'div.modal-content'),
     form_upload_to_image=FormUploadToImage(By.CSS_SELECTOR,
                                            'form[action*="/upload_to_image"]'),
     table_volumes=TableVolume(By.ID, 'volumes'))

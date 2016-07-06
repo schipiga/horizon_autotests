@@ -1,5 +1,5 @@
 """
-Custom form.
+Volume page.
 
 @author: schipiga@mirantis.com
 """
@@ -20,17 +20,20 @@ Custom form.
 from pom import ui
 from selenium.webdriver.common.by import By
 
+from horizon_autotests.app import ui as _ui
+from horizon_autotests.app.pages.base import PageBase
 
-class Form(ui.Form):
-    """Custom form."""
 
-    submit_locator = By.CSS_SELECTOR, '.btn.btn-primary'
-    cancel_locator = By.CSS_SELECTOR, '.btn.cancel'
+@ui.register_ui(
+    field_name=ui.TextField(By.NAME, 'name'),
+    field_transfer_id=ui.TextField(By.NAME, 'id'),
+    field_transfer_key=ui.TextField(By.NAME, 'auth_key'))
+class FormTransferInfo(_ui.Form):
+    """Form with info about transfer."""
 
-    def submit(self):
-        """Submit form."""
-        self.webelement.find_element(*self.submit_locator).click()
 
-    def cancel(self):
-        """Cancel form."""
-        self.webelement.find_element(*self.cancel_locator).click()
+@ui.register_ui(form_transfer_info=FormTransferInfo(By.CSS_SELECTOR, 'form'))
+class PageVolumeTransfer(PageBase):
+    """Volume transfer info page."""
+
+    url = "/project/volumes/{}/"

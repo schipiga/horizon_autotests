@@ -19,7 +19,8 @@ Volumes steps.
 
 from horizon_autotests.app.pages import (PageAdminVolumes,
                                          PageVolume,
-                                         PageVolumes)
+                                         PageVolumes,
+                                         PageVolumeTransfer)
 
 from ._utils import waiter
 from .base import BaseSteps
@@ -290,44 +291,44 @@ class VolumesSteps(BaseSteps):
 
     def create_transfer(self, volume_name, transfer_name):
         """Step to create transfer."""
-        volumes_page = self.volumes_page()
+        tab_volumes = self.tab_volumes()
 
-        with volumes_page.table_volumes.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_create_transfer.click()
 
-        with volumes_page.form_create_transfer as form:
-            form.field_transfer_name.value = transfer_name
+        with tab_volumes.form_create_transfer as form:
+            form.field_name.value = transfer_name
             form.submit()
 
-        volumes_page.spinner.wait_for_absence()
+        tab_volumes.spinner.wait_for_absence()
         self.close_notification('success')
 
-        with self.volume_transfer_page.form_transfer_info as form:
+        with PageVolumeTransfer(self.app).form_transfer_info as form:
             transfer_id = form.field_transfer_id.value
             transfer_key = form.field_transfer_key.value
 
-        assert volumes_page.table_volumes.row(
+        assert self.tab_admin_volumes().table_volumes.row(
             name=volume_name).cell('status').value == 'awaiting-transfer'
 
         return transfer_id, transfer_key
 
     def accept_transfer(self, transfer_id, transfer_key, volume_name):
         """Step to accept transfer."""
-        volumes_page = self.volumes_page()
+        tab_volumes = self.tab_volumes()
 
-        volumes_page.button_accept_transfer.click()
+        tab_volumes.button_accept_transfer.click()
 
-        with volumes_page.form_accept_transfer as form:
+        with tab_volumes.form_accept_transfer as form:
             form.field_transfer_id.value = transfer_id
             form.field_transfer_key.value = transfer_key
             form.submit()
 
-        volumes_page.spinner.wait_for_absence()
+        tab_volumes.spinner.wait_for_absence()
         self.close_notification('success')
 
-        with volumes_page.table_volumes.row(name=volume_name) as row:
+        with tab_volumes.table_volumes.row(name=volume_name) as row:
             row.wait_for_presence(30)
             row.cell('status').value == 'Available'
 

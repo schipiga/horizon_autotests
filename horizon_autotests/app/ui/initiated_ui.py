@@ -60,7 +60,7 @@ class Spinner(ui.UI):
         By.CSS_SELECTOR, 'ul.navbar-nav.navbar-right > li.dropdown'),
     dropdown_menu_project=DropdownMenuProject(
         By.CSS_SELECTOR, 'ul.navbar-nav > li.dropdown'),
-    form_confirm=Form(By.CSS_SELECTOR, 'div.modal-content'),
+    form_confirm=Form(By.CSS_SELECTOR, 'div.modal-content > div.modal-footer'),
     spinner=ui.UI(By.CSS_SELECTOR, 'div.modal-dialog'))
 class InitiatedUI(ui.Container):
     """Predefined UI components for page or tab."""

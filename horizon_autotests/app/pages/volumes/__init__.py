@@ -19,4 +19,5 @@ Volume pages and their components.
 
 from .page_admin_volumes import PageAdminVolumes  # noqa
 from .page_volume import PageVolume  # noqa
+from .page_volume_transfer import PageVolumeTransfer  # noqa
 from .page_volumes import PageVolumes  # noqa

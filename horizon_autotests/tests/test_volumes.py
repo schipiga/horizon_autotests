@@ -139,12 +139,12 @@ class TestAdminOnly(object):
 
     def test_transfer_volume(self, volume, auth_steps, volumes_steps):
         """Verify that volume can be transfered between users."""
-        transfer_name = generate_ids('transfer').next()
+        transfer_name = next(generate_ids('transfer'))
         transfer_id, transfer_key = volumes_steps.create_transfer(
             volume.name, transfer_name)
         auth_steps.logout()
         auth_steps.login(DEMO_NAME, DEMO_PASSWD)
-        volumes_steps.accept_transfer(transfer_id, transfer_key)
+        volumes_steps.accept_transfer(transfer_id, transfer_key, volume.name)
 
     def test_migrate_volume(self, volume, volumes_steps):
         """Verify that admin can migrate volume between available hosts."""

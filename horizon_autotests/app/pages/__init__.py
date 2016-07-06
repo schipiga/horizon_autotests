@@ -25,7 +25,10 @@ from .login import PageLogin
 from .projects import PageProjects
 from .settings import PageSettings
 from .users import PageUsers
-from .volumes import PageAdminVolumes, PageVolume, PageVolumes
+from .volumes import (PageAdminVolumes,
+                      PageVolume,
+                      PageVolumes,
+                      PageVolumeTransfer)
 
 pages = [
     PageAccess,
@@ -37,5 +40,6 @@ pages = [
     PageSettings,
     PageUsers,
     PageVolume,
-    PageVolumes
+    PageVolumes,
+    PageVolumeTransfer
 ]
