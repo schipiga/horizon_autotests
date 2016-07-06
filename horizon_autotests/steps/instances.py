@@ -45,7 +45,7 @@ class InstancesSteps(BaseSteps):
 
             form.item_source.click()
             with form.tab_source as tab:
-                tab.form_boot_source.value = 'Image'
+                tab.combobox_boot_source.value = 'Image'
                 tab.radio_volume_create.value = 'No'
                 tab.table_available_sources.row(
                     name='TestVM').button_add.click()

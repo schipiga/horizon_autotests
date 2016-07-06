@@ -45,6 +45,8 @@ class FormEditVolume(_ui.Form):
     item_extend_volume=ui.UI(By.CSS_SELECTOR, '*[id$="action_extend"]'),
     item_launch_volume_as_instance=ui.UI(By.CSS_SELECTOR,
                                          '*[id$="action_launch_volume_ng"]'),
+    item_manage_attachments=ui.UI(By.CSS_SELECTOR,
+                                  '[id$="action_attachments"]'),
     item_upload_to_image=ui.UI(By.CSS_SELECTOR,
                                '*[id$="action_upload_to_image"]'))
 class DropdownMenu(_ui.DropdownMenu):
@@ -62,7 +64,11 @@ class RowVolume(ui.Row):
 class TableVolume(_ui.Table):
     """Volumes table."""
 
-    columns = {'name': 2, 'size': 4, 'status': 5, 'type': 6}
+    columns = {'name': 2,
+               'size': 4,
+               'status': 5,
+               'type': 6,
+               'attached_to': 7}
     row_cls = RowVolume
 
 
@@ -89,6 +95,26 @@ class FormCreateSnapshot(_ui.Form):
 
 
 @ui.register_ui(
+    detach_volume_button=ui.Button(By.CSS_SELECTOR, '[id$="action_detach"]'))
+class RowAttachedInstance(ui.Row):
+    """Row with attached instance to volume."""
+
+
+class TableAttachedInstances(ui.Table):
+    """Table of attached instances to volume."""
+
+    columns = {'name': 2}
+    row_cls = RowAttachedInstance
+
+
+@ui.register_ui(
+    combobox_instance=ui.ComboBox(By.NAME, 'instance'),
+    table_instances=TableAttachedInstances(By.ID, 'attachments'))
+class FormManageAttachments(_ui.Form):
+    """Form to manage volume attachments."""
+
+
+@ui.register_ui(
     button_create_volume=ui.Button(By.ID, 'volumes__action_create'),
     button_delete_volumes=ui.Button(By.ID, 'volumes__action_delete'),
     form_change_volume_type=FormChangeVolumeType(By.CSS_SELECTOR,
@@ -97,11 +123,15 @@ class FormCreateSnapshot(_ui.Form):
         By.CSS_SELECTOR, 'form[action*="/create_snapshot"]'),
     form_create_volume=FormCreateVolume(By.CSS_SELECTOR,
                                         'form[action*="volumes/create"]'),
+    form_edit_volume=FormEditVolume(By.CSS_SELECTOR,
+                                    'form[action*="/update"]'),
     form_extend_volume=FormExtendVolume(By.CSS_SELECTOR,
                                         'form[action*="/extend"]'),
     form_launch_instance=FormLaunchInstance(
         By.CSS_SELECTOR,
         'wizard[ng-controller="LaunchInstanceWizardController"]'),
+    form_manage_attachments=FormManageAttachments(By.CSS_SELECTOR,
+                                                  'form[action*="/attach"]'),
     form_upload_to_image=FormUploadToImage(By.CSS_SELECTOR,
                                            'form[action*="/upload_to_image"]'),
     table_volumes=TableVolume(By.ID, 'volumes'))

@@ -29,16 +29,18 @@ class ImagesSteps(BaseSteps):
         """Open images page if it isn't opened."""
         return self._open(PageImages)
 
-    def delete_image(self, name):
+    def delete_image(self, image_name):
         """Step to delete image."""
         page_images = self.page_images()
 
-        with page_images.images_table.row(name=name).dropdown_menu as menu:
-            menu.toggle_button.click()
-            menu.delete_item.click()
+        with page_images.table_images.row(
+                name=image_name).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_delete.click()
 
-        page_images.delete_image_confirm_form.submit()
-        page_images.spinner.wait_for_absence(30)
+        page_images.form_confirm.submit()
+        page_images.spinner.wait_for_absence()
         self.close_notification('success')
 
-        page_images.images_table.row(name=name).wait_for_absence(30)
+        page_images.table_images.row(
+            name=image_name).wait_for_absence(30)

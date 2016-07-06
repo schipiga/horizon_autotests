@@ -77,15 +77,15 @@ class VolumesSteps(BaseSteps):
         tab_volumes.spinner.wait_for_absence()
         self.close_notification('success')
 
-        with tab_volumes.table_volumes.row(name=volume_name) as row:
-            assert waiter.exe(30, lambda: not row.is_present)
+        tab_volumes.table_volumes.row(
+            name=volume_name).wait_for_absence(30)
 
     def edit_volume(self, volume_name, new_volume_name):
         """Step to edit volume."""
         tab_volumes = self.tab_volumes()
 
         tab_volumes.table_volumes.row(
-            name=volume_name).item_edit_volume.click()
+            name=volume_name).dropdown_menu.item_default.click()
 
         tab_volumes.form_edit_volume.field_name.value = new_volume_name
         tab_volumes.form_edit_volume.submit()
@@ -93,8 +93,8 @@ class VolumesSteps(BaseSteps):
         tab_volumes.spinner.wait_for_absence()
         self.close_notification('info')
 
-        with tab_volumes.volumes_table.row(name=new_volume_name) as row:
-            assert waiter.exe(30, lambda: row.is_present)
+        tab_volumes.table_volumes.row(
+            name=new_volume_name).wait_for_presence(30)
 
     def delete_volumes(self, *volume_names):
         """Step to delete volumes."""
@@ -111,8 +111,8 @@ class VolumesSteps(BaseSteps):
         self.close_notification('success')
 
         for volume_name in volume_names:
-            with tab_volumes.table_volumes.row(name=volume_name) as row:
-                assert waiter.exe(60, lambda: not row.is_present)
+            tab_volumes.table_volumes.row(
+                name=volume_name).wait_for_absence(180)
 
     def view_volume(self, volume_name):
         """Step to view volume."""
@@ -146,7 +146,7 @@ class VolumesSteps(BaseSteps):
         """Step to upload volume to image."""
         tab_volumes = self.tab_volumes()
 
-        with tab_volumes.volumes_table.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_upload_to_image.click()
@@ -166,7 +166,7 @@ class VolumesSteps(BaseSteps):
         """Step to extend volume size."""
         tab_volumes = self.tab_volumes()
 
-        with tab_volumes.volumes_table.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_extend_volume.click()
@@ -182,42 +182,48 @@ class VolumesSteps(BaseSteps):
                 name=volume_name).cell('size') as cell:
             assert waiter.exe(90, lambda: cell.value.startswith(str(new_size)))
 
-    def admin_volumes_page(self):
+    def page_admin_volumes(self):
         """Open admin volumes page if it isn't opened."""
         return self._open(PageAdminVolumes)
 
+    def tab_admin_volumes(self):
+        """Open admin volumes tab."""
+        with self.page_admin_volumes() as page:
+            page.label_volumes.click()
+            return page.tab_volumes
+
     def change_volume_status(self, volume_name, status=None):
         """Step to change volume status."""
-        volumes_page = self.admin_volumes_page()
+        tab_volumes = self.tab_admin_volumes()
 
-        with volumes_page.table_volumes.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_update_volume_status.click()
 
-        with volumes_page.form_update_volume_status as form:
+        with tab_volumes.form_update_volume_status as form:
             if not status:
                 status = form.combobox_status.values[-1]
             form.combobox_status.value = status
             form.submit()
 
-        volumes_page.spinner.wait_for_absence()
+        tab_volumes.spinner.wait_for_absence()
         self.close_notification('success')
 
-        with volumes_page.table_volumes.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).cell('status') as cell:
             assert waiter.exe(90, lambda: cell.value == status)
 
     def launch_volume_as_instance(self, volume_name, instance_name, count=1):
         """Step to launch volume as instance."""
-        volumes_page = self.volumes_page()
+        tab_volumes = self.tab_volumes()
 
-        with volumes_page.volumes_table.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_launch_volume_as_instance.click()
 
-        with volumes_page.form_launch_instance as form:
+        with tab_volumes.form_launch_instance as form:
 
             with form.tab_details as tab:
                 tab.field_name.value = instance_name
@@ -235,27 +241,27 @@ class VolumesSteps(BaseSteps):
 
             form.submit()
 
-        volumes_page.spinner.wait_for_absence()
+        tab_volumes.spinner.wait_for_absence()
 
     def attach_instance(self, volume_name, instance_name):
         """Step to attach instance."""
-        volumes_page = self.volumes_page()
+        tab_volumes = self.tab_volumes()
 
-        with volumes_page.volumes_table.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_manage_attachments.click()
 
-        with volumes_page.form_manage_attachments as form:
+        with tab_volumes.form_manage_attachments as form:
             instance_value = next(val for val in form.combobox_instance.values
                                   if instance_name in val)
             form.combobox_instance.value = instance_value
             form.submit()
 
-        volumes_page.spinner.wait_for_absence()
+        tab_volumes.spinner.wait_for_absence()
         self.close_notification('info')
 
-        with volumes_page.volumes_table.row(name=volume_name) as row:
+        with tab_volumes.table_volumes.row(name=volume_name) as row:
             with row.cell('status') as cell:
                 assert waiter.exe(60, lambda: cell.value == 'In-use')
 
@@ -263,22 +269,22 @@ class VolumesSteps(BaseSteps):
 
     def detach_instance(self, volume_name, instance_name):
         """Step to detach instance."""
-        volumes_page = self.volume_page()
+        tab_volumes = self.tab_volumes()
 
-        with volumes_page.table_volumes.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_manage_attachments.click()
 
-        volumes_page.form_manage_attachments.instances_table.row(
+        tab_volumes.form_manage_attachments.table_instances.row(
             name=instance_name).detach_volume_button.click()
 
-        volumes_page.form_confirm.submit()
+        tab_volumes.form_confirm.submit()
 
-        volumes_page.spinner.wait_for_absence()
+        tab_volumes.spinner.wait_for_absence()
         self.close_notification('success')
 
-        with volumes_page.table_volumes.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).cell('status') as cell:
             assert waiter.exe(60, lambda: cell.value == 'Available')
 

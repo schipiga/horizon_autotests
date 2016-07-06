@@ -19,10 +19,10 @@ Volumes tests.
 
 import pytest
 
+from horizon_autotests.steps._utils import waiter
+
 from .fixtures.config import DEMO_NAME, DEMO_PASSWD
 from .fixtures.utils import generate_ids
-
-from .steps._utils import waiter
 
 
 @pytest.mark.usefixtures('any_user')
@@ -40,48 +40,50 @@ class TestAnyUser(object):
     def test_delete_volumes(self, volumes_count, volumes_steps,
                             create_volumes):
         """Verify that user can delete volumes as bunch."""
-        volume_names = list(generate_ids(prefix='volume', count=volumes_count))
+        volume_names = list(generate_ids('volume', count=volumes_count))
         create_volumes(volume_names)
 
     def test_volumes_pagination(self, volumes_steps, create_volumes,
                                 update_settings):
         """Verify that volumes pagination works right and back."""
-        volume_names = list(generate_ids(prefix='volume', count=3))
+        volume_names = list(generate_ids('volume', count=3))
         create_volumes(volume_names)
         update_settings(items_per_page=1)
 
-        assert volumes_steps.volumes_page.volumes_table.row(
-            name=volume_names[2]).is_present
-        assert volumes_steps.volumes_page.next_link.is_present
-        assert not volumes_steps.volumes_page.prev_link.is_present
+        tab_volumes = volumes_steps.tab_volumes()
 
-        volumes_steps.volumes_page.next_link.click()
+        tab_volumes.table_volumes.row(
+            name=volume_names[2]).wait_for_presence(30)
+        assert tab_volumes.table_volumes.link_next.is_present
+        assert not tab_volumes.table_volumes.link_prev.is_present
 
-        assert volumes_steps.volumes_page.volumes_table.row(
-            name=volume_names[1]).is_present
-        assert volumes_steps.volumes_page.next_link.is_present
-        assert volumes_steps.volumes_page.prev_link.is_present
+        tab_volumes.table_volumes.link_next.click()
 
-        volumes_steps.volumes_page.next_link.click()
+        tab_volumes.table_volumes.row(
+            name=volume_names[1]).wait_for_presence(30)
+        assert tab_volumes.table_volumes.link_next.is_present
+        assert tab_volumes.table_volumes.link_prev.is_present
 
-        assert volumes_steps.volumes_page.volumes_table.row(
-            name=volume_names[0]).is_present
-        assert not volumes_steps.volumes_page.next_link.is_present
-        assert volumes_steps.volumes_page.prev_link.is_present
+        tab_volumes.table_volumes.link_next.click()
 
-        volumes_steps.volumes_page.prev_link.click()
+        tab_volumes.table_volumes.row(
+            name=volume_names[0]).wait_for_presence(30)
+        assert not tab_volumes.table_volumes.link_next.is_present
+        assert tab_volumes.table_volumes.link_prev.is_present
 
-        assert volumes_steps.volumes_page.volumes_table.row(
-            name=volume_names[1]).is_present
-        assert volumes_steps.volumes_page.next_link.is_present
-        assert volumes_steps.volumes_page.prev_link.is_present
+        tab_volumes.table_volumes.link_prev.click()
 
-        volumes_steps.volumes_page.prev_link.click()
+        tab_volumes.table_volumes.row(
+            name=volume_names[1]).wait_for_presence(30)
+        assert tab_volumes.table_volumes.link_next.is_present
+        assert tab_volumes.table_volumes.link_prev.is_present
 
-        assert volumes_steps.volumes_page.volumes_table.row(
-            name=volume_names[2]).is_present
-        assert volumes_steps.volumes_page.next_link.is_present
-        assert not volumes_steps.volumes_page.prev_link.is_present
+        tab_volumes.table_volumes.link_prev.click()
+
+        tab_volumes.table_volumes.row(
+            name=volume_names[2]).wait_for_presence(30)
+        assert tab_volumes.table_volumes.link_next.is_present
+        assert not tab_volumes.table_volumes.link_prev.is_present
 
     def test_view_volume(self, volume, volumes_steps):
         """Verify that user can view volume info."""
@@ -95,10 +97,11 @@ class TestAnyUser(object):
 
     def test_upload_volume_to_image(self, volume, images_steps, volumes_steps):
         """Verify that user can upload volume to image."""
-        image_name = generate_ids(prefix='image', length=20).next()
+        image_name = next(generate_ids('image', length=20))
         volumes_steps.upload_volume_to_image(volume.name, image_name)
-        assert images_steps.images_page.images_table.row(
-            name=image_name).is_present
+
+        images_steps.page_images().table_images.row(
+            name=image_name).wait_for_presence(30)
         images_steps.delete_image(image_name)
 
     def test_volume_extend(self, volume, volumes_steps):
@@ -118,14 +121,14 @@ class TestAdminOnly(object):
     def test_launch_volume_as_instance(self, volume, instances_steps,
                                        volumes_steps):
         """Verify that admin can launch volume as instance."""
-        instance_name = generate_ids('instance').next()
+        instance_name = next(generate_ids('instance'))
         volumes_steps.launch_volume_as_instance(volume.name, instance_name)
 
-        instances_steps.instances_page.instances_table.row(
-            name=instance_name).wait_for_presence(30)
-        cell = instances_steps.instances_page.instances_table.row(
-            name=instance_name).cell('status')
-        assert waiter.exe(60, lambda: cell.value == 'Active')
+        with instances_steps.page_instances().table_instances.row(
+                name=instance_name) as row:
+            row.wait_for_presence(30)
+            with row.cell('status') as cell:
+                assert waiter.exe(60, lambda: cell.value == 'Active')
 
         instances_steps.delete_instance(instance_name)
 

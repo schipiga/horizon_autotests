@@ -27,11 +27,10 @@ from horizon_autotests.app.pages.base import PageBase
 
 
 @ui.register_ui(
-    label_admin_volumes=ui.UI(By.CSS_SELECTOR,
-                              '[data-target$="volumes_tab"]'),
+    label_volumes=ui.UI(By.CSS_SELECTOR, '[data-target$="volumes_tab"]'),
     label_volume_types=ui.UI(By.CSS_SELECTOR,
                              '[data-target$="volume_types_tab"]'),
-    tab_admin_volumes=TabAdminVolumes(),
+    tab_volumes=TabAdminVolumes(),
     tab_volume_types=TabVolumeTypes())
 class PageAdminVolumes(PageBase):
     """Admin volumes page."""
