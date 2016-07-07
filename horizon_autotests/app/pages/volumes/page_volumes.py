@@ -20,15 +20,18 @@ Volumes page.
 from pom import ui
 from selenium.webdriver.common.by import By
 
-from ..base import PageBase
+from horizon_autotests.app.pages.base import PageBase
 
+from .tab_backups import TabBackups
 from .tab_snapshots import TabSnapshots
 from .tab_volumes import TabVolumes
 
 
 @ui.register_ui(
+    label_backups=ui.UI(By.CSS_SELECTOR, '[data-target$="backups_tab"]'),
     label_snapshots=ui.UI(By.CSS_SELECTOR, '[data-target$="snapshots_tab"]'),
     label_volumes=ui.UI(By.CSS_SELECTOR, '[data-target$="volumes_tab"]'),
+    tab_backups=TabBackups(),
     tab_snapshots=TabSnapshots(),
     tab_volumes=TabVolumes())
 class PageVolumes(PageBase):

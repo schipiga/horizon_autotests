@@ -377,6 +377,12 @@ class VolumesSteps(BaseSteps):
             page.label_snapshots.click()
             return page.tab_snapshots
 
+    def tab_backups(self):
+        """Open volume backups tab."""
+        with self.page_volumes() as page:
+            page.label_backups.click()
+            return page.tab_backups
+
     def create_snapshot(self, volume_name, snapshot_name, description=None):
         """Step to create volume snapshot."""
         tab_volumes = self.tab_volumes()
@@ -480,3 +486,52 @@ class VolumesSteps(BaseSteps):
             row.wait_for_presence()
             with row.cell('status') as cell:
                 assert waiter.exe(60, lambda: cell.value == 'Available')
+
+    def create_backup(self, volume_name, backup_name, description=None,
+                      container=None):
+        """Step to create volume backup."""
+        tab_volumes = self.tab_volumes()
+
+        with tab_volumes.table_volumes.row(
+                name=volume_name).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_create_backup.click()
+
+        with tab_volumes.form_create_backup as form:
+            form.field_name.value = backup_name
+
+            if description is not None:
+                self.field_description.value = description
+
+            if container is not None:
+                self.field_container.value = container
+
+            form.submit()
+
+        tab_volumes.spinner.wait_for_absence()
+        self.close_notification('success')
+
+        tab_backups = self.tab_backups()
+
+        with tab_backups.table_backups.row(name=backup_name) as row:
+            row.wait_for_presence()
+            with row.cell('status') as cell:
+                assert waiter.exe(300, lambda: cell.value == 'Available')
+
+    def delete_backups(self, *backup_names):
+        """Step to delete volume backups."""
+        tab_backups = self.tab_backups()
+
+        for backup_name in backup_names:
+            tab_backups.table_backups.row(
+                name=backup_name).checkbox.select()
+
+        tab_backups.button_delete_backups.click()
+        tab_backups.form_confirm.submit()
+
+        tab_backups.spinner.wait_for_absence()
+        self.close_notification('success')
+
+        for backup_name in backup_names:
+            tab_backups.table_backups.row(
+                name=backup_name).wait_for_absence(30)

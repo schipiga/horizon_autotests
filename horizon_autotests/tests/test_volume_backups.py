@@ -19,10 +19,51 @@ Tests for volume backups.
 
 import pytest
 
+from .fixtures.utils import generate_ids
+
 
 @pytest.mark.usefixtures('any_user')
 class TestAnyUser(object):
     """Tests for any user."""
 
-    def test_volume_backups_pagination(self):
+    def test_volume_backups_pagination(self, create_backups, update_settings,
+                                       volumes_steps):
         """Verify that volume backups pagination works right and back."""
+        backup_names = list(generate_ids('backup', count=3))
+        create_backups(backup_names)
+        update_settings(items_per_page=1)
+
+        tab_backups = volumes_steps.tab_backups()
+
+        tab_backups.table_backups.row(
+            name=backup_names[2]).wait_for_presence(30)
+        assert tab_backups.table_backups.link_next.is_present
+        assert not tab_backups.table_backups.link_prev.is_present
+
+        tab_backups.table_backups.link_next.click()
+
+        tab_backups.table_backups.row(
+            name=backup_names[1]).wait_for_presence(30)
+        assert tab_backups.table_backups.link_next.is_present
+        assert tab_backups.table_backups.link_prev.is_present
+
+        tab_backups.table_backups.link_next.click()
+
+        tab_backups.table_backups.row(
+            name=backup_names[0]).wait_for_presence(30)
+        assert not tab_backups.table_backups.link_next.is_present
+        assert tab_backups.table_backups.link_prev.is_present
+
+        tab_backups.table_backups.link_prev.click()
+
+        tab_backups.table_backups.row(
+            name=backup_names[1]).wait_for_presence(30)
+        assert tab_backups.table_backups.link_next.is_present
+        assert tab_backups.table_backups.link_prev.is_present
+
+        tab_backups.table_backups.link_prev.click()
+
+        tab_backups.table_backups.row(
+            name=backup_names[2]).wait_for_presence(30)
+        assert tab_backups.table_backups.link_next.is_present
+        assert not tab_backups.table_backups.link_prev.is_present

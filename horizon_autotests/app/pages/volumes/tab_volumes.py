@@ -41,6 +41,7 @@ class FormEditVolume(_ui.Form):
 
 @ui.register_ui(
     item_change_volume_type=ui.UI(By.CSS_SELECTOR, '*[id$="action_retype"]'),
+    item_create_backup=ui.UI(By.CSS_SELECTOR, '[id$="action_backups"]'),
     item_create_snapshot=ui.UI(By.CSS_SELECTOR, 'a[id$="action_snapshots"]'),
     item_create_transfer=ui.UI(By.CSS_SELECTOR,
                                '[id$="action_create_transfer"]'),
@@ -129,6 +130,14 @@ class FormAcceptTransfer(_ui.Form):
 
 
 @ui.register_ui(
+    field_container=ui.TextField(By.NAME, 'container_name'),
+    field_description=ui.TextField(By.NAME, 'description'),
+    field_name=ui.TextField(By.NAME, 'name'))
+class FormCreateBackup(_ui.Form):
+    """Form to create volume backup."""
+
+
+@ui.register_ui(
     button_accept_transfer=ui.Button(By.ID, 'volumes__action_accept_transfer'),
     button_create_volume=ui.Button(By.ID, 'volumes__action_create'),
     button_delete_volumes=ui.Button(By.ID, 'volumes__action_delete'),
@@ -136,6 +145,8 @@ class FormAcceptTransfer(_ui.Form):
         By.CSS_SELECTOR, 'form[action*="/accept_transfer"]'),
     form_change_volume_type=FormChangeVolumeType(By.CSS_SELECTOR,
                                                  'form[action*="/retype"]'),
+    form_create_backup=FormCreateBackup(
+        By.CSS_SELECTOR, 'form[action*="/create_backup"]'),
     form_create_snapshot=FormCreateSnapshot(
         By.CSS_SELECTOR, 'form[action*="/create_snapshot"]'),
     form_create_transfer=FormCreateTransfer(
