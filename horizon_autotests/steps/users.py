@@ -49,7 +49,7 @@ class UsersSteps(BaseSteps):
 
         page_users.table_users.row(name=username).wait_for_presence()
 
-    def delete_user(self, username):
+    def delete_user(self, username, check=True):
         """Step to delete user."""
         page_users = self.page_users()
 
@@ -60,23 +60,26 @@ class UsersSteps(BaseSteps):
         page_users.form_confirm.submit()
         page_users.spinner.wait_for_absence()
 
-        self.close_notification('success')
+        if check:
+            self.close_notification('success')
+            page_users.table_users.row(name=username).wait_for_absence()
 
-        page_users.table_users.row(name=username).wait_for_absence()
-
-    def delete_users(self, *usernames):
+    def delete_users(self, usernames, check=True):
         """Step to delete users."""
         page_users = self.page_users()
 
         for username in usernames:
             page_users.table_users.row(name=username).checkbox.select()
+
         page_users.button_delete_users.click()
         page_users.form_confirm.submit()
         page_users.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        for username in usernames:
-            page_users.table_users.row(name=username).wait_for_absence()
+        if check:
+            self.close_notification('success')
+
+            for username in usernames:
+                page_users.table_users.row(name=username).wait_for_absence()
 
     def change_user_password(self, username, new_password):
         """Step to change user password."""
@@ -93,3 +96,14 @@ class UsersSteps(BaseSteps):
 
         page_users.spinner.wait_for_absence()
         self.close_notification('success')
+
+    def filter_users(self, query, check=True):
+        """Step to filter users."""
+        page_users = self.page_users()
+
+        page_users.field_filter_users.value = query
+        page_users.button_filter_users.click()
+
+        if check:
+            for row in page_users.table_users.rows:
+                assert query in row.cell('name').value

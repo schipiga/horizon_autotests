@@ -43,3 +43,14 @@ class TestAdminOnly(object):
         auth_steps.login(user.name, user.password)
         auth_steps.logout()
         auth_steps.login(ADMIN_NAME, ADMIN_PASSWD)
+
+    def test_impossible_delete_admin(self, users_steps):
+        """Verify that admin can't delete himself."""
+        users_steps.delete_users(['admin'], check=False)
+        users_steps.close_notification('error')
+        assert users_steps.page_users().table_users.row(
+            name='admin').is_present
+
+    def test_filter_users(self, users_steps):
+        """Verify that admin can filter users."""
+        users_steps.filter_users('admi')

@@ -81,7 +81,7 @@ def create_users(users_steps):
     yield _create_users
 
     if users:
-        users_steps.delete_users(*[user.name for user in users])
+        users_steps.delete_users([user.name for user in users])
 
 
 @pytest.fixture

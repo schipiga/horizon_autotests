@@ -65,6 +65,8 @@ class FormChangePassword(_ui.Form):
 @ui.register_ui(
     button_create_user=ui.Button(By.ID, 'users__action_create'),
     button_delete_users=ui.Button(By.ID, 'users__action_delete'),
+    button_filter_users=ui.Button(By.CLASS_NAME, 'fa-search'),
+    field_filter_users=ui.TextField(By.NAME, 'users__filter__q'),
     form_change_password=FormChangePassword(By.ID,
                                             'change_user_password_form'),
     form_create_user=FormCreateUser(By.ID, 'create_user_form'),
