@@ -46,8 +46,8 @@ __all__ = [
 def horizon():
     """Initial fixture.
 
-    Starts browser and create demo user before test.
-    Deletes demo user and close browser after test.
+    Starts browser and creates demo user before test.
+    Deletes demo user and closes browser after test.
     """
     app = Horizon(DASHBOARD_URL)
     try:

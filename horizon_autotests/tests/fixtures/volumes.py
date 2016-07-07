@@ -76,7 +76,7 @@ def create_volume(volumes_steps):
 @pytest.yield_fixture
 def volume(volumes_steps):
     """Create volume."""
-    volume_name = generate_ids(prefix='volume').next()
+    volume_name = next(generate_ids('volume'))
     volumes_steps.create_volume(volume_name)
     volume = AttrDict(name=volume_name)
     yield volume
@@ -86,7 +86,7 @@ def volume(volumes_steps):
 @pytest.yield_fixture
 def snapshot(volume, volumes_steps):
     """Create snapshot."""
-    snapshot_name = generate_ids('snapshot').next()
+    snapshot_name = next(generate_ids('snapshot'))
     volumes_steps.create_snapshot(volume.name, snapshot_name)
     snapshot = AttrDict(name=snapshot_name)
     yield snapshot

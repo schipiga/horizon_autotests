@@ -415,8 +415,8 @@ class VolumesSteps(BaseSteps):
         self.close_notification('success')
 
         for snapshot_name in snapshot_names:
-            with tab_snapshots.table_snapshots.row(name=snapshot_name) as row:
-                assert waiter.exe(60, lambda: not row.is_present)
+            tab_snapshots.table_snapshots.row(
+                name=snapshot_name).wait_for_presence(30)
 
     def update_snapshot(self, snapshot_name, new_snapshot_name,
                         description=None):
@@ -440,6 +440,6 @@ class VolumesSteps(BaseSteps):
         tab_snapshots = self.tab_snapshots()
 
         with tab_snapshots.table_snapshots.row(name=new_snapshot_name) as row:
-            assert waiter.exe(30, lambda: row.is_present)
+            row.wait_for_presence(30)
             with row.cell('status') as cell:
                 assert waiter.exe(30, lambda: cell.value == 'Available')
