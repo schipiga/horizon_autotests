@@ -24,6 +24,7 @@ from horizon_autotests.steps import UsersSteps
 from .utils import AttrDict, generate_ids
 
 __all__ = [
+    'create_user',
     'create_users',
     'user',
     'users_steps'
@@ -32,21 +33,50 @@ __all__ = [
 
 @pytest.fixture
 def users_steps(login, horizon):
-    """Get users steps."""
+    """Fixture to get users steps."""
     return UsersSteps(horizon)
 
 
 @pytest.yield_fixture
-def create_users(users_steps):
-    """Create users."""
+def create_user(users_steps):
+    """Callable fixture to create user with options.
+
+    Can be called several times during test.
+    """
     users = []
 
-    def _create_users(names):
-        for name in names:
-            users_steps.create_user(name, name, 'admin')
-            user = AttrDict(name=name, password=name)
+    def _create_user(username, password, project):
+        users_steps.create_user(username, password, project)
+        user = AttrDict(name=username, password=password)
+
+        users.append(user)
+        return user
+
+    yield _create_user
+
+    for user in users:
+        users_steps.delete_user(user.name)
+
+
+@pytest.yield_fixture
+def create_users(users_steps):
+    """Callable fixture to create users with options.
+
+    Can be called several times during test.
+    """
+    users = []
+
+    def _create_users(usernames):
+        _users = []
+
+        for username in usernames:
+            users_steps.create_user(username, username, 'admin')
+            user = AttrDict(name=username, password=username)
+
             users.append(user)
-        return users
+            _users.append(user)
+
+        return _users
 
     yield _create_users
 
@@ -55,7 +85,7 @@ def create_users(users_steps):
 
 
 @pytest.fixture
-def user(create_users):
-    """Create user."""
-    user_names = list(generate_ids('user'))
-    return create_users(user_names)[0]
+def user(create_user):
+    """Fixture to create user with default options before test."""
+    username = next(generate_ids('user'))
+    return create_user(username, username, 'admin')

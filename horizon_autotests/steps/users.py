@@ -82,14 +82,14 @@ class UsersSteps(BaseSteps):
         """Step to change user password."""
         page_users = self.page_users()
 
-        with page_users.users_table.row(name=username).dropdown_menu as menu:
-            menu.toggle_button.click()
-            menu.change_password_item.click()
+        with page_users.table_users.row(name=username).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_change_password.click()
 
-        with page_users.change_password_form as form:
-            form.password_field.value = new_password
-            form.confirm_password_field.value = new_password
+        with page_users.form_change_password as form:
+            form.field_password.value = new_password
+            form.field_confirm_password.value = new_password
             form.submit()
 
-        self.base_page.modal_spinner.wait_for_absence()
+        page_users.spinner.wait_for_absence()
         self.close_notification('success')
