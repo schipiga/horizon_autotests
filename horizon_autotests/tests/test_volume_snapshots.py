@@ -22,7 +22,7 @@ import pytest
 from .fixtures.utils import generate_ids
 
 
-@pytest.mark.usefixtures('admin_only')
+@pytest.mark.usefixtures('any_user')
 class TestAnyUser(object):
     """Tests for any user."""
 
@@ -74,5 +74,7 @@ class TestAnyUser(object):
         assert tab_snapshots.table_snapshots.link_next.is_present
         assert not tab_snapshots.table_snapshots.link_prev.is_present
 
-    def test_create_volume_from_snapshot(self):
+    def test_create_volume_from_snapshot(self, snapshot, volumes_steps):
         """Verify that user cat create volume from snapshot."""
+        volumes_steps.create_volume_from_snapshot(snapshot.name)
+        volumes_steps.delete_volume(snapshot.name)

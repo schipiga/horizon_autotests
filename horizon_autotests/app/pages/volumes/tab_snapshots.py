@@ -47,8 +47,20 @@ class TableSnapshots(_ui.Table):
 
 
 @ui.register_ui(
+    combobox_source=ui.ComboBox(By.NAME, 'snapshot_source'),
+    combobox_type=ui.ComboBox(By.NAME, 'type'),
+    field_description=ui.TextField(By.NAME, 'description'),
+    field_name=ui.TextField(By.NAME, 'name'),
+    field_size=ui.IntegerField(By.NAME, 'size'))
+class FormCreateVolume(_ui.Form):
+    """Form to create volume from snapshot."""
+
+
+@ui.register_ui(
     button_delete_snapshots=ui.Button(By.ID,
                                       'volume_snapshots__action_delete'),
+    form_create_volume=FormCreateVolume(By.CSS_SELECTOR,
+                                        'form[action*="volumes/create"]'),
     form_edit_snapshot=FormCreateSnapshot(By.ID, 'update_snapshot_form'),
     table_snapshots=TableSnapshots(By.ID, 'volume_snapshots'))
 class TabSnapshots(_ui.Tab):

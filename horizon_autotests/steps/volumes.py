@@ -373,8 +373,9 @@ class VolumesSteps(BaseSteps):
 
     def tab_snapshots(self):
         """Open volume snapshots tab."""
-        self.volumes_page.label_snapshots.click()
-        return self.volumes_page.tab_snapshots
+        with self.page_volumes() as page:
+            page.label_snapshots.click()
+            return page.tab_snapshots
 
     def create_snapshot(self, volume_name, snapshot_name, description=None):
         """Step to create volume snapshot."""
@@ -397,7 +398,7 @@ class VolumesSteps(BaseSteps):
         tab_snapshots = self.tab_snapshots()
 
         with tab_snapshots.table_snapshots.row(name=snapshot_name) as row:
-            assert row.is_present
+            row.wait_for_presence()
             with row.cell('status') as cell:
                 assert waiter.exe(30, lambda: cell.value == 'Available')
 
@@ -421,7 +422,6 @@ class VolumesSteps(BaseSteps):
         """Step to delete volume snapshots."""
         tab_snapshots = self.tab_snapshots()
 
-        tab_snapshots.table_snapshots.wait_for_presence(30)
         for snapshot_name in snapshot_names:
             tab_snapshots.table_snapshots.row(
                 name=snapshot_name).checkbox.select()
@@ -429,12 +429,12 @@ class VolumesSteps(BaseSteps):
         tab_snapshots.button_delete_snapshots.click()
         tab_snapshots.form_confirm.submit()
 
-        self.base_page.spinner.wait_for_absence()
+        tab_snapshots.spinner.wait_for_absence()
         self.close_notification('success')
 
         for snapshot_name in snapshot_names:
             tab_snapshots.table_snapshots.row(
-                name=snapshot_name).wait_for_presence(30)
+                name=snapshot_name).wait_for_absence(30)
 
     def update_snapshot(self, snapshot_name, new_snapshot_name,
                         description=None):
@@ -461,3 +461,22 @@ class VolumesSteps(BaseSteps):
             row.wait_for_presence(30)
             with row.cell('status') as cell:
                 assert waiter.exe(30, lambda: cell.value == 'Available')
+
+    def create_volume_from_snapshot(self, snapshot_name):
+        """Step to create volume from spanshot."""
+        tab_snapshots = self.tab_snapshots()
+
+        with tab_snapshots.table_snapshots.row(
+                name=snapshot_name).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_default.click()
+
+        tab_snapshots.form_create_volume.submit()
+
+        tab_snapshots.spinner.wait_for_absence()
+        self.close_notification('info')
+
+        with self.tab_volumes().table_volumes.row(name=snapshot_name) as row:
+            row.wait_for_presence()
+            with row.cell('status') as cell:
+                assert waiter.exe(60, lambda: cell.value == 'Available')
