@@ -18,6 +18,7 @@ Themable checkbox.
 # limitations under the License.
 
 from pom import ui
+from pom.ui.base import immediately, WebElementProxy
 from selenium.webdriver.common.by import By
 
 
@@ -25,18 +26,20 @@ class CheckBox(ui.CheckBox):
     """Themable checkbox."""
 
     @property
-    def label(self):
+    @immediately
+    def is_selected(self):
+        """Define is checkbox selected."""
+        return self._webelement.is_selected()
+
+    @property
+    def webelement(self):
         """Label of checkbox."""
-        web_id = self.webelement.get_attribute('id')
+        web_id = self._webelement.get_attribute('id')
         label_locator = By.CSS_SELECTOR, 'label[for="{}"]'.format(web_id)
-        return self.container.find_element(label_locator)
 
-    def select(self):
-        """Select checkbox if it isn't selected."""
-        if not self.is_selected:
-            self.label.click()
+        return WebElementProxy(
+            lambda: self.container.find_element(label_locator))
 
-    def unselect(self):
-        """Unselect checkbox if it is selected."""
-        if self.is_selected:
-            self.label.click()
+    @property
+    def _webelement(self):
+        return super(CheckBox, self).webelement
