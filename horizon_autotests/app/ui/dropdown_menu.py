@@ -36,4 +36,5 @@ class DropdownMenu(ui.Block):
 
         It has predefined selector.
         """
+        super(DropdownMenu, self).__init__(*args, **kwgs)
         self.locator = By.CSS_SELECTOR, 'div.btn-group'

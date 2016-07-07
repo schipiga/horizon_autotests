@@ -54,3 +54,9 @@ class TestAdminOnly(object):
     def test_filter_users(self, users_steps):
         """Verify that admin can filter users."""
         users_steps.filter_users('admi')
+
+    def test_sort_users(self, users_steps):
+        """Verify that admin can sort users."""
+        users_steps.sort_users()
+        users_steps.page_users().refresh()
+        users_steps.sort_users(reverse=True)

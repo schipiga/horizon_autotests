@@ -31,4 +31,5 @@ class Tab(ui.Block, InitiatedUI):
 
         It has predefined locator.
         """
+        super(Tab, self).__init__(*args, **kwgs)
         self.locator = By.CSS_SELECTOR, 'body'

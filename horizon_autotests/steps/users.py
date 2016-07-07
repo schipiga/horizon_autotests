@@ -19,6 +19,7 @@ Users steps.
 
 from horizon_autotests.app.pages import PageUsers
 
+from ._utils import waiter
 from .base import BaseSteps
 
 
@@ -105,5 +106,33 @@ class UsersSteps(BaseSteps):
         page_users.button_filter_users.click()
 
         if check:
-            for row in page_users.table_users.rows:
-                assert query in row.cell('name').value
+
+            def check_rows():
+                for row in page_users.table_users.rows:
+                    if not (row.is_visible and
+                            query in row.link_username.value):
+                        return False
+                return True
+
+            assert waiter.exe(10, check_rows)
+
+    def sort_users(self, reverse=False, check=True):
+        """Step to sort users."""
+        with self.page_users().table_users as table:
+
+            table.header.cell('name').click()
+            if reverse:
+                table.header.cell('name').click()
+
+            if check:
+
+                def check_sort():
+                    usernames = [row.link_username.value for row in table.rows]
+                    expected_usernames = sorted(usernames)
+
+                    if reverse:
+                        expected_usernames = list(reversed(expected_usernames))
+
+                    return usernames == expected_usernames
+
+                assert waiter.exe(10, check_sort)

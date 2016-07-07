@@ -34,7 +34,8 @@ class DropdownMenu(_ui.DropdownMenu):
 
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
-    dropdown_menu=DropdownMenu())
+    dropdown_menu=DropdownMenu(),
+    link_username=ui.UI(By.CSS_SELECTOR, 'td[data-cell-name="name"] a'))
 class RowUser(ui.Row):
     """User row of users table."""
 
