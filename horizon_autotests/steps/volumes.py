@@ -332,24 +332,42 @@ class VolumesSteps(BaseSteps):
             row.wait_for_presence(30)
             row.cell('status').value == 'Available'
 
-    def migrate_host(self, volume_name, new_host=None):
+    def migrate_volume(self, volume_name, new_host=None):
         """Step to migrate host."""
-        volumes_page = self.admin_volumes_page()
+        tab_volumes = self.tab_admin_volumes()
 
-        with volumes_page.table_volumes.row(
+        with tab_volumes.table_volumes.row(
                 name=volume_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_migrate_volume.click()
 
-        with volumes_page.form_migrate_volume as form:
+        with tab_volumes.form_migrate_volume as form:
             old_host = form.field_current_host.value
+
             if not new_host:
                 new_host = form.combobox_destination_host.values[-1]
+
             form.combobox_destination_host.value = new_host
             form.submit()
 
-        volumes_page.spinner.wait_for_absence()
+        tab_volumes.spinner.wait_for_absence()
         self.close_notification('success')
+
+        with tab_volumes.table_volumes.row(
+                name=volume_name, host=new_host) as row:
+            row.wait_for_presence(30)
+            with row.cell('status') as cell:
+                waiter.exe(30, lambda: cell.value == 'Available')
+
+        page_volumes = self.page_admin_volumes()
+
+        def is_old_host_volume_absent():
+            page_volumes.refresh()
+            page_volumes.label_volumes.click()
+            return not page_volumes.tab_volumes.table_volumes.row(
+                name=volume_name, host=old_host).is_present
+
+        assert waiter.exe(300, is_old_host_volume_absent)
 
         return old_host, new_host
 

@@ -25,7 +25,8 @@ from horizon_autotests.app import ui as _ui
 
 @ui.register_ui(
     item_update_volume_status=ui.UI(
-        By.CSS_SELECTOR, '*[id*="action_update_status"]'))
+        By.CSS_SELECTOR, '*[id*="action_update_status"]'),
+    item_migrate_volume=ui.UI(By.CSS_SELECTOR, '[id$="action_migrate"]'))
 class DropdownMenu(_ui.DropdownMenu):
     """Dropdown menu for admin volume row."""
 
@@ -40,18 +41,31 @@ class RowVolume(ui.Row):
 class TableVolumes(ui.Table):
     """Admin volumes table."""
 
-    columns = {'name': 4, 'size': 5, 'status': 6, 'type': 7}
+    columns = {'project': 2,
+               'host': 3,
+               'name': 4,
+               'size': 5,
+               'status': 6,
+               'type': 7}
     row_cls = RowVolume
 
 
 @ui.register_ui(combobox_status=ui.ComboBox(By.NAME, 'status'))
 class FormUpdateVolumeStatus(_ui.Form):
-    """For to update volume status."""
+    """Form to update volume status."""
+
+
+@ui.register_ui(
+    combobox_destination_host=ui.ComboBox(By.NAME, 'host'),
+    field_current_host=ui.TextField(By.NAME, 'current_host'))
+class FormMigrateVolume(_ui.Form):
+    """Form to migrate volume."""
 
 
 @ui.register_ui(
     table_volumes=TableVolumes(By.CSS_SELECTOR, 'table[id="volumes"]'),
     form_update_volume_status=FormUpdateVolumeStatus(
-        By.CSS_SELECTOR, 'form[action*="/update_status"]'))
+        By.CSS_SELECTOR, 'form[action*="/update_status"]'),
+    form_migrate_volume=FormMigrateVolume(By.ID, 'migrate_volume_modal'))
 class TabAdminVolumes(_ui.Tab):
     """Admin volumes tab."""

@@ -146,7 +146,7 @@ class TestAdminOnly(object):
         auth_steps.login(DEMO_NAME, DEMO_PASSWD)
         volumes_steps.accept_transfer(transfer_id, transfer_key, volume.name)
 
-    # def test_migrate_volume(self, volume, volumes_steps):
-    #     """Verify that admin can migrate volume between available hosts."""
-    #     old_host, _ = volumes_steps.migrate_volume(volume.name)
-    #     volumes_steps.migrate_volume(volume.name, old_host)
+    def test_migrate_volume(self, volume, volumes_steps):
+        """Verify that admin can migrate volume between available hosts."""
+        old_host, _ = volumes_steps.migrate_volume(volume.name)
+        volumes_steps.migrate_volume(volume.name, old_host)
