@@ -17,18 +17,50 @@ Image tests.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# from .fixtures.utils import generate_ids
+import pytest
+
+from .fixtures.utils import generate_ids
 
 
-# def test_edit_image(image, images_steps):
-#     new_name = image.name + ' (updated)'
-#     images_steps.update_image(name=image.name, new_name=new_name)
-#     image.name = new_name
+@pytest.mark.usefixtures('any_user')
+class TestAnyUser(object):
+    """Tests for any user."""
+
+    @pytest.mark.parametrize('images_count', [1, 2])
+    def test_delete_images(self, images_count):
+        """Verify that user can delete images as batch."""
+
+    def test_create_image_from_local_file(self):
+        """Verify that user can create image from local file."""
+
+    def test_view_image(self):
+        """Verify that user can view image info."""
+
+    def test_images_pagination(self):
+        """Verify images pagination works right and back."""
+
+    def test_update_image_metadata(self):
+        """Verify that user can update image metadata."""
+
+    def test_remove_protected_image(self):
+        """Verify that user can't delete protected image."""
+
+    def test_edit_image(self):
+        """Verify that user ca edit image."""
+
+    def test_create_volume_from_image(self):
+        """Verify that user can create volume from image."""
+
+    def test_edit_image_disk_and_ram_size(self):
+        """Verify that image limits has influence to flavor choice."""
 
 
-# def test_delete_images(images_count, create_images):
-#     images_names = list(generate_ids(prefix='image', count=images_count))
-#     create_images(images_names)
+@pytest.mark.usefixtures('admin_only')
+class TestAdminOnly(object):
+    """Tests for admin only."""
 
+    def test_public_image_visibility(self):
+        """Verify that public image is visible for other users."""
 
-# def test_create_image_from_local_file()
+    def test_launch_instance_from_image(self):
+        """Verify that user can launch instance from image."""

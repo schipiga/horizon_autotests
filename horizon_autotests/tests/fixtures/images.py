@@ -21,12 +21,70 @@ import pytest
 
 from horizon_autotests.steps import ImagesSteps
 
+from .utils import AttrDict, generate_ids
+
 __all__ = [
+    'create_image',
+    'create_images',
+    'image',
     'images_steps'
 ]
 
 
 @pytest.fixture
 def images_steps(login, horizon):
-    """Get images steps."""
+    """Fixture to get images steps."""
     return ImagesSteps(horizon)
+
+
+@pytest.yield_fixture
+def create_images(images_steps):
+    """Fixture to create images with options.
+
+    Can be called several times during test.
+    """
+    images = []
+
+    def _create_images(*image_names):
+        _images = []
+
+        for image_name in image_names:
+            images_steps.create_image(image_name)
+            image = AttrDict(name=image_name)
+
+            images.append(image)
+            _images.append(image)
+
+        return _images
+
+    yield _create_images
+
+    if images:
+        images_steps.delete_images(*[image.name for image in images])
+
+
+@pytest.yield_fixture
+def create_image(images_steps):
+    """Fixture to create image with options.
+
+    Can be called several times during test.
+    """
+    images = []
+
+    def _create_image(image_name):
+        images_steps.create_image(image_name)
+        image = AttrDict(name=image_name)
+        images.append(image)
+        return image
+
+    yield _create_image
+
+    for image in images:
+        images_steps.delete_image(image.name)
+
+
+@pytest.fixture
+def image(create_image):
+    """Fixture to create image with default options before test."""
+    image_name = next(generate_ids('image'))
+    return create_image(image_name)

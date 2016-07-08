@@ -21,7 +21,7 @@ import pytest
 
 from horizon_autotests.steps import VolumesSteps
 
-from .utils import generate_ids, AttrDict
+from .utils import AttrDict, generate_ids
 
 __all__ = [
     'create_backups',
