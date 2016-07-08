@@ -24,5 +24,5 @@ import pytest
 class TestAdminOnly(object):
     """Tests for admin only."""
 
-    def test_create_project(self):
-        """Verify that user can create project."""
+    def test_create_project(self, project):
+        """Verify that admin can create project."""

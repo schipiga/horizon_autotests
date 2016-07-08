@@ -1,5 +1,5 @@
 """
-Fixtures to manipulate with access.
+Fixtures to manipulate with routers.
 
 @author: schipiga@mirantis.com
 """
@@ -26,7 +26,7 @@ from .utils import AttrDict, generate_ids
 
 @pytest.fixture
 def routers_steps(horizon, login):
-    """Fixture to get access steps."""
+    """Fixture to get routers steps."""
     return RoutersSteps(horizon)
 
 

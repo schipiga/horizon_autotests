@@ -25,6 +25,7 @@ from .credentials import *  # noqa
 from .images import *  # noqa
 from .instances import *  # noqa
 from .keypairs import *  # noqa
+from .projects import *  # noqa
 from .routers import *  # noqa
 from .settings import *  # noqa
 from .users import *  # noqa
