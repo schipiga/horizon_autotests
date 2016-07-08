@@ -44,12 +44,28 @@ class TestAdminOnly(object):
         auth_steps.logout()
         auth_steps.login(ADMIN_NAME, ADMIN_PASSWD)
 
-    def test_impossible_delete_admin(self, users_steps):
+    def test_impossible_delete_admin_via_button(self, users_steps):
         """Verify that admin can't delete himself."""
         users_steps.delete_users(['admin'], check=False)
         users_steps.close_notification('error')
+
         assert users_steps.page_users().table_users.row(
             name='admin').is_present
+
+    def test_impossible_delete_admin_via_dropdown(self, users_steps):
+        """Verify that admin can't delete himself with dropdown menu."""
+        with users_steps.page_users().table_users.row(
+                name='admin').dropdown_menu as menu:
+
+            menu.button_toggle.click()
+            assert not menu.item_delete.is_present
+
+    def test_impossible_disable_admin(self, horizon, users_steps):
+        """Verify that admin can't disable himself."""
+        users_steps.toggle_user('admin', enable=False, check=False)
+        horizon.page_users.refresh()
+        horizon.page_users.table_users.row(
+            name='admin').cell('enabled').value == 'Yes'
 
     def test_filter_users(self, users_steps):
         """Verify that admin can filter users."""
