@@ -65,3 +65,21 @@ class TestAdminOnly(object):
         """Verify that admin can enable and disable user."""
         users_steps.toggle_user(user.name, enable=False)
         users_steps.toggle_user(user.name, enable=True)
+
+    def test_update_user(self, user, users_steps):
+        """Verify that admin can update user."""
+        new_username = user.name + '(updated)'
+        with user.put(name=new_username):
+            users_steps.update_user(user.name, new_username)
+
+
+@pytest.mark.usefixtures('demo_only')
+class TestDemoOnly(object):
+    """Tests for demo user only."""
+
+    def test_unavailable_users_list_for_unprivileged_user(
+            self, horizon, users_steps):
+        """Verify that demo user can't see users list."""
+        horizon.page_users.open()
+        users_steps.close_notification('info')
+        assert not horizon.page_users.table_users.rows

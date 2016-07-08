@@ -26,7 +26,8 @@ from .config import (ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
 
 __all__ = [
     'admin_only',
-    'any_user'
+    'any_user',
+    'demo_only'
 ]
 
 
@@ -49,3 +50,11 @@ def admin_only():
     os.environ['OS_LOGIN'] = ADMIN_NAME
     os.environ['OS_PASSWD'] = ADMIN_PASSWD
     os.environ['OS_PROJECT'] = ADMIN_PROJECT
+
+
+@pytest.fixture
+def demo_only():
+    """Set demo credentials for test."""
+    os.environ['OS_LOGIN'] = DEMO_NAME
+    os.environ['OS_PASSWD'] = DEMO_PASSWD
+    os.environ['OS_PROJECT'] = DEMO_PROJECT

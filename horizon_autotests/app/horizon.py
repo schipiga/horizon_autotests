@@ -22,6 +22,7 @@ import pom
 from .pages import PageBase, pages
 
 
+@pom.register_pages(pages)
 class Horizon(pom.App):
     """Application to launch horizon in browser."""
 

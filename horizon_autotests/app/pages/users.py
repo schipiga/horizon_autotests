@@ -41,7 +41,7 @@ class RowUser(ui.Row):
     """User row of users table."""
 
 
-class TableUsers(ui.Table):
+class TableUsers(_ui.Table):
     """Users table."""
 
     columns = {'name': 2, 'email': 4, 'enabled': 7}
@@ -65,6 +65,12 @@ class FormChangePassword(_ui.Form):
 
 
 @ui.register_ui(
+    field_name=ui.TextField(By.NAME, 'name'))
+class FormUpdateUser(_ui.Form):
+    """Form to update user."""
+
+
+@ui.register_ui(
     button_create_user=ui.Button(By.ID, 'users__action_create'),
     button_delete_users=ui.Button(By.ID, 'users__action_delete'),
     button_filter_users=ui.Button(By.CLASS_NAME, 'fa-search'),
@@ -72,6 +78,7 @@ class FormChangePassword(_ui.Form):
     form_change_password=FormChangePassword(By.ID,
                                             'change_user_password_form'),
     form_create_user=FormCreateUser(By.ID, 'create_user_form'),
+    form_update_user=FormUpdateUser(By.ID, 'update_user_form'),
     table_users=TableUsers(By.ID, 'users'))
 class PageUsers(PageBase):
     """Users page."""

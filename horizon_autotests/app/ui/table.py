@@ -23,6 +23,16 @@ from selenium.webdriver.common.by import By
 
 @ui.register_ui(
     link_next=ui.UI(By.CSS_SELECTOR, 'a[href^="?marker="]'),
-    link_prev=ui.UI(By.CSS_SELECTOR, 'a[href^="?prev_marker="]'))
+    link_prev=ui.UI(By.CSS_SELECTOR, 'a[href^="?prev_marker="]'),
+    row_empty=ui.UI(By.CSS_SELECTOR, 'tr.empty'))
 class Table(ui.Table):
     """Custom table."""
+
+    @property
+    def rows(self):
+        """Table rows."""
+        rows = super(Table, self).rows
+        if len(rows) == 1 and self.row_empty.is_present:
+            return []
+        else:
+            return rows

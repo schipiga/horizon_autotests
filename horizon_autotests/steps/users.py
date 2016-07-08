@@ -156,3 +156,21 @@ class UsersSteps(BaseSteps):
             if check:
                 self.close_notification('success')
                 assert row.cell('enabled').value == need_status
+
+    def update_user(self, username, new_username, check=True):
+        """Step to update user."""
+        page_users = self.page_users()
+
+        with page_users.table_users.row(name=username).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_default.click()
+
+        with page_users.form_update_user as form:
+            form.field_name.value = new_username
+            form.submit()
+
+        page_users.spinner.wait_for_absence()
+
+        if check:
+            self.close_notification('success')
+            page_users.table_users.row(name=new_username).wait_for_presence()
