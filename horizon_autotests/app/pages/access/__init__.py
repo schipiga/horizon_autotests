@@ -1,5 +1,5 @@
 """
-Security group tests.
+Module of access page and its components.
 
 @author: schipiga@mirantis.com
 """
@@ -17,12 +17,4 @@ Security group tests.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
-
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
-    """Tests for any user."""
-
-    def test_create_security_group(self, security_group):
-        """Verify that user can create security group."""
+from .page_access import PageAccess

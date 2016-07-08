@@ -17,6 +17,7 @@ Module with fixtures for tests.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .access import *  # noqa
 from .api_access import *  # noqa
 from .app import *  # noqa
 from .auto_use import *  # noqa

@@ -1,5 +1,5 @@
 """
-Access & security page and its components.
+Keypairs tab.
 
 @author: schipiga@mirantis.com
 """
@@ -21,8 +21,6 @@ from pom import ui
 from selenium.webdriver.common.by import By
 
 from horizon_autotests.app import ui as _ui
-
-from .base import PageBase
 
 
 @ui.register_ui(field_name=ui.TextField(By.NAME, 'name'))
@@ -60,13 +58,3 @@ class FormImportKeypair(ui.Form):
     table_keypairs=TableKeypairs(By.ID, 'keypairs'))
 class TabKeypairs(_ui.Tab):
     """Keypairs tab."""
-
-
-@ui.register_ui(
-    label_keypairs=ui.UI(By.CSS_SELECTOR, '[data-target*="keypairs_tab"]'),
-    tab_keypairs=TabKeypairs())
-class PageAccess(PageBase):
-    """Access & security page."""
-
-    url = "/project/access_and_security/"
-    navigate_items = "Project", "Compute", "Access & Security"

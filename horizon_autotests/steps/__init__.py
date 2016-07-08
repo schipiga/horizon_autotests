@@ -17,6 +17,7 @@ Module with horizon steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .access import AccessSteps  # noqa
 from .api_access import ApiAccessSteps  # noqa
 from .auth import AuthSteps  # noqa
 from .images import ImagesSteps  # noqa
