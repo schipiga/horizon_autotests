@@ -27,7 +27,8 @@ from .base import PageBase
 
 @ui.register_ui(
     item_change_password=ui.UI(By.CSS_SELECTOR,
-                               '*[id*="action_change_password"]'))
+                               '*[id*="action_change_password"]'),
+    item_toggle_user=ui.UI(By.CSS_SELECTOR, '[id$="action_toggle"]'))
 class DropdownMenu(_ui.DropdownMenu):
     """Dropdown menu for user row."""
 
@@ -43,7 +44,7 @@ class RowUser(ui.Row):
 class TableUsers(ui.Table):
     """Users table."""
 
-    columns = {'name': 2, 'email': 4}
+    columns = {'name': 2, 'email': 4, 'enabled': 7}
     row_cls = RowUser
 
 

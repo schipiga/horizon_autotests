@@ -136,3 +136,23 @@ class UsersSteps(BaseSteps):
                     return usernames == expected_usernames
 
                 assert waiter.exe(10, check_sort)
+
+    def toggle_user(self, username, enable, check=True):
+        """Step to disable user."""
+        if enable:
+            curr_status = 'No'
+            need_status = 'Yes'
+        else:
+            curr_status = 'Yes'
+            need_status = 'No'
+
+        with self.page_users().table_users.row(name=username) as row:
+            assert row.cell('enabled').value == curr_status
+
+            with row.dropdown_menu as menu:
+                menu.button_toggle.click()
+                menu.item_toggle_user.click()
+
+            if check:
+                self.close_notification('success')
+                assert row.cell('enabled').value == need_status

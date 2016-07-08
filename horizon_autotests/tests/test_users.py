@@ -60,3 +60,8 @@ class TestAdminOnly(object):
         users_steps.sort_users()
         users_steps.page_users().refresh()
         users_steps.sort_users(reverse=True)
+
+    def test_disable_enable_user(self, user, users_steps):
+        """Verify that admin can enable and disable user."""
+        users_steps.toggle_user(user.name, enable=False)
+        users_steps.toggle_user(user.name, enable=True)
