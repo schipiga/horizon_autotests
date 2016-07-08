@@ -19,39 +19,39 @@ Fixtures to manipulate with access.
 
 import pytest
 
-from horizon_autotests.steps import AccessSteps
+from horizon_autotests.steps import RoutersSteps
 
 from .utils import AttrDict, generate_ids
 
 
 @pytest.fixture
-def access_steps(horizon, login):
+def routers_steps(horizon, login):
     """Fixture to get access steps."""
-    return AccessSteps(horizon)
+    return RoutersSteps(horizon)
 
 
 @pytest.yield_fixture
-def create_security_group(access_steps):
-    """Fixture to create security group with options.
+def create_router(routers_steps):
+    """Fixture to router with options.
 
     Can be called several times during test.
     """
-    security_groups = []
+    routers = []
 
-    def _create_security_group(group_name):
-        access_steps.create_security_group(group_name)
-        security_group = AttrDict(name=group_name)
-        security_groups.append(security_group)
-        return security_group
+    def _create_router(router_name):
+        routers_steps.create_router(router_name)
+        router = AttrDict(name=router_name)
+        routers.append(router)
+        return router
 
-    yield _create_security_group
+    yield _create_router
 
-    for security_group in security_groups:
-        access_steps.delete_security_group(security_group.name)
+    for router in routers:
+        routers_steps.delete_router(router.name)
 
 
 @pytest.fixture
-def security_group(create_security_group):
-    """Fixture to create security group with default options."""
-    group_name = next(generate_ids('security-group'))
-    return create_security_group(group_name)
+def router(create_router):
+    """Fixture to create router with default options."""
+    router_name = next(generate_ids('router'))
+    return create_router(router_name)

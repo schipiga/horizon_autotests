@@ -24,6 +24,5 @@ import pytest
 class TestAnyUser(object):
     """Tests for any user."""
 
-    def test_create_router(self, create_router):
+    def test_create_router(self, router):
         """Verify that user can create router."""
-        create_router()

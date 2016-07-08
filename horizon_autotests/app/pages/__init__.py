@@ -23,6 +23,7 @@ from .images import PageImages
 from .instances import PageInstances
 from .login import PageLogin
 from .projects import PageProjects
+from .routers import PageRouters
 from .settings import PagePassword, PageSettings
 from .users import PageUsers
 from .volumes import (PageAdminVolumes,
@@ -39,6 +40,7 @@ pages = [
     PageLogin,
     PagePassword,
     PageProjects,
+    PageRouters,
     PageSettings,
     PageUsers,
     PageVolume,
