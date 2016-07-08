@@ -39,3 +39,19 @@ class PageSettings(PageBase):
     """Settings page."""
 
     url = "/settings/"
+
+
+@ui.register_ui(
+    field_confirm_password=ui.TextField(By.NAME, 'confirm_password'),
+    field_current_password=ui.TextField(By.NAME, 'current_password'),
+    field_new_password=ui.TextField(By.NAME, 'new_password'))
+class FormChangePassword(_ui.Form):
+    """Form to change user password."""
+
+
+@ui.register_ui(
+    form_change_password=FormChangePassword(By.ID, 'change_password_modal'))
+class PagePassword(PageBase):
+    """Page to change user password."""
+
+    url = "/settings/password/"

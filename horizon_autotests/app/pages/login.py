@@ -30,7 +30,10 @@ class FormLogin(_ui.Form):
     """Form to login user."""
 
 
-@ui.register_ui(form_login=FormLogin(By.CSS_SELECTOR, 'form'))
+@ui.register_ui(
+    form_login=FormLogin(By.CSS_SELECTOR, 'form'),
+    label_alert_message=ui.UI(By.CSS_SELECTOR, 'div.alert-message'),
+    label_error_message=ui.UI(By.CSS_SELECTOR, 'div.error'))
 class PageLogin(pom.Page):
     """Page to login user."""
 

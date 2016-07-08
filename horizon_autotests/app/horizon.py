@@ -21,6 +21,8 @@ import pom
 
 from .pages import PageBase, pages
 
+sorted_pages = sorted(pages, key=lambda page: len(page.url))
+
 
 @pom.register_pages(pages)
 class Horizon(pom.App):
@@ -50,7 +52,7 @@ class Horizon(pom.App):
     def current_page(self):
         """Current page dynamic definition."""
         current_url = self.webdriver.current_url
-        for page in pages:
+        for page in sorted_pages:
             url = self.app_url + page.url
 
             if current_url.startswith(url):

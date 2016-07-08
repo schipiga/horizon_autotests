@@ -18,12 +18,12 @@ Module with horizon pages.
 # limitations under the License.
 
 from .access import PageAccess
-from .base import PageBase  # noqa
+from .base import PageBase
 from .images import PageImages
 from .instances import PageInstances
 from .login import PageLogin
 from .projects import PageProjects
-from .settings import PageSettings
+from .settings import PagePassword, PageSettings
 from .users import PageUsers
 from .volumes import (PageAdminVolumes,
                       PageVolume,
@@ -32,10 +32,12 @@ from .volumes import (PageAdminVolumes,
 
 pages = [
     PageAccess,
+    PageBase,
     PageAdminVolumes,
     PageImages,
     PageInstances,
     PageLogin,
+    PagePassword,
     PageProjects,
     PageSettings,
     PageUsers,

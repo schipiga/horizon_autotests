@@ -17,7 +17,7 @@ Settings steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import PageSettings
+from horizon_autotests.app.pages import PagePassword, PageSettings
 
 from .base import BaseSteps
 
@@ -56,3 +56,20 @@ class SettingsSteps(BaseSteps):
                 'timezone': form.combobox_timezone.value,
                 'items_per_page': form.field_items_per_page.value,
                 'instance_log_length': form.field_instance_log_length.value}
+
+    def page_password(self):
+        """Open page to change user password if it isn't opened."""
+        return self._open(PagePassword)
+
+    def change_user_password(self, current_password, new_password, check=True):
+        """Step to change user password."""
+        page_password = self.page_password()
+
+        with page_password.form_change_password as form:
+            form.field_current_password.value = current_password
+            form.field_new_password.value = new_password
+            form.field_confirm_password.value = new_password
+            form.submit()
+
+        if check:
+            self.app.page_login.label_error_message.wait_for_presence()

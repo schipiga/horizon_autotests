@@ -17,21 +17,57 @@ Tests for volume snapshots.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from urlparse import urlparse
+
 import pytest
 
+from .fixtures.config import ADMIN_NAME, ADMIN_PASSWD
 
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
-    """Tests for any user."""
 
-    def test_dashboard_help_url(self):
+@pytest.yield_fixture
+def new_user_account(user, auth_steps):
+    auth_steps.logout()
+    auth_steps.login(user.name, user.password)
+
+    yield
+
+    auth_steps.logout()
+    auth_steps.login(ADMIN_NAME, ADMIN_PASSWD)
+
+
+@pytest.mark.usefixtures('admin_only')
+class TestAdminOnly(object):
+    """Tests for admin only."""
+
+    def test_dashboard_help_url(self, new_user_account, horizon):
         """Verify that user can open dashboard help url."""
+        with horizon.page_base.dropdown_menu_account as menu:
+            menu.click()
+            assert urlparse(menu.item_help.href).netloc == "docs.openstack.org"
+            menu.click()
 
-    def test_password_change(self):
+    def test_change_user_password(self, horizon, user, new_user_account,
+                                  auth_steps, settings_steps):
         """Verify that user can change it's password."""
+        new_password = 'new-' + user.password
+        with user.put(password=new_password):
+            settings_steps.change_user_password(user.password, new_password)
 
-    def test_show_message_after_logout(self):
-        """Verify that message shown after logout."""
+            auth_steps.login(user.name, user.password, check=False)
+            horizon.page_login.label_alert_message.wait_for_presence()
 
-    def test_user_settings_change(self):
+        auth_steps.login(user.name, user.password)
+
+    def test_change_user_settings(self, horizon, new_user_account,
+                                  update_settings, settings_steps):
         """Verify that user can change his settings."""
+        new_settings = {
+            'lang': 'British English (en-gb)',
+            'timezone': 'UTC -05:00: Jamaica Time',
+            'items_per_page': '1',
+            'instance_log_length': '1'}
+
+        update_settings(**new_settings)
+        horizon.page_settings.refresh()
+
+        assert settings_steps.current_settings == new_settings

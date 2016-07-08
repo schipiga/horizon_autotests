@@ -29,7 +29,7 @@ class AuthSteps(BaseSteps):
         """Open login page if it's not opened."""
         return self._open(PageLogin)
 
-    def login(self, username, password):
+    def login(self, username, password, check=True):
         """Step to log in user account.
 
         Arguments:
@@ -41,12 +41,14 @@ class AuthSteps(BaseSteps):
             form.field_password.value = password
             form.submit()
 
-        PageBase(self.app).dropdown_menu_account.wait_for_presence(30)
+        if check:
+            PageBase(self.app).dropdown_menu_account.wait_for_presence(30)
 
-    def logout(self):
+    def logout(self, check=True):
         """Step to log out user account."""
         with PageBase(self.app).dropdown_menu_account as menu:
             menu.click()
             menu.item_exit.click()
 
-        PageLogin(self.app).form_login.wait_for_presence(30)
+        if check:
+            PageLogin(self.app).form_login.wait_for_presence(30)

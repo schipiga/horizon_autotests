@@ -24,7 +24,8 @@ from .form import Form
 
 
 @ui.register_ui(
-    item_exit=ui.UI(By.CSS_SELECTOR, 'a[href*="/auth/logout/"]'))
+    item_exit=ui.UI(By.CSS_SELECTOR, 'a[href*="/auth/logout/"]'),
+    item_help=ui.Link(By.CSS_SELECTOR, 'a[target="_blank"]'))
 class DropdownMenuAccount(ui.Block):
     """Dropdown menu for account settings."""
 
