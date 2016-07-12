@@ -32,6 +32,9 @@ class BaseSteps(object):
         self.app = app
 
     def _open(self, page):
+        if not isinstance(page, type):
+            page = page.__class__
+
         current_page = self.app.current_page
         if not isinstance(current_page, page):
 

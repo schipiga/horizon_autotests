@@ -17,8 +17,6 @@ Horizon steps for authentication.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import PageBase, PageLogin
-
 from .base import BaseSteps
 
 
@@ -27,7 +25,7 @@ class AuthSteps(BaseSteps):
 
     def page_login(self):
         """Open login page if it's not opened."""
-        return self._open(PageLogin)
+        return self._open(self.app.page_login)
 
     def login(self, username, password, check=True):
         """Step to log in user account.
@@ -42,13 +40,13 @@ class AuthSteps(BaseSteps):
             form.submit()
 
         if check:
-            PageBase(self.app).dropdown_menu_account.wait_for_presence(30)
+            self.app.page_base.dropdown_menu_account.wait_for_presence(30)
 
     def logout(self, check=True):
         """Step to log out user account."""
-        with PageBase(self.app).dropdown_menu_account as menu:
+        with self.app.page_base.dropdown_menu_account as menu:
             menu.click()
             menu.item_exit.click()
 
         if check:
-            PageLogin(self.app).form_login.wait_for_presence(30)
+            self.app.page_login.form_login.wait_for_presence(30)
