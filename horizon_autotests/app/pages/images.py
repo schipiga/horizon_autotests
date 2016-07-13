@@ -40,6 +40,17 @@ class TableImages(ui.Table):
 
 
 @ui.register_ui(
+    field_name=ui.TextField(By.NAME, 'name'),
+    field_image_url=ui.TextField(By.NAME, 'image_url'),
+    field_disk_format=ui.ComboBox(By.NAME, 'disk_format'))
+class FormCreateImage(_ui.Form):
+    """Form to create image."""
+
+
+@ui.register_ui(
+    button_create_image=ui.Button(By.ID, 'images__action_create'),
+    button_delete_images=ui.Button(By.ID, 'images__action_delete'),
+    form_create_image=FormCreateImage(By.ID, 'create_image_form'),
     table_images=TableImages(By.ID, 'images'))
 class PageImages(PageBase):
     """Images Page."""

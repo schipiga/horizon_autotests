@@ -27,8 +27,11 @@ class TestAnyUser(object):
     """Tests for any user."""
 
     @pytest.mark.parametrize('images_count', [1, 2])
-    def test_delete_images(self, images_count):
+    def test_delete_images(self, images_count, create_images):
         """Verify that user can delete images as batch."""
+        image_names = list(
+            generate_ids('image', count=images_count, length=20))
+        create_images(*image_names)
 
     def test_create_image_from_local_file(self):
         """Verify that user can create image from local file."""

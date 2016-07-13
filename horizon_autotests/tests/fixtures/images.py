@@ -60,7 +60,7 @@ def create_images(images_steps):
     yield _create_images
 
     if images:
-        images_steps.delete_images(*[image.name for image in images])
+        images_steps.delete_images([image.name for image in images])
 
 
 @pytest.yield_fixture
