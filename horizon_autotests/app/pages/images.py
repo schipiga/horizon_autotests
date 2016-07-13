@@ -32,7 +32,7 @@ class RowImage(ui.Row):
     """Row with image in images table."""
 
 
-class TableImages(ui.Table):
+class TableImages(_ui.Table):
     """Images table."""
 
     columns = {'name': 2, 'type': 3, 'status': 4, 'format': 7}

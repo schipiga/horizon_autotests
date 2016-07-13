@@ -20,6 +20,7 @@ Fixtures for images.
 import pytest
 
 from horizon_autotests.steps import ImagesSteps
+from horizon_autotests.steps._utils import waiter
 
 from .utils import AttrDict, generate_ids
 
@@ -38,7 +39,7 @@ def images_steps(login, horizon):
 
 
 @pytest.yield_fixture
-def create_images(images_steps):
+def create_images(images_steps, horizon):
     """Fixture to create images with options.
 
     Can be called several times during test.
@@ -49,11 +50,19 @@ def create_images(images_steps):
         _images = []
 
         for image_name in image_names:
-            images_steps.create_image(image_name)
-            image = AttrDict(name=image_name)
+            images_steps.create_image(image_name, check=False)
+            images_steps.close_notification('success')
 
+            image = AttrDict(name=image_name)
             images.append(image)
             _images.append(image)
+
+        for image_name in image_names:
+            with horizon.page_images.table_images.row(
+                    name=image_name) as row:
+                row.wait_for_presence()
+                with row.cell('status') as cell:
+                    waiter.exe(60, lambda: cell.value == 'Active')
 
         return _images
 

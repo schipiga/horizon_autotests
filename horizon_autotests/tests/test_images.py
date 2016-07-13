@@ -42,8 +42,42 @@ class TestAnyUser(object):
     def test_view_image(self):
         """Verify that user can view image info."""
 
-    def test_images_pagination(self):
+    def test_images_pagination(self, images_steps, create_images,
+                               update_settings):
         """Verify images pagination works right and back."""
+        image_names = sorted(list(generate_ids('image', count=2, length=20)))
+        create_images(*image_names)
+        update_settings(items_per_page=1)
+
+        page_images = images_steps.page_images()
+
+        page_images.table_images.row(name=image_names[0]).wait_for_presence()
+        assert page_images.table_images.link_next.is_present
+        assert not page_images.table_images.link_prev.is_present
+
+        page_images.table_images.link_next.click()
+
+        page_images.table_images.row(name=image_names[1]).wait_for_presence()
+        assert page_images.table_images.link_next.is_present
+        assert page_images.table_images.link_prev.is_present
+
+        page_images.table_images.link_next.click()
+
+        page_images.table_images.row(name='TestVM').wait_for_presence()
+        assert not page_images.table_images.link_next.is_present
+        assert page_images.table_images.link_prev.is_present
+
+        page_images.table_images.link_prev.click()
+
+        page_images.table_images.row(name=image_names[1]).wait_for_presence()
+        assert page_images.table_images.link_next.is_present
+        assert page_images.table_images.link_prev.is_present
+
+        page_images.table_images.link_prev.click()
+
+        page_images.table_images.row(name=image_names[0]).wait_for_presence()
+        assert page_images.table_images.link_next.is_present
+        assert not page_images.table_images.link_prev.is_present
 
     def test_update_image_metadata(self):
         """Verify that user can update image metadata."""
