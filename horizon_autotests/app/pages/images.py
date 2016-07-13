@@ -40,9 +40,11 @@ class TableImages(ui.Table):
 
 
 @ui.register_ui(
-    field_name=ui.TextField(By.NAME, 'name'),
+    field_disk_format=ui.ComboBox(By.NAME, 'disk_format'),
+    field_image_file=ui.TextField(By.NAME, 'image_file'),
     field_image_url=ui.TextField(By.NAME, 'image_url'),
-    field_disk_format=ui.ComboBox(By.NAME, 'disk_format'))
+    field_name=ui.TextField(By.NAME, 'name'),
+    field_source_type=ui.ComboBox(By.NAME, 'source_type'))
 class FormCreateImage(_ui.Form):
     """Form to create image."""
 

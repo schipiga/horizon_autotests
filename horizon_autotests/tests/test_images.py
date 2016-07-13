@@ -19,7 +19,7 @@ Image tests.
 
 import pytest
 
-from .fixtures.utils import generate_ids
+from .fixtures.utils import generate_ids, generate_files
 
 
 @pytest.mark.usefixtures('any_user')
@@ -33,8 +33,11 @@ class TestAnyUser(object):
             generate_ids('image', count=images_count, length=20))
         create_images(*image_names)
 
-    def test_create_image_from_local_file(self):
+    def test_create_image_from_local_file(self, create_image):
         """Verify that user can create image from local file."""
+        image_name = next(generate_ids('image', length=20))
+        image_file = next(generate_files(postfix='.qcow2'))
+        create_image(image_name, image_file)
 
     def test_view_image(self):
         """Verify that user can view image info."""

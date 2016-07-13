@@ -31,7 +31,7 @@ class ImagesSteps(BaseSteps):
         """Open images page if it isn't opened."""
         return self._open(self.app.page_images)
 
-    def create_image(self, image_name, image_url=CIRROS_URL,
+    def create_image(self, image_name, image_url=CIRROS_URL, image_file=None,
                      disk_format='QCOW2', check=True):
         """Step to create image."""
         page_images = self.page_images()
@@ -39,7 +39,15 @@ class ImagesSteps(BaseSteps):
 
         with page_images.form_create_image as form:
             form.field_name.value = image_name
-            form.field_image_url.value = image_url
+
+            if image_file:
+                form.field_source_type.value = 'Image File'
+                form.field_image_file.value = image_file
+
+            else:
+                form.field_source_type.value = 'Image Location'
+                form.field_image_url.value = image_url
+
             form.field_disk_format.value = disk_format
             form.submit()
 

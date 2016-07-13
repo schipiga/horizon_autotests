@@ -71,8 +71,8 @@ def create_image(images_steps):
     """
     images = []
 
-    def _create_image(image_name):
-        images_steps.create_image(image_name)
+    def _create_image(image_name, image_file):
+        images_steps.create_image(image_name, image_file=image_file)
         image = AttrDict(name=image_name)
         images.append(image)
         return image
