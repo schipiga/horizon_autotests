@@ -58,10 +58,11 @@ class ImagesSteps(BaseSteps):
 
             with page_images.table_images.row(name=image_name) as row:
                 row.wait_for_presence()
+
                 with row.cell('status') as cell:
                     waiter.exe(60, lambda: cell.value == 'Active')
 
-    def delete_image(self, image_name):
+    def delete_image(self, image_name, check=True):
         """Step to delete image."""
         page_images = self.page_images()
 
@@ -72,10 +73,11 @@ class ImagesSteps(BaseSteps):
 
         page_images.form_confirm.submit()
         page_images.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        page_images.table_images.row(
-            name=image_name).wait_for_absence(60)
+        if check:
+            self.close_notification('success')
+            page_images.table_images.row(
+                name=image_name).wait_for_absence(60)
 
     def delete_images(self, image_names, check=True):
         """Step to delete images."""
@@ -94,3 +96,51 @@ class ImagesSteps(BaseSteps):
             for image_name in image_names:
                 page_images.table_images.row(
                     name=image_name).wait_for_absence(60)
+
+    def update_metadata(self, image_name, metadata, check=True):
+        """Step to update image metadata."""
+        page_images = self.page_images()
+        with page_images.table_images.row(
+                name=image_name).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_update_metadata.click()
+
+        with page_images.form_update_metadata as form:
+            for metadata_name, metadata_value in metadata.items():
+                form.field_metadata_name.value = metadata_name
+                form.button_add_metadata.click()
+                form.list_metadata.row(
+                    metadata_name).field_metadata_value.value = metadata_value
+
+            form.submit()
+
+        if check:
+            page_images.modal.wait_for_absence()
+
+            with page_images.table_images.row(name=image_name) as row:
+                row.wait_for_presence()
+
+                with row.cell('status') as cell:
+                    waiter.exe(60, lambda: cell.value == 'Active')
+
+    def get_metadata(self, image_name, check=True):
+        """Step to get image metadata."""
+        metadata = {}
+
+        page_images = self.page_images()
+
+        with page_images.table_images.row(
+                name=image_name).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_update_metadata.click()
+
+        for row in page_images.form_update_metadata.list_metadata.rows:
+            metadata[row.field_metadata_name.value] = \
+                row.field_metadata_value.value
+
+        page_images.form_update_metadata.cancel()
+
+        if check:
+            page_images.modal.wait_for_absence()
+
+        return metadata

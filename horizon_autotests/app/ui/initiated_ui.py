@@ -56,12 +56,25 @@ class Spinner(ui.UI):
         super(Spinner, self).wait_for_absence(timeout)
 
 
+class Modal(ui.Block):
+    """Spinner to wait loading."""
+
+    def wait_for_absence(self, timeout=30):
+        """Wait spinner absence with predefined timeout.
+
+        Arguments:
+            - timeout: integer, default is 30 sec.
+        """
+        super(Modal, self).wait_for_absence(timeout)
+
+
 @ui.register_ui(
     dropdown_menu_account=DropdownMenuAccount(
         By.CSS_SELECTOR, 'ul.navbar-nav.navbar-right > li.dropdown'),
     dropdown_menu_project=DropdownMenuProject(
         By.CSS_SELECTOR, 'ul.navbar-nav > li.dropdown'),
     form_confirm=Form(By.CSS_SELECTOR, 'div.modal-content > div.modal-footer'),
+    modal=Modal(By.CLASS_NAME, 'modal-backdrop'),
     spinner=Spinner(By.CLASS_NAME, 'spinner'))
 class InitiatedUI(ui.Container):
     """Predefined UI components for page or tab."""

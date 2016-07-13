@@ -80,7 +80,7 @@ def create_image(images_steps):
     """
     images = []
 
-    def _create_image(image_name, image_file):
+    def _create_image(image_name, image_file=None):
         images_steps.create_image(image_name, image_file=image_file)
         image = AttrDict(name=image_name)
         images.append(image)
@@ -95,5 +95,5 @@ def create_image(images_steps):
 @pytest.fixture
 def image(create_image):
     """Fixture to create image with default options before test."""
-    image_name = next(generate_ids('image'))
+    image_name = next(generate_ids('image', length=20))
     return create_image(image_name)

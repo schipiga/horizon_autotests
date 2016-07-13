@@ -26,8 +26,15 @@ from .base import PageBase
 
 
 @ui.register_ui(
+    item_update_metadata=ui.UI(By.CSS_SELECTOR,
+                               '[id$="action_update_metadata"]'))
+class DropdownMenu(_ui.DropdownMenu):
+    """Dropdown menu for image row."""
+
+
+@ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
-    dropdown_menu=_ui.DropdownMenu())
+    dropdown_menu=DropdownMenu())
 class RowImage(ui.Row):
     """Row with image in images table."""
 
@@ -50,9 +57,37 @@ class FormCreateImage(_ui.Form):
 
 
 @ui.register_ui(
+    field_metadata_name=ui.UI(By.CSS_SELECTOR, '[ng-bind$="item.leaf.name"]'),
+    field_metadata_value=ui.TextField(By.CSS_SELECTOR,
+                                      '[ng-model$="item.leaf.value"]'))
+class RowMetadata(ui.Row):
+    """Row of added metadata."""
+
+
+class ListMetadata(ui.List):
+    """List of added metadata."""
+
+    row_cls = RowMetadata
+    row_xpath = './li[contains(@ng-repeat, "item in existingList")]'
+
+
+@ui.register_ui(
+    button_add_metadata=ui.Button(By.CSS_SELECTOR, '[ng-click*="addCustom"]'),
+    field_metadata_name=ui.TextField(By.NAME, 'customItem'),
+    list_metadata=ListMetadata(By.CSS_SELECTOR, 'ul[ng-form$="metadataForm"]'))
+class FormUpdateMetadata(_ui.Form):
+    """Form to update image metadata."""
+
+    submit_locator = By.CSS_SELECTOR, '.btn[ng-click$="modal.save()"]'
+    cancel_locator = By.CSS_SELECTOR, '.btn[ng-click$="modal.cancel()"]'
+
+
+@ui.register_ui(
     button_create_image=ui.Button(By.ID, 'images__action_create'),
     button_delete_images=ui.Button(By.ID, 'images__action_delete'),
     form_create_image=FormCreateImage(By.ID, 'create_image_form'),
+    form_update_metadata=FormUpdateMetadata(By.CSS_SELECTOR,
+                                            'div.modal-content'),
     table_images=TableImages(By.ID, 'images'))
 class PageImages(PageBase):
     """Images Page."""

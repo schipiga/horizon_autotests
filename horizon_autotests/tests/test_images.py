@@ -79,8 +79,14 @@ class TestAnyUser(object):
         assert page_images.table_images.link_next.is_present
         assert not page_images.table_images.link_prev.is_present
 
-    def test_update_image_metadata(self):
+    def test_update_image_metadata(self, image, images_steps):
         """Verify that user can update image metadata."""
+        metadata = {
+            next(generate_ids('metadata')): next(generate_ids("value"))
+            for _ in range(2)}
+        images_steps.update_metadata(image.name, metadata)
+        image_metadata = images_steps.get_metadata(image.name)
+        assert metadata == image_metadata
 
     def test_remove_protected_image(self):
         """Verify that user can't delete protected image."""
