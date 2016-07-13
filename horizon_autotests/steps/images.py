@@ -144,3 +144,26 @@ class ImagesSteps(BaseSteps):
             page_images.modal.wait_for_absence()
 
         return metadata
+
+    def update_image(self, image_name, new_image_name, check=True):
+        """Step to update image."""
+        page_images = self.page_images()
+        with page_images.table_images.row(
+                name=image_name).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_edit.click()
+
+        with page_images.form_update_image as form:
+            form.field_name.value = new_image_name
+            form.submit()
+
+        page_images.spinner.wait_for_absence()
+
+        if check:
+            self.close_notification('success')
+
+            with page_images.table_images.row(name=new_image_name) as row:
+                row.wait_for_presence()
+
+                with row.cell('status') as cell:
+                    waiter.exe(60, lambda: cell.value == 'Active')

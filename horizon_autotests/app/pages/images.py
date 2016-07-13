@@ -83,9 +83,16 @@ class FormUpdateMetadata(_ui.Form):
 
 
 @ui.register_ui(
+    field_name=ui.TextField(By.NAME, 'name'))
+class FormUpdateImage(_ui.Form):
+    """Form to update image."""
+
+
+@ui.register_ui(
     button_create_image=ui.Button(By.ID, 'images__action_create'),
     button_delete_images=ui.Button(By.ID, 'images__action_delete'),
     form_create_image=FormCreateImage(By.ID, 'create_image_form'),
+    form_update_image=FormUpdateImage(By.ID, 'update_image_form'),
     form_update_metadata=FormUpdateMetadata(By.CSS_SELECTOR,
                                             'div.modal-content'),
     table_images=TableImages(By.ID, 'images'))
@@ -93,3 +100,5 @@ class PageImages(PageBase):
     """Images Page."""
 
     url = "/project/images/"
+
+    navigate_items = 'Project', 'Compute', 'Images'

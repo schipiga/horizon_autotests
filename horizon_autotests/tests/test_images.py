@@ -91,8 +91,11 @@ class TestAnyUser(object):
     def test_remove_protected_image(self):
         """Verify that user can't delete protected image."""
 
-    def test_edit_image(self):
-        """Verify that user ca edit image."""
+    def test_edit_image(self, image, images_steps):
+        """Verify that user can edit image."""
+        new_image_name = image.name + '(updated)'
+        with image.put(name=new_image_name):
+            images_steps.update_image(image.name, new_image_name)
 
     def test_create_volume_from_image(self):
         """Verify that user can create volume from image."""
