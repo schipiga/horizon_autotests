@@ -74,6 +74,28 @@ def generate_files(prefix=None, postfix=None, folder=None, count=1, size=1024):
         yield file_path
 
 
+def get_size(value, to):
+    """Get size of value with specified type."""
+    _map = {'TB': 1024 * 1024 * 1024 * 1024,
+            'GB': 1024 * 1024 * 1024,
+            'MB': 1024 * 1024,
+            'KB': 1024}
+
+    value = value.upper()
+    to = to.upper()
+
+    for k, v in _map.items():
+        if value.endswith(k):
+            value = int(value.strip(k).strip()) * v
+            break
+    else:
+        value = int(value) * 1024
+
+    for k, v in _map.items():
+        if to == k:
+            return value / v
+
+
 def slugify(string):
     """Slugify test names to put test results in folder with test name."""
     return ''.join(s if s.isalnum() else '_' for s in string).strip('_')

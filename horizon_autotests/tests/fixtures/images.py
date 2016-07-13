@@ -80,8 +80,10 @@ def create_image(images_steps):
     """
     images = []
 
-    def _create_image(image_name, image_file=None):
-        images_steps.create_image(image_name, image_file=image_file)
+    def _create_image(image_name, image_file=None, min_disk=None,
+                      min_ram=None):
+        images_steps.create_image(image_name, image_file=image_file,
+                                  min_disk=min_disk, min_ram=min_ram)
         image = AttrDict(name=image_name)
         images.append(image)
         return image

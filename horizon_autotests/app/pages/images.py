@@ -23,6 +23,7 @@ from selenium.webdriver.common.by import By
 from horizon_autotests.app import ui as _ui
 
 from .base import PageBase
+from .instances import FormLaunchInstance
 
 
 @ui.register_ui(
@@ -47,11 +48,13 @@ class TableImages(_ui.Table):
 
 
 @ui.register_ui(
-    field_disk_format=ui.ComboBox(By.NAME, 'disk_format'),
+    combobox_disk_format=ui.ComboBox(By.NAME, 'disk_format'),
+    combobox_source_type=ui.ComboBox(By.NAME, 'source_type'),
     field_image_file=ui.TextField(By.NAME, 'image_file'),
     field_image_url=ui.TextField(By.NAME, 'image_url'),
-    field_name=ui.TextField(By.NAME, 'name'),
-    field_source_type=ui.ComboBox(By.NAME, 'source_type'))
+    field_min_disk=ui.TextField(By.NAME, 'minimum_disk'),
+    field_min_ram=ui.TextField(By.NAME, 'minimum_ram'),
+    field_name=ui.TextField(By.NAME, 'name'))
 class FormCreateImage(_ui.Form):
     """Form to create image."""
 
@@ -92,6 +95,9 @@ class FormUpdateImage(_ui.Form):
     button_create_image=ui.Button(By.ID, 'images__action_create'),
     button_delete_images=ui.Button(By.ID, 'images__action_delete'),
     form_create_image=FormCreateImage(By.ID, 'create_image_form'),
+    form_launch_instance=FormLaunchInstance(
+        By.CSS_SELECTOR,
+        'wizard[ng-controller="LaunchInstanceWizardController"]'),
     form_update_image=FormUpdateImage(By.ID, 'update_image_form'),
     form_update_metadata=FormUpdateMetadata(By.CSS_SELECTOR,
                                             'div.modal-content'),

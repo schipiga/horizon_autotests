@@ -32,7 +32,8 @@ class ImagesSteps(BaseSteps):
         return self._open(self.app.page_images)
 
     def create_image(self, image_name, image_url=CIRROS_URL, image_file=None,
-                     disk_format='QCOW2', check=True):
+                     disk_format='QCOW2', min_disk=None, min_ram=None,
+                     check=True):
         """Step to create image."""
         page_images = self.page_images()
         page_images.button_create_image.click()
@@ -41,14 +42,20 @@ class ImagesSteps(BaseSteps):
             form.field_name.value = image_name
 
             if image_file:
-                form.field_source_type.value = 'Image File'
+                form.combobox_source_type.value = 'Image File'
                 form.field_image_file.value = image_file
 
             else:
-                form.field_source_type.value = 'Image Location'
+                form.combobox_source_type.value = 'Image Location'
                 form.field_image_url.value = image_url
 
-            form.field_disk_format.value = disk_format
+            if min_disk:
+                form.field_min_disk.value = min_disk
+
+            if min_ram:
+                form.field_min_ram.value = min_ram
+
+            form.combobox_disk_format.value = disk_format
             form.submit()
 
         page_images.spinner.wait_for_absence()

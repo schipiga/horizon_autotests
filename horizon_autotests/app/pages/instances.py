@@ -17,6 +17,8 @@ Instances page.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
 from pom import ui
 from selenium.webdriver.common.by import By
 
@@ -48,9 +50,25 @@ class RadioVolumeCreate(ui.UI):
 
 
 @ui.register_ui(
+    label_alert=ui.UI(By.CSS_SELECTOR, 'span.invalid'))
+class Cell(ui.Block):
+    """Cell."""
+
+    @property
+    def value(self):
+        """Cell value."""
+        def _clean_html(raw_html):
+            return re.sub(r'<.*?>', '', raw_html)
+
+        return _clean_html(super(Cell, self).value).strip()
+
+
+@ui.register_ui(
     button_add=ui.Button(By.CSS_SELECTOR, 'button.btn.btn-default'))
 class RowAvailable(ui.Row):
     """Row with available item."""
+
+    cell_cls = Cell
 
 
 class TableAvailableSources(ui.Table):
@@ -74,8 +92,9 @@ class TabSource(ui.Block):
 class TableAvailableFlavors(ui.Table):
     """Available flavors table."""
 
-    columns = {'name': 2}
+    columns = {'name': 2, 'ram': 4, 'root_disk': 6}
     row_cls = RowAvailable
+    row_xpath = './/tr[contains(@ng-repeat-start, "displayedItems")]'
 
 
 @ui.register_ui(
@@ -115,6 +134,7 @@ class FormLaunchInstance(_ui.Form):
     """Form to launch new instance."""
 
     submit_locator = By.CSS_SELECTOR, 'button.btn.btn-primary.finish'
+    cancel_locator = By.CSS_SELECTOR, 'button.btn[ng-click="cancel()"]'
 
 
 @ui.register_ui(
