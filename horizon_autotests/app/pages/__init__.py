@@ -19,6 +19,7 @@ Module with horizon pages.
 
 from .access import PageAccess
 from .base import PageBase
+from .containers import PageContainers
 from .images import PageImages
 from .instances import PageInstances
 from .login import PageLogin
@@ -33,8 +34,9 @@ from .volumes import (PageAdminVolumes,
 
 pages = [
     PageAccess,
-    PageBase,
     PageAdminVolumes,
+    PageBase,
+    PageContainers,
     PageImages,
     PageInstances,
     PageLogin,

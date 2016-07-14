@@ -17,8 +17,6 @@ Horizon base steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import PageBase
-
 
 class BaseSteps(object):
     """Base steps."""
@@ -52,7 +50,7 @@ class BaseSteps(object):
         Arguments:
             - project_name: string, name of project.
         """
-        with PageBase(self.app).dropdown_menu_project as menu:
+        with self.app.page_base.dropdown_menu_project as menu:
             menu.click()
             menu.item_project(project_name).click()
 
@@ -64,6 +62,7 @@ class BaseSteps(object):
         Arguments:
             - level: string, level of popup: "success", "info", "error".
         """
-        with PageBase(self.app).notification(level) as popup:
+        self.app.page_base.modal.wait_for_absence()
+        with self.app.page_base.notification(level) as popup:
             popup.button_close.click()
             popup.wait_for_absence()
