@@ -63,4 +63,4 @@ class NavigateMenu(ui.Block):
 
 
 def _is_expanded(menu):
-    return 'in' in menu.webelement.get_attribute('class').split()
+    return menu.is_present and 'in' in menu.get_attribute('class').split()

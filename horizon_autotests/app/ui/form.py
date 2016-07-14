@@ -27,10 +27,12 @@ class Form(ui.Form):
     submit_locator = By.CSS_SELECTOR, '.btn.btn-primary'
     cancel_locator = By.CSS_SELECTOR, '.btn.cancel'
 
+    @ui.wait_for_presence
     def submit(self):
         """Submit form."""
         self.webelement.find_element(*self.submit_locator).click()
 
+    @ui.wait_for_presence
     def cancel(self):
         """Cancel form."""
         self.webelement.find_element(*self.cancel_locator).click()
