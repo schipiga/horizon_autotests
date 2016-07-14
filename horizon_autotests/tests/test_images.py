@@ -132,13 +132,17 @@ class TestAnyUser(object):
                 form.cancel()
             page.modal.wait_for_absence()
 
+    def test_public_image_visibility(self, horizon, login):
+        """Verify that public image is visible for other users."""
+        with horizon.page_images as page:
+            page.open()
+            page.button_public_images.click()
+            page.table_images.row(name='TestVM').wait_for_presence()
+
 
 @pytest.mark.usefixtures('admin_only')
 class TestAdminOnly(object):
     """Tests for admin only."""
-
-    def test_public_image_visibility(self):
-        """Verify that public image is visible for other users."""
 
     def test_launch_instance_from_image(self):
         """Verify that user can launch instance from image."""

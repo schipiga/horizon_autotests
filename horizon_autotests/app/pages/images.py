@@ -94,6 +94,7 @@ class FormUpdateImage(_ui.Form):
 @ui.register_ui(
     button_create_image=ui.Button(By.ID, 'images__action_create'),
     button_delete_images=ui.Button(By.ID, 'images__action_delete'),
+    button_public_images=ui.Button(By.CSS_SELECTOR, 'button[value="public"]'),
     form_create_image=FormCreateImage(By.ID, 'create_image_form'),
     form_launch_instance=FormLaunchInstance(
         By.CSS_SELECTOR,
