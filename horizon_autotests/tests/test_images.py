@@ -120,17 +120,15 @@ class TestAnyUser(object):
 
                     ram_cell = row.cell('ram')
                     if get_size(ram_cell.value, to='mb') < ram_size:
-                        assert ram_cell.label_alert.is_visible
+                        assert ram_cell.label_alert.is_present
                     else:
-                        assert not (ram_cell.label_alert.is_present and
-                                    ram_cell.label_alert.is_visible)
+                        assert not ram_cell.label_alert.is_present
 
                     disk_cell = row.cell('root_disk')
                     if get_size(disk_cell.value, to='gb') < disk_size:
-                        assert disk_cell.label_alert.is_visible
+                        assert disk_cell.label_alert.is_present
                     else:
-                        assert not (disk_cell.label_alert.is_present and
-                                    disk_cell.label_alert.is_visible)
+                        assert not disk_cell.label_alert.is_present
                 form.cancel()
             page.modal.wait_for_absence()
 

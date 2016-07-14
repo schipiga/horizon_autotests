@@ -109,7 +109,7 @@ class UsersSteps(BaseSteps):
 
             def check_rows():
                 for row in page_users.table_users.rows:
-                    if not (row.is_visible and
+                    if not (row.is_present and
                             query in row.link_username.value):
                         return False
                 return True
