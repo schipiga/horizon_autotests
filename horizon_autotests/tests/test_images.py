@@ -88,8 +88,15 @@ class TestAnyUser(object):
         image_metadata = images_steps.get_metadata(image.name)
         assert metadata == image_metadata
 
-    def test_remove_protected_image(self):
+    def test_remove_protected_image(self, horizon, create_image, images_steps):
         """Verify that user can't delete protected image."""
+        image_name = next(generate_ids('image', length=20))
+        create_image(image_name, protected=True)
+        images_steps.delete_images([image_name], check=False)
+        images_steps.close_notification('error')
+        horizon.page_images.table_images.row(
+            name=image_name).wait_for_presence()
+        images_steps.update_image(image_name, protected=False)
 
     def test_edit_image(self, image, images_steps):
         """Verify that user can edit image."""

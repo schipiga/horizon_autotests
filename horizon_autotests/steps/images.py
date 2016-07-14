@@ -33,7 +33,7 @@ class ImagesSteps(BaseSteps):
 
     def create_image(self, image_name, image_url=CIRROS_URL, image_file=None,
                      disk_format='QCOW2', min_disk=None, min_ram=None,
-                     check=True):
+                     protected=False, check=True):
         """Step to create image."""
         page_images = self.page_images()
         page_images.button_create_image.click()
@@ -54,6 +54,11 @@ class ImagesSteps(BaseSteps):
 
             if min_ram:
                 form.field_min_ram.value = min_ram
+
+            if protected:
+                form.checkbox_protected.select()
+            else:
+                form.checkbox_protected.unselect()
 
             form.combobox_disk_format.value = disk_format
             form.submit()
@@ -97,9 +102,9 @@ class ImagesSteps(BaseSteps):
         page_images.button_delete_images.click()
         page_images.form_confirm.submit()
         page_images.spinner.wait_for_absence()
-        self.close_notification('success')
 
         if check:
+            self.close_notification('success')
             for image_name in image_names:
                 page_images.table_images.row(
                     name=image_name).wait_for_absence(60)
@@ -152,7 +157,8 @@ class ImagesSteps(BaseSteps):
 
         return metadata
 
-    def update_image(self, image_name, new_image_name, check=True):
+    def update_image(self, image_name, new_image_name=None, protected=False,
+                     check=True):
         """Step to update image."""
         page_images = self.page_images()
         with page_images.table_images.row(
@@ -161,7 +167,15 @@ class ImagesSteps(BaseSteps):
             menu.item_edit.click()
 
         with page_images.form_update_image as form:
-            form.field_name.value = new_image_name
+
+            if new_image_name:
+                form.field_name.value = new_image_name
+
+            if protected:
+                form.checkbox_protected.select()
+            else:
+                form.checkbox_protected.unselect()
+
             form.submit()
 
         page_images.spinner.wait_for_absence()
@@ -169,7 +183,8 @@ class ImagesSteps(BaseSteps):
         if check:
             self.close_notification('success')
 
-            with page_images.table_images.row(name=new_image_name) as row:
+            with page_images.table_images.row(
+                    name=new_image_name or image_name) as row:
                 row.wait_for_presence()
 
                 with row.cell('status') as cell:

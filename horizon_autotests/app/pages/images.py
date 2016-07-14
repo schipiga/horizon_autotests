@@ -48,6 +48,7 @@ class TableImages(_ui.Table):
 
 
 @ui.register_ui(
+    checkbox_protected=_ui.CheckBox(By.NAME, 'protected'),
     combobox_disk_format=ui.ComboBox(By.NAME, 'disk_format'),
     combobox_source_type=ui.ComboBox(By.NAME, 'source_type'),
     field_image_file=ui.TextField(By.NAME, 'image_file'),
@@ -86,6 +87,7 @@ class FormUpdateMetadata(_ui.Form):
 
 
 @ui.register_ui(
+    checkbox_protected=_ui.CheckBox(By.NAME, 'protected'),
     field_name=ui.TextField(By.NAME, 'name'))
 class FormUpdateImage(_ui.Form):
     """Form to update image."""
