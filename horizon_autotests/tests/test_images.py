@@ -19,6 +19,8 @@ Image tests.
 
 import pytest
 
+from horizon_autotests.steps._utils import waiter
+
 from .fixtures.utils import generate_ids, generate_files, get_size
 
 
@@ -121,9 +123,10 @@ class TestAnyUser(object):
 
             with page.form_launch_instance as form:
                 form.item_flavor.click()
-                rows = form.tab_flavor.table_available_flavors.rows
-                assert rows
-                for row in rows:
+                waiter.exe(
+                    30, lambda: form.tab_flavor.table_available_flavors.rows)
+
+                for row in form.tab_flavor.table_available_flavors.rows:
 
                     ram_cell = row.cell('ram')
                     if get_size(ram_cell.value, to='mb') < ram_size:
