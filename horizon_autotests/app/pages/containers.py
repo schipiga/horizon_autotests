@@ -34,7 +34,15 @@ class FormCreateContainer(_ui.Form):
 
 @ui.register_ui(
     button_delete_container=ui.Button(
-        By.CSS_SELECTOR, '[ng-click*="deleteContainer"]'))
+        By.CSS_SELECTOR, '[ng-click*="deleteContainer"]'),
+    label_created_date=ui.UI(
+        By.CSS_SELECTOR, '.hz-object-timestamp .hz-object-val'),
+    label_objects_count=ui.UI(
+        By.CSS_SELECTOR, '.hz-object-count .hz-object-val'),
+    label_size=ui.UI(
+        By.CSS_SELECTOR, '.hz-object-size .hz-object-val'),
+    link_public_url=ui.Link(
+        By.CSS_SELECTOR, '.hz-object-link a[ng-show*="public_url"]'))
 class RowContainer(ui.Row):
     """Row with container."""
 
@@ -46,13 +54,55 @@ class ListContainers(ui.List):
     row_xpath = ".//div[contains(@ng-repeat, 'container')]"
 
 
+@ui.register_ui(item_delete=ui.UI(By.CSS_SELECTOR, '.text-danger'))
+class DropdownMenu(_ui.DropdownMenu):
+    """Dropdown menu for row with object."""
+
+
+@ui.register_ui(
+    button_delete=ui.Button(By.CSS_SELECTOR, 'button.btn-danger'),
+    dropdown_menu=DropdownMenu(),
+    link_folder=ui.Link(By.CSS_SELECTOR, 'td > a'))
+class RowObject(ui.Row):
+    """Row with object."""
+
+
+class TableObjects(_ui.Table):
+    """Table with objects."""
+
+    columns = {'name': 1}
+    row_cls = RowObject
+    row_xpath = './/tr[contains(@ng-repeat, "file")]'
+
+
+@ui.register_ui(field_name=ui.TextField(By.NAME, 'name'))
+class FormCreateFolder(_ui.Form):
+    """Form to create folder."""
+
+
+@ui.register_ui(
+    field_file=ui.FileField(By.NAME, 'file'),
+    field_name=ui.TextField(By.ID, 'id_name'))
+class FormUploadFile(_ui.Form):
+    """Form to upload file."""
+
+
 @ui.register_ui(
     button_create_container=ui.Button(
         By.CSS_SELECTOR, 'button[ng-click="cc.createContainer()"]'),
+    button_create_folder=ui.Button(
+        By.CSS_SELECTOR, '[ng-click="oc.createFolder()"]'),
+    button_upload_file=ui.Button(
+        By.CSS_SELECTOR, '[ng-click="oc.uploadObject()"]'),
     form_create_container=FormCreateContainer(
         By.CSS_SELECTOR, 'div[ng-form="containerForm"]'),
+    form_create_folder=FormCreateFolder(
+        By.CSS_SELECTOR, 'div.modal-content'),
+    form_upload_file=FormUploadFile(
+        By.CSS_SELECTOR, 'div[ng-form="uploadForm"]'),
     list_containers=ListContainers(
-        By.CSS_SELECTOR, 'accordion.hz-container-accordion'))
+        By.CSS_SELECTOR, 'accordion.hz-container-accordion'),
+    table_objects=TableObjects(By.CSS_SELECTOR, 'table.hz-objects'))
 class PageContainers(PageBase):
     """Containers Page."""
 

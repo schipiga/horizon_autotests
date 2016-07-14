@@ -61,3 +61,103 @@ class ContainersSteps(BaseSteps):
             self.close_notification('success')
             page_containers.list_containers.row(
                 container_name).wait_for_absence()
+
+    def __enter__(self):
+        """Enter to context manager."""
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        """Exit from context manager."""
+        self._callback()
+
+    def container(self, container_name):
+        """Step to enter to container."""
+        self.app.page_containers.list_containers.row(container_name).click()
+
+        def exit(self=self):
+            self.app.page_containers.list_containers.row(
+                container_name).click()
+
+        self._callback = exit
+        return self
+
+    def folder(self, folder_name):
+        """Step to enter to folder."""
+        self.app.page_containers.table_objects.row(
+            name=folder_name).link_folder.click()
+
+        def exit(self=self):
+            self.app.page_containers.back()
+
+        self._callback = exit
+        return self
+
+    def create_folder(self, folder_name, check=True):
+        """Step to create folder."""
+        with self.app.page_containers as page:
+            page.button_create_folder.click()
+
+            with page.form_create_folder as form:
+                form.field_name.value = folder_name
+                form.submit()
+
+        if check:
+            self.close_notification('success')
+            self.app.page_containers.table_objects.row(
+                name=folder_name).wait_for_presence()
+
+    def delete_folder(self, folder_name, check=True):
+        """Step to delete folder."""
+        with self.app.page_containers as page:
+            page.table_objects.row(
+                name=folder_name).button_delete.click()
+            page.form_confirm.submit()
+
+        if check:
+            self.close_notification('success')
+            self.app.page_containers.table_objects.row(
+                name=folder_name).wait_for_absence()
+
+    def container_info(self, container_name):
+        """Step to get container info."""
+        with self.app.page_containers.list_containers.row(
+                container_name) as row:
+            return {
+                'objects_count': row.label_objects_count.value,
+                'size': row.label_size.value,
+                'created_date': row.label_created_date.value,
+                'public_url': row.link_public_url.href}
+
+    def upload_file(self, file_path, file_name=None, check=True):
+        """Step to upload file."""
+        self.app.page_containers.button_upload_file.click()
+
+        with self.app.page_containers.form_upload_file as form:
+            form.field_file.value = file_path
+
+            if file_name:
+                form.field_name.value = file_name
+
+            file_name = form.field_name.value
+            form.submit()
+
+        if check:
+            self.close_notification('success')
+            self.app.page_containers.table_objects.row(
+                name=file_name).wait_for_presence()
+
+        return file_name
+
+    def delete_file(self, file_name, check=True):
+        """Step to delete file."""
+        with self.app.page_containers.table_objects.row(
+                name=file_name).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_delete.click()
+
+        self.app.page_containers.form_confirm.submit()
+
+        if check:
+            self.close_notification('success')
+            self.app.page_containers.table_objects.row(
+                name=file_name).wait_for_absence()
