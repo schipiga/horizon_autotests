@@ -37,14 +37,12 @@ class RadioVolumeCreate(ui.UI):
     """Radio buttons group to create volume or no."""
 
     @property
-    @ui.wait_for_presence
     def value(self):
         """Value of radio buttons group."""
         return self.webelement.find_element(
             By.XPATH, 'label[contains(@class, "active")]').text
 
     @value.setter
-    @ui.wait_for_presence
     def value(self, val):
         """Set value of radio buttons group."""
         self.webelement.find_element(
