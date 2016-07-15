@@ -39,7 +39,8 @@ class VolumesSteps(BaseSteps):
             page.label_volumes.click()
             return page.tab_volumes
 
-    def create_volume(self, volume_name, source_type='Image', volume_type=''):
+    def create_volume(self, volume_name, source_type='Image', volume_type='',
+                      check=True):
         """Step to create volume."""
         tab_volumes = self.tab_volumes()
         tab_volumes.button_create_volume.click()
@@ -59,13 +60,15 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('info')
 
-        with tab_volumes.table_volumes.row(
-                name=volume_name).cell('status') as cell:
-            assert waiter.exe(60, lambda: cell.value == 'Available')
+        if check:
+            self.close_notification('info')
+            with tab_volumes.table_volumes.row(name=volume_name) as row:
+                row.wait_for_presence()
+                with row.cell('status') as cell:
+                    assert waiter.exe(60, lambda: cell.value == 'Available')
 
-    def delete_volume(self, volume_name):
+    def delete_volume(self, volume_name, check=True):
         """Step to delete volume."""
         tab_volumes = self.tab_volumes()
 
@@ -76,10 +79,11 @@ class VolumesSteps(BaseSteps):
 
         tab_volumes.form_confirm.submit()
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        tab_volumes.table_volumes.row(
-            name=volume_name).wait_for_absence(30)
+        if check:
+            self.close_notification('success')
+            tab_volumes.table_volumes.row(
+                name=volume_name).wait_for_absence(30)
 
     def edit_volume(self, volume_name, new_volume_name):
         """Step to edit volume."""
@@ -97,7 +101,7 @@ class VolumesSteps(BaseSteps):
         tab_volumes.table_volumes.row(
             name=new_volume_name).wait_for_presence(30)
 
-    def delete_volumes(self, *volume_names):
+    def delete_volumes(self, volume_names, check=True):
         """Step to delete volumes."""
         tab_volumes = self.tab_volumes()
 
@@ -109,11 +113,12 @@ class VolumesSteps(BaseSteps):
         tab_volumes.form_confirm.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        for volume_name in volume_names:
-            tab_volumes.table_volumes.row(
-                name=volume_name).wait_for_absence(180)
+        if check:
+            self.close_notification('success')
+            for volume_name in volume_names:
+                tab_volumes.table_volumes.row(
+                    name=volume_name).wait_for_absence(180)
 
     def view_volume(self, volume_name):
         """Step to view volume."""

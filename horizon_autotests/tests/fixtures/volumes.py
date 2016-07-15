@@ -20,6 +20,7 @@ Fixtures for volumes.
 import pytest
 
 from horizon_autotests.steps import VolumesSteps
+from horizon_autotests.steps._utils import waiter
 
 from .utils import AttrDict, generate_ids
 
@@ -48,22 +49,30 @@ def create_volumes(volumes_steps):
     """
     volumes = []
 
-    def _create_volumes(names):
+    def _create_volumes(volume_names):
         _volumes = []
 
-        for name in names:
-            volumes_steps.create_volume(name)
-            volume = AttrDict(name=name)
+        for volume_name in volume_names:
+            volumes_steps.create_volume(volume_name, check=False)
+            volumes_steps.close_notification('info')
+            volume = AttrDict(name=volume_name)
 
             volumes.append(volume)
             _volumes.append(volume)
+
+        for volume_name in volume_names:
+            with volumes_steps.tab_volumes().table_volumes.row(
+                    name=volume_name) as row:
+                row.wait_for_presence()
+                with row.cell('status') as cell:
+                    assert waiter.exe(60, lambda: cell.value == 'Available')
 
         return _volumes
 
     yield _create_volumes
 
     if volumes:
-        volumes_steps.delete_volumes(*[volume.name for volume in volumes])
+        volumes_steps.delete_volumes([volume.name for volume in volumes])
 
 
 @pytest.yield_fixture
@@ -74,10 +83,11 @@ def create_volume(volumes_steps):
     """
     volumes = []
 
-    def _create_volume(name, volume_type):
-        volumes_steps.create_volume(name, volume_type=volume_type)
-        volumes.append(AttrDict(name=name))
-        return volumes[-1]
+    def _create_volume(volume_name, volume_type=''):
+        volumes_steps.create_volume(volume_name, volume_type=volume_type)
+        volume = AttrDict(name=volume_name)
+        volumes.append(volume)
+        return volume
 
     yield _create_volume
 
@@ -85,16 +95,11 @@ def create_volume(volumes_steps):
         volumes_steps.delete_volume(volume.name)
 
 
-@pytest.yield_fixture
-def volume(volumes_steps):
+@pytest.fixture
+def volume(create_volume):
     """Fixture to create volume with default options before test."""
     volume_name = next(generate_ids('volume'))
-    volumes_steps.create_volume(volume_name)
-
-    volume = AttrDict(name=volume_name)
-    yield volume
-
-    volumes_steps.delete_volume(volume.name)
+    return create_volume(volume_name)
 
 
 @pytest.yield_fixture
