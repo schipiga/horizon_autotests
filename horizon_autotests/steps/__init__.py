@@ -24,6 +24,7 @@ from .containers import ContainersSteps  # noqa
 from .images import ImagesSteps  # noqa
 from .instances import InstancesSteps  # noqa
 from .keypairs import KeypairsSteps  # noqa
+from .networks import NetworksSteps  # noqa
 from .projects import ProjectsSteps  # noqa
 from .routers import RoutersSteps  # noqa
 from .settings import SettingsSteps  # noqa

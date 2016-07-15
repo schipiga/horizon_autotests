@@ -30,9 +30,13 @@ class Form(ui.Form):
     @ui.wait_for_presence
     def submit(self):
         """Submit form."""
-        self.webelement.find_element(*self.submit_locator).click()
+        submit_button = ui.Button(*self.submit_locator)
+        submit_button.container = self
+        submit_button.click()
 
     @ui.wait_for_presence
     def cancel(self):
         """Cancel form."""
-        self.webelement.find_element(*self.cancel_locator).click()
+        cancel_button = ui.Button(*self.cancel_locator)
+        cancel_button.container = self
+        cancel_button.click()

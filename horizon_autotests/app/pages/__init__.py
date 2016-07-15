@@ -23,6 +23,9 @@ from .containers import PageContainers
 from .images import PageImages
 from .instances import PageInstances
 from .login import PageLogin
+from .networks import (PageAdminNetworks,
+                       PageNetwork,
+                       PageNetworks)
 from .projects import PageProjects
 from .routers import PageRouters
 from .settings import PagePassword, PageSettings
@@ -34,12 +37,15 @@ from .volumes import (PageAdminVolumes,
 
 pages = [
     PageAccess,
+    PageAdminNetworks,
     PageAdminVolumes,
     PageBase,
     PageContainers,
     PageImages,
     PageInstances,
     PageLogin,
+    PageNetwork,
+    PageNetworks,
     PagePassword,
     PageProjects,
     PageRouters,

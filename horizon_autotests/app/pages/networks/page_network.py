@@ -1,5 +1,5 @@
 """
-Module with fixtures for tests.
+Network page.
 
 @author: schipiga@mirantis.com
 """
@@ -17,19 +17,21 @@ Module with fixtures for tests.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .access import *  # noqa
-from .api_access import *  # noqa
-from .app import *  # noqa
-from .auto_use import *  # noqa
-from .containers import *  # noqa
-from .credentials import *  # noqa
-from .images import *  # noqa
-from .instances import *  # noqa
-from .keypairs import *  # noqa
-from .networks import *  # noqa
-from .projects import *  # noqa
-from .routers import *  # noqa
-from .settings import *  # noqa
-from .users import *  # noqa
-from .volume_types import *  # noqa
-from .volumes import *  # noqa
+from pom import ui
+from selenium.webdriver.common.by import By
+
+from horizon_autotests.app import ui as _ui
+from horizon_autotests.app.pages.base import PageBase
+
+
+class TableSubnets(_ui.Table):
+    """Table of subnets."""
+
+    columns = {'name': 2, 'network_address': 3}
+
+
+@ui.register_ui(table_subnets=TableSubnets(By.ID, 'subnets'))
+class PageNetwork(PageBase):
+    """Network page."""
+
+    url = "/project/networks/{}/detail"

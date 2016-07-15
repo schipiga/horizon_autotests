@@ -19,16 +19,41 @@ Network tests.
 
 import pytest
 
+from .fixtures.utils import generate_ids
+
 
 @pytest.mark.usefixtures('any_user')
 class TestAnyUser(object):
     """Tests for any user."""
 
-    def test_private_network_create(self):
-        """Verify that user can create private network."""
-
-    def test_subnet_add(self):
+    def test_subnet_add(self, network, networks_steps):
         """Verify that user can add subnet."""
+        subnet_name = next(generate_ids('subnet'))
+        networks_steps.add_subnet(network.name, subnet_name)
 
-    def test_create_network(self):
-        """Verify that uer can create network."""
+
+@pytest.mark.usefixtures('admin_only')
+class TestAdminOnly(object):
+    """Tests for admin only."""
+
+    def test_create_shared_network(self, horizon, networks_steps):
+        """Verify that admin can create shared network."""
+        network_name = next(generate_ids('network'))
+        networks_steps.create_network(network_name, shared=True)
+        networks_steps.delete_networks([network_name], check=False)
+        networks_steps.close_notification('error')
+        horizon.page_networks.table_networks.row(
+            name=network_name).wait_for_presence()
+        networks_steps.admin_delete_network(network_name)
+
+
+@pytest.mark.usefixtures('demo_only')
+class TestDemoOnly(object):
+    """Tests for demo only."""
+
+    def test_not_create_shared_network(self, horizon, create_network):
+        """Verify that demo can not create shared network."""
+        network_name = next(generate_ids('network'))
+        create_network(network_name, shared=True)
+        assert horizon.page_networks.table_networks.row(
+            name=network_name).cell('shared').value == 'No'
