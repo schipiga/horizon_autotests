@@ -140,8 +140,8 @@ class FormLaunchInstance(_ui.Form):
 
 
 @ui.register_ui(
-    lock_item=ui.UI(By.CSS_SELECTOR, '*[id*="action_lock"]'),
-    unlock_item=ui.UI(By.CSS_SELECTOR, '*[id*="action_unlock"]'))
+    item_lock=ui.UI(By.CSS_SELECTOR, '*[id*="action_lock"]'),
+    item_unlock=ui.UI(By.CSS_SELECTOR, '*[id*="action_unlock"]'))
 class DropdownMenu(_ui.DropdownMenu):
     """Dropdown menu for instance row."""
 

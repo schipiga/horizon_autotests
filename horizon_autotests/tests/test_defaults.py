@@ -26,4 +26,4 @@ class TestAdminOnly(object):
 
     def test_update_defaults(self, update_defaults):
         """Verify that admin can update default quotas."""
-        update_defaults('volumes quota')
+        update_defaults({'volumes': 100000})

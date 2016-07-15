@@ -111,15 +111,16 @@ class InstancesSteps(BaseSteps):
         """Step to lock instance."""
         with self.page_instances().table_instances.row(
                 name=instance_name).dropdown_menu as menu:
-            menu.toggle_button.click()
-            menu.lock_item.click()
+            menu.button_toggle.click()
+            menu.item_lock.click()
 
         self.close_notification('success')
 
     def unlock_instance(self, instance_name):
+        """Step to unlock instance."""
         with self.page_instances().table_instances.row(
                 name=instance_name).dropdown_menu as menu:
-            menu.toggle_button.click()
-            menu.unlock_item.click()
+            menu.button_toggle.click()
+            menu.item_unlock.click()
 
         self.close_notification('success')

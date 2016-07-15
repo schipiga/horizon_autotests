@@ -40,6 +40,9 @@ class Profile(FirefoxProfile):
         self.set_preference("browser.download.dir", self.download_dir)
         self.set_preference("browser.helperApps.neverAsk.saveToDisk",
                             "application/binary,text/plain")
+        self.set_preference("browser.download.manager.showAlertOnComplete",
+                            False)
+        self.set_preference("browser.download.panel.shown", True)
 
 
 @pom.register_pages(pages)

@@ -21,6 +21,7 @@ from .access import AccessSteps  # noqa
 from .api_access import ApiAccessSteps  # noqa
 from .auth import AuthSteps  # noqa
 from .containers import ContainersSteps  # noqa
+from .defaults import DefaultsSteps  # noqa
 from .images import ImagesSteps  # noqa
 from .instances import InstancesSteps  # noqa
 from .keypairs import KeypairsSteps  # noqa
