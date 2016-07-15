@@ -22,16 +22,19 @@ from selenium.webdriver.common.by import By
 
 from horizon_autotests.app.pages.base import PageBase
 
-from .tab_security_groups import TabSecurityGroups
+from .tab_api_access import TabApiAccess
 from .tab_keypairs import TabKeypairs
+from .tab_security_groups import TabSecurityGroups
 
 
 @ui.register_ui(
-    label_security_groups=ui.UI(By.CSS_SELECTOR,
-                                '[data-target$="security_groups_tab"]'),
+    label_api_access=ui.UI(By.CSS_SELECTOR, '[data-target$="api_access_tab"]'),
     label_keypairs=ui.UI(By.CSS_SELECTOR, '[data-target$="keypairs_tab"]'),
-    tab_security_groups=TabSecurityGroups(),
-    tab_keypairs=TabKeypairs())
+    label_security_groups=ui.UI(
+        By.CSS_SELECTOR, '[data-target$="security_groups_tab"]'),
+    tab_api_access=TabApiAccess(),
+    tab_keypairs=TabKeypairs(),
+    tab_security_groups=TabSecurityGroups())
 class PageAccess(PageBase):
     """Access & security page."""
 

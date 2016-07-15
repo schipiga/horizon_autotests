@@ -42,6 +42,8 @@ class AuthSteps(BaseSteps):
         if check:
             self.app.page_base.dropdown_menu_account.wait_for_presence(30)
 
+        self.app.current_username = username
+
     def logout(self, check=True):
         """Step to log out user account."""
         with self.app.page_base.dropdown_menu_account as menu:
@@ -50,3 +52,6 @@ class AuthSteps(BaseSteps):
 
         if check:
             self.app.page_login.form_login.wait_for_presence(30)
+
+        self.app.current_username = None
+        self.app.current_project = None

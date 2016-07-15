@@ -30,6 +30,7 @@ class DropdownMenuAccount(ui.Block):
     """Dropdown menu for account settings."""
 
 
+@ui.register_ui(label_project=ui.UI(By.CSS_SELECTOR, '.context-project'))
 class DropdownMenuProject(ui.Block):
     """Dropdown menu for project switching."""
 

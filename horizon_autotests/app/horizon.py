@@ -54,6 +54,8 @@ class Horizon(pom.App):
         self.webdriver.maximize_window()
         self.webdriver.set_window_size(1920, 1080)
         self.webdriver.set_page_load_timeout(30)
+        self.current_username = None
+        self.current_project = None
 
     @property
     def download_dir(self):

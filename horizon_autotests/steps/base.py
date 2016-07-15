@@ -55,6 +55,7 @@ class BaseSteps(object):
             menu.item_project(project_name).click()
 
         self.close_notification('success')
+        self.app.current_project = project_name
 
     def close_notification(self, level):
         """Close notification popup window.
