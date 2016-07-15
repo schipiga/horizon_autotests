@@ -17,11 +17,29 @@ Horizon application implementation.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from tempfile import mkdtemp
+
 import pom
+from selenium.webdriver import FirefoxProfile
 
 from .pages import PageBase, pages
 
 sorted_pages = sorted(pages, key=lambda page: len(page.url))
+
+
+class Profile(FirefoxProfile):
+    """Horizon browser profile."""
+
+    def __init__(self, *args, **kwgs):
+        """Constructor."""
+        super(Profile, self).__init__(*args, **kwgs)
+        self.download_dir = mkdtemp()
+        self.set_preference("browser.download.folderList", 2)
+        self.set_preference("browser.download.manager.showWhenStarting",
+                            False)
+        self.set_preference("browser.download.dir", self.download_dir)
+        self.set_preference("browser.helperApps.neverAsk.saveToDisk",
+                            "application/binary,text/plain")
 
 
 @pom.register_pages(pages)
@@ -30,10 +48,17 @@ class Horizon(pom.App):
 
     def __init__(self, url, *args, **kwgs):
         """Constructor."""
-        super(Horizon, self).__init__(url, 'firefox', *args, **kwgs)
+        self.profile = Profile()
+        super(Horizon, self).__init__(
+            url, 'firefox', firefox_profile=self.profile, *args, **kwgs)
         self.webdriver.maximize_window()
         self.webdriver.set_window_size(1920, 1080)
         self.webdriver.set_page_load_timeout(30)
+
+    @property
+    def download_dir(self):
+        """Directory with downloaded files."""
+        return self.profile.download_dir
 
     def open(self, page):
         """Open page or url.
