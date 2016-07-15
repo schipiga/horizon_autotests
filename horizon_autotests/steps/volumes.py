@@ -388,7 +388,8 @@ class VolumesSteps(BaseSteps):
             page.label_backups.click()
             return page.tab_backups
 
-    def create_snapshot(self, volume_name, snapshot_name, description=None):
+    def create_snapshot(self, volume_name, snapshot_name, description=None,
+                        check=True):
         """Step to create volume snapshot."""
         tab_volumes = self.tab_volumes()
 
@@ -404,16 +405,17 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('info')
 
-        tab_snapshots = self.tab_snapshots()
+        if check:
+            self.close_notification('info')
+            tab_snapshots = self.tab_snapshots()
 
-        with tab_snapshots.table_snapshots.row(name=snapshot_name) as row:
-            row.wait_for_presence()
-            with row.cell('status') as cell:
-                assert waiter.exe(30, lambda: cell.value == 'Available')
+            with tab_snapshots.table_snapshots.row(name=snapshot_name) as row:
+                row.wait_for_presence()
+                with row.cell('status') as cell:
+                    assert waiter.exe(30, lambda: cell.value == 'Available')
 
-    def delete_snapshot(self, snapshot_name):
+    def delete_snapshot(self, snapshot_name, check=True):
         """Step to delete volume snapshot."""
         tab_snapshots = self.tab_snapshots()
 
@@ -424,12 +426,13 @@ class VolumesSteps(BaseSteps):
 
         tab_snapshots.form_confirm.submit()
         tab_snapshots.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        tab_snapshots.table_snapshots.row(
-            name=snapshot_name).wait_for_absence(30)
+        if check:
+            self.close_notification('success')
+            tab_snapshots.table_snapshots.row(
+                name=snapshot_name).wait_for_absence(30)
 
-    def delete_snapshots(self, *snapshot_names):
+    def delete_snapshots(self, snapshot_names, check=True):
         """Step to delete volume snapshots."""
         tab_snapshots = self.tab_snapshots()
 
@@ -441,11 +444,12 @@ class VolumesSteps(BaseSteps):
         tab_snapshots.form_confirm.submit()
 
         tab_snapshots.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        for snapshot_name in snapshot_names:
-            tab_snapshots.table_snapshots.row(
-                name=snapshot_name).wait_for_absence(30)
+        if check:
+            self.close_notification('success')
+            for snapshot_name in snapshot_names:
+                tab_snapshots.table_snapshots.row(
+                    name=snapshot_name).wait_for_absence(30)
 
     def update_snapshot(self, snapshot_name, new_snapshot_name,
                         description=None):

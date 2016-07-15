@@ -26,6 +26,7 @@ from .utils import AttrDict, generate_ids
 
 __all__ = [
     'create_backups',
+    'create_snapshot',
     'create_snapshots',
     'create_volume',
     'create_volumes',
@@ -60,9 +61,9 @@ def create_volumes(volumes_steps):
             volumes.append(volume)
             _volumes.append(volume)
 
+        tab_volumes = volumes_steps.tab_volumes()
         for volume_name in volume_names:
-            with volumes_steps.tab_volumes().table_volumes.row(
-                    name=volume_name) as row:
+            with tab_volumes.table_volumes.row(name=volume_name) as row:
                 row.wait_for_presence()
                 with row.cell('status') as cell:
                     assert waiter.exe(60, lambda: cell.value == 'Available')
@@ -102,16 +103,11 @@ def volume(create_volume):
     return create_volume(volume_name)
 
 
-@pytest.yield_fixture
-def snapshot(volume, volumes_steps):
+@pytest.fixture
+def snapshot(create_snapshot):
     """Fixture to create volume snapshot with default options before test."""
     snapshot_name = next(generate_ids('snapshot'))
-    volumes_steps.create_snapshot(volume.name, snapshot_name)
-
-    snapshot = AttrDict(name=snapshot_name)
-    yield snapshot
-
-    volumes_steps.delete_snapshot(snapshot.name)
+    return create_snapshot(snapshot_name)
 
 
 @pytest.yield_fixture
@@ -126,11 +122,20 @@ def create_snapshots(volume, volumes_steps):
         _snapshots = []
 
         for snapshot_name in snapshot_names:
-            volumes_steps.create_snapshot(volume.name, snapshot_name)
+            volumes_steps.create_snapshot(volume.name, snapshot_name,
+                                          check=False)
+            volumes_steps.close_notification('info')
             snapshot = AttrDict(name=snapshot_name)
 
             snapshots.append(snapshot)
             _snapshots.append(snapshot)
+
+        tab_snapshots = volumes_steps.tab_snapshots()
+        for snapshot_name in snapshot_names:
+            with tab_snapshots.table_snapshots.row(name=snapshot_name) as row:
+                row.wait_for_presence()
+                with row.cell('status') as cell:
+                    assert waiter.exe(30, lambda: cell.value == 'Available')
 
         return _snapshots
 
@@ -138,7 +143,7 @@ def create_snapshots(volume, volumes_steps):
 
     if snapshots:
         volumes_steps.delete_snapshots(
-            *[snapshot.name for snapshot in snapshots])
+            [snapshot.name for snapshot in snapshots])
 
 
 @pytest.yield_fixture
@@ -151,8 +156,9 @@ def create_snapshot(volume, volumes_steps):
 
     def _create_snapshot(snapshot_name):
         volumes_steps.create_snapshot(volume.name, snapshot_name)
-        snapshots.append(AttrDict(name=snapshot_name))
-        return snapshots[-1]
+        snapshot = AttrDict(name=snapshot_name)
+        snapshots.append(snapshot)
+        return snapshot
 
     yield _create_snapshot
 
