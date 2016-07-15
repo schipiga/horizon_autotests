@@ -21,6 +21,7 @@ from .access import PageAccess
 from .base import PageBase
 from .containers import PageContainers
 from .defaults import PageDefaults
+from .host_aggregates import PageHostAggregates
 from .images import PageImages
 from .instances import PageInstances
 from .login import PageLogin
@@ -43,6 +44,7 @@ pages = [
     PageBase,
     PageContainers,
     PageDefaults,
+    PageHostAggregates,
     PageImages,
     PageInstances,
     PageLogin,
