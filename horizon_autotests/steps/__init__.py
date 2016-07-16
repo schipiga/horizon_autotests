@@ -22,6 +22,7 @@ from .api_access import ApiAccessSteps  # noqa
 from .auth import AuthSteps  # noqa
 from .containers import ContainersSteps  # noqa
 from .defaults import DefaultsSteps  # noqa
+from .floating_ips import FloatingIPsSteps
 from .host_aggregates import HostAggregatesSteps  # noqa
 from .images import ImagesSteps  # noqa
 from .instances import InstancesSteps  # noqa

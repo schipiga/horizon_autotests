@@ -24,6 +24,7 @@ from .auto_use import *  # noqa
 from .containers import *  # noqa
 from .credentials import *  # noqa
 from .defaults import *  # noqa
+from .floating_ips import *  # noqa
 from .host_aggregates import *  # noqa
 from .images import *  # noqa
 from .instances import *  # noqa
