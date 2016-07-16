@@ -25,6 +25,7 @@ from .host_aggregates import PageHostAggregates
 from .images import PageImages
 from .instances import PageInstances
 from .login import PageLogin
+from .metadata_definitions import PageMetadataDefinitions
 from .networks import (PageAdminNetworks,
                        PageNetwork,
                        PageNetworks)
@@ -48,6 +49,7 @@ pages = [
     PageImages,
     PageInstances,
     PageLogin,
+    PageMetadataDefinitions,
     PageNetwork,
     PageNetworks,
     PagePassword,

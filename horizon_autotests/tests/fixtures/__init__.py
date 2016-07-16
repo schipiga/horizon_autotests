@@ -28,6 +28,7 @@ from .host_aggregates import *  # noqa
 from .images import *  # noqa
 from .instances import *  # noqa
 from .keypairs import *  # noqa
+from .metadata_definitions import *  # noqa
 from .networks import *  # noqa
 from .projects import *  # noqa
 from .routers import *  # noqa

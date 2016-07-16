@@ -23,6 +23,12 @@ from horizon_autotests.steps import RoutersSteps
 
 from .utils import AttrDict, generate_ids
 
+__all__ = [
+    'create_router',
+    'router',
+    'routers_steps'
+]
+
 
 @pytest.fixture
 def routers_steps(horizon, login):

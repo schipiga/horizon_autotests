@@ -24,6 +24,5 @@ import pytest
 class TestAdminOnly(object):
     """Tests for admin only."""
 
-    def test_create_namespace(self, create_namespace):
+    def test_create_namespace(self, namespace):
         """Verify that user can create namespace."""
-        create_namespace()

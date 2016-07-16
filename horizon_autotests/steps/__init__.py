@@ -26,6 +26,7 @@ from .host_aggregates import HostAggregatesSteps  # noqa
 from .images import ImagesSteps  # noqa
 from .instances import InstancesSteps  # noqa
 from .keypairs import KeypairsSteps  # noqa
+from .metadata_definitions import NamespacesSteps  # noqa
 from .networks import NetworksSteps  # noqa
 from .projects import ProjectsSteps  # noqa
 from .routers import RoutersSteps  # noqa
