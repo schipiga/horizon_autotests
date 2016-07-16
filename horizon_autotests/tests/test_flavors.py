@@ -19,6 +19,9 @@ Flavor tests.
 
 import pytest
 
+from horizon_autotests.steps._utils import waiter
+
+from .fixtures.config import ADMIN_NAME, ADMIN_PASSWD, DEMO_NAME, DEMO_PASSWD
 from .fixtures.utils import generate_ids
 
 
@@ -30,22 +33,46 @@ class TestAdminOnly(object):
         """Verify that admin can update flavor metadata."""
         metadata = {
             next(generate_ids('metadata')): next(generate_ids("value"))
-            for i in range(2)}
-        flavors_steps.update_flavor_metadata(flavor.name, metadata)
+            for _ in range(2)}
+        flavors_steps.update_metadata(flavor.name, metadata)
+        flavor_metadata = flavors_steps.get_metadata(flavor.name)
+        assert metadata == flavor_metadata
 
     def test_update_flavor(self, flavor, flavors_steps):
         """Verify that admin cat update flavor."""
-        new_flavor_name = flavor.name + ' (updated)'
+        new_flavor_name = flavor.name + '-updated'
         with flavor.put(name=new_flavor_name):
-            flavors_steps.update_flavor(name=flavor.name,
-                                        new_name=new_flavor_name)
+            flavors_steps.update_flavor(flavor_name=flavor.name,
+                                        new_flavor_name=new_flavor_name)
 
-    def test_modify_flavor_access(self, flavor, flavors_steps):
+    def test_modify_flavor_access(self, horizon, flavor, auth_steps,
+                                  flavors_steps):
         """Verify that admin can modify flavor access."""
-        flavors_steps.modify_flavor_access(flavor.name)
+        flavors_steps.modify_access(flavor.name)
+
+        auth_steps.logout()
+        auth_steps.login(DEMO_NAME, DEMO_PASSWD)
+
+        horizon.page_instances.open()
+        horizon.page_instances.button_launch_instance.click()
+
+        with horizon.page_instances.form_launch_instance as form:
+            form.item_flavor.click()
+
+            waiter.exe(
+                30, lambda: form.tab_flavor.table_available_flavors.rows)
+
+            for row in form.tab_flavor.table_available_flavors.rows:
+                assert row.cell('name').value != flavor.name
+
+            form.cancel()
+        horizon.page_instances.modal.wait_for_absence()
+
+        auth_steps.logout()
+        auth_steps.login(ADMIN_NAME, ADMIN_PASSWD)
 
     @pytest.mark.parametrize('flavors_count', [2, 1])
     def test_delete_flavors(self, flavors_count, create_flavors):
         """Verify that admin can delete flavors as batch."""
         flavor_names = list(generate_ids('flavor', count=flavors_count))
-        create_flavors(flavor_names)
+        create_flavors(*flavor_names)
