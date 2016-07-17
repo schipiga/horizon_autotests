@@ -37,8 +37,9 @@ class TestAdminOnly(object):
         instances_steps.lock_instance(instance.name)
         instances_steps.unlock_instance(instance.name)
 
-# def test_view_instance(instance, instances_steps):
-#     instances_steps.view_instance(instance.name)
+    def test_view_instance(self, instance, instances_steps):
+        """Verify that user can view instance details."""
+        instances_steps.view_instance(instance.name)
 
     def test_instances_pagination(self, instances_steps, create_instances,
                                   update_settings):

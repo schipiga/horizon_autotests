@@ -19,8 +19,6 @@ Instances steps.
 
 from six import moves
 
-from horizon_autotests.app.pages import PageInstances
-
 from ._utils import waiter
 from .base import BaseSteps
 
@@ -30,7 +28,7 @@ class InstancesSteps(BaseSteps):
 
     def page_instances(self):
         """Open instances page if it isn't opened."""
-        return self._open(PageInstances)
+        return self._open(self.app.page_instances)
 
     def create_instance(self, name, count=1):
         """Step to create instance."""
@@ -124,3 +122,10 @@ class InstancesSteps(BaseSteps):
             menu.item_unlock.click()
 
         self.close_notification('success')
+
+    def view_instance(self, instance_name, check=True):
+        """Step to view instance."""
+        self.page_instances().table_instances.row(
+            name=instance_name).link_instance.click()
+        assert self.app.page_instance.info_instance.label_name.value \
+            == instance_name

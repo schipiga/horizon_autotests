@@ -23,7 +23,7 @@ from selenium.webdriver.common.by import By
 from horizon_autotests.app import ui as _ui
 
 from .base import PageBase
-from .instances import FormLaunchInstance
+from .instances.page_instances import FormLaunchInstance
 
 
 @ui.register_ui(

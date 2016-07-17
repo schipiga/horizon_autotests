@@ -24,7 +24,7 @@ from .defaults import PageDefaults
 from .flavors import PageFlavors
 from .host_aggregates import PageHostAggregates
 from .images import PageImages
-from .instances import PageInstances
+from .instances import PageInstance, PageInstances
 from .login import PageLogin
 from .metadata_definitions import PageMetadataDefinitions
 from .networks import (PageAdminNetworks,
@@ -49,6 +49,7 @@ pages = [
     PageFlavors,
     PageHostAggregates,
     PageImages,
+    PageInstance,
     PageInstances,
     PageLogin,
     PageMetadataDefinitions,

@@ -24,7 +24,7 @@ from selenium.webdriver.common.by import By
 
 from horizon_autotests.app import ui as _ui
 
-from .base import PageBase
+from ..base import PageBase
 
 
 @ui.register_ui(field_count=ui.TextField(By.NAME, 'count'),
@@ -148,7 +148,8 @@ class DropdownMenu(_ui.DropdownMenu):
 
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
-    dropdown_menu=DropdownMenu())
+    dropdown_menu=DropdownMenu(),
+    link_instance=ui.UI(By.CSS_SELECTOR, 'td > a'))
 class RowInstance(ui.Row):
     """Row with instance."""
 
