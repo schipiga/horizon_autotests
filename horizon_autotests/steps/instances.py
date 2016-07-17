@@ -17,8 +17,6 @@ Instances steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from six import moves
-
 from ._utils import waiter
 from .base import BaseSteps
 
@@ -30,7 +28,7 @@ class InstancesSteps(BaseSteps):
         """Open instances page if it isn't opened."""
         return self._open(self.app.page_instances)
 
-    def create_instance(self, name, count=1):
+    def create_instance(self, instance_name, count=1, check=True):
         """Step to create instance."""
         page_instances = self.page_instances()
 
@@ -38,7 +36,7 @@ class InstancesSteps(BaseSteps):
         with page_instances.form_launch_instance as form:
 
             with form.tab_details as tab:
-                tab.field_name.value = name
+                tab.field_name.value = instance_name
                 tab.field_count.value = count
 
             form.item_source.click()
@@ -60,16 +58,19 @@ class InstancesSteps(BaseSteps):
 
             form.submit()
 
-        for i in moves.range(1, count + 1):
+        instance_names = []
+        for i in range(1, count + 1):
             if count == 1:
-                instance_name = name
+                instance_names.append(instance_name)
             else:
-                instance_name = '{}-{}'.format(name, i)
-            page_instances.table_instances.row(
-                name=instance_name).wait_for_presence(30)
-            cell = page_instances.table_instances.row(
-                name=instance_name).cell('status')
-            assert waiter.exe(300, lambda: cell.value == 'Active')
+                instance_names.append('{}-{}'.format(instance_name, i))
+
+        if check:
+            for name in instance_names:
+                page_instances.table_instances.row(
+                    name=name, status='Active').wait_for_presence(300)
+
+        return instance_names
 
     def delete_instances(self, *instance_names):
         """Step to delete instances."""

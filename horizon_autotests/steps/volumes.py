@@ -63,10 +63,8 @@ class VolumesSteps(BaseSteps):
 
         if check:
             self.close_notification('info')
-            with tab_volumes.table_volumes.row(name=volume_name) as row:
-                row.wait_for_presence()
-                with row.cell('status') as cell:
-                    assert waiter.exe(60, lambda: cell.value == 'Available')
+            tab_volumes.table_volumes.row(
+                name=volume_name, status='Available').wait_for_presence(60)
 
     def delete_volume(self, volume_name, check=True):
         """Step to delete volume."""
@@ -126,7 +124,7 @@ class VolumesSteps(BaseSteps):
             name=volume_name).link_volume.click()
         assert PageVolume(self.app).info_volume.label_name.value == volume_name
 
-    def change_volume_type(self, volume_name, volume_type=None):
+    def change_volume_type(self, volume_name, volume_type=None, check=True):
         """Step to change volume type."""
         tab_volumes = self.tab_volumes()
 
@@ -142,13 +140,13 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('info')
 
-        with tab_volumes.table_volumes.row(
-                name=volume_name).cell('type') as cell:
-            assert waiter.exe(30, lambda: cell.value == volume_type)
+        if check:
+            self.close_notification('info')
+            tab_volumes.table_volumes.row(
+                name=volume_name, type=volume_type).wait_for_presence(30)
 
-    def upload_volume_to_image(self, volume_name, image_name):
+    def upload_volume_to_image(self, volume_name, image_name, check=True):
         """Step to upload volume to image."""
         tab_volumes = self.tab_volumes()
 
@@ -162,13 +160,13 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('info')
 
-        with tab_volumes.table_volumes.row(
-                name=volume_name).cell('status') as cell:
-            assert waiter.exe(90, lambda: cell.value == 'Available')
+        if check:
+            self.close_notification('info')
+            tab_volumes.table_volumes.row(
+                name=volume_name, status='Available').wait_for_presence(90)
 
-    def extend_volume(self, volume_name, new_size=2):
+    def extend_volume(self, volume_name, new_size=2, check=True):
         """Step to extend volume size."""
         tab_volumes = self.tab_volumes()
 
@@ -182,11 +180,11 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('info')
 
-        with tab_volumes.table_volumes.row(
-                name=volume_name).cell('size') as cell:
-            assert waiter.exe(90, lambda: cell.value.startswith(str(new_size)))
+        if check:
+            self.close_notification('info')
+            tab_volumes.table_volumes.row(
+                name=volume_name, size=new_size).wait_for_presence(90)
 
     def page_admin_volumes(self):
         """Open admin volumes page if it isn't opened."""
@@ -198,7 +196,7 @@ class VolumesSteps(BaseSteps):
             page.label_volumes.click()
             return page.tab_volumes
 
-    def change_volume_status(self, volume_name, status=None):
+    def change_volume_status(self, volume_name, status=None, check=True):
         """Step to change volume status."""
         tab_volumes = self.tab_admin_volumes()
 
@@ -214,11 +212,11 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        with tab_volumes.table_volumes.row(
-                name=volume_name).cell('status') as cell:
-            assert waiter.exe(90, lambda: cell.value == status)
+        if check:
+            self.close_notification('success')
+            tab_volumes.table_volumes.row(
+                name=volume_name, status=status).wait_for_presence(90)
 
     def launch_volume_as_instance(self, volume_name, instance_name, count=1):
         """Step to launch volume as instance."""
@@ -249,7 +247,7 @@ class VolumesSteps(BaseSteps):
 
         tab_volumes.spinner.wait_for_absence()
 
-    def attach_instance(self, volume_name, instance_name):
+    def attach_instance(self, volume_name, instance_name, check=True):
         """Step to attach instance."""
         tab_volumes = self.tab_volumes()
 
@@ -265,15 +263,14 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('info')
 
-        with tab_volumes.table_volumes.row(name=volume_name) as row:
-            with row.cell('status') as cell:
-                assert waiter.exe(60, lambda: cell.value == 'In-use')
+        if check:
+            self.close_notification('info')
+            tab_volumes.table_volumes.row(
+                name=volume_name, status='In-use',
+                attached_to=instance_name).wait_for_presence(60)
 
-            assert instance_name in row.cell('attached_to').value
-
-    def detach_instance(self, volume_name, instance_name):
+    def detach_instance(self, volume_name, instance_name, check=True):
         """Step to detach instance."""
         tab_volumes = self.tab_volumes()
 
@@ -288,13 +285,13 @@ class VolumesSteps(BaseSteps):
         tab_volumes.form_confirm.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        with tab_volumes.table_volumes.row(
-                name=volume_name).cell('status') as cell:
-            assert waiter.exe(60, lambda: cell.value == 'Available')
+        if check:
+            self.close_notification('success')
+            tab_volumes.table_volumes.row(
+                name=volume_name, status='Available').wait_for_presence(60)
 
-    def create_transfer(self, volume_name, transfer_name):
+    def create_transfer(self, volume_name, transfer_name, check=True):
         """Step to create transfer."""
         tab_volumes = self.tab_volumes()
 
@@ -308,18 +305,22 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        with PageVolumeTransfer(self.app).form_transfer_info as form:
-            transfer_id = form.field_transfer_id.value
-            transfer_key = form.field_transfer_key.value
+        if check:
+            self.close_notification('success')
 
-        assert self.tab_admin_volumes().table_volumes.row(
-            name=volume_name).cell('status').value == 'awaiting-transfer'
+            with self.app.page_volume_transfer.form_transfer_info as form:
+                transfer_id = form.field_transfer_id.value
+                transfer_key = form.field_transfer_key.value
 
-        return transfer_id, transfer_key
+            self.tab_admin_volumes().table_volumes.row(
+                name=volume_name,
+                status='awaiting-transfer').wait_for_presence()
 
-    def accept_transfer(self, transfer_id, transfer_key, volume_name):
+            return transfer_id, transfer_key
+
+    def accept_transfer(self, transfer_id, transfer_key, volume_name,
+                        check=True):
         """Step to accept transfer."""
         tab_volumes = self.tab_volumes()
 
@@ -331,13 +332,13 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        with tab_volumes.table_volumes.row(name=volume_name) as row:
-            row.wait_for_presence(30)
-            row.cell('status').value == 'Available'
+        if check:
+            self.close_notification('success')
+            tab_volumes.table_volumes.row(
+                name=volume_name, status='Available').wait_for_presence(30)
 
-    def migrate_volume(self, volume_name, new_host=None):
+    def migrate_volume(self, volume_name, new_host=None, check=True):
         """Step to migrate host."""
         tab_volumes = self.tab_admin_volumes()
 
@@ -356,25 +357,25 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        with tab_volumes.table_volumes.row(
-                name=volume_name, host=new_host) as row:
-            row.wait_for_presence(30)
-            with row.cell('status') as cell:
-                waiter.exe(30, lambda: cell.value == 'Available')
+        if check:
+            self.close_notification('success')
 
-        page_volumes = self.page_admin_volumes()
+            tab_volumes.table_volumes.row(
+                name=volume_name, host=new_host,
+                status='Available').wait_for_presence(60)
 
-        def is_old_host_volume_absent():
-            page_volumes.refresh()
-            page_volumes.label_volumes.click()
-            return not page_volumes.tab_volumes.table_volumes.row(
-                name=volume_name, host=old_host).is_present
+            page_volumes = self.page_admin_volumes()
 
-        assert waiter.exe(300, is_old_host_volume_absent)
+            def is_old_host_volume_absent():
+                page_volumes.refresh()
+                page_volumes.label_volumes.click()
+                return not page_volumes.tab_volumes.table_volumes.row(
+                    name=volume_name, host=old_host).is_present
 
-        return old_host, new_host
+            assert waiter.exe(300, is_old_host_volume_absent)
+
+            return old_host, new_host
 
     def tab_snapshots(self):
         """Open volume snapshots tab."""
@@ -408,12 +409,8 @@ class VolumesSteps(BaseSteps):
 
         if check:
             self.close_notification('info')
-            tab_snapshots = self.tab_snapshots()
-
-            with tab_snapshots.table_snapshots.row(name=snapshot_name) as row:
-                row.wait_for_presence()
-                with row.cell('status') as cell:
-                    assert waiter.exe(30, lambda: cell.value == 'Available')
+            self.tab_snapshots().table_snapshots.row(
+                name=snapshot_name, status='Available').wait_for_presence(30)
 
     def delete_snapshot(self, snapshot_name, check=True):
         """Step to delete volume snapshot."""
@@ -452,7 +449,7 @@ class VolumesSteps(BaseSteps):
                     name=snapshot_name).wait_for_absence(30)
 
     def update_snapshot(self, snapshot_name, new_snapshot_name,
-                        description=None):
+                        description=None, check=True):
         """Step to update volume snapshot."""
         tab_snapshots = self.tab_snapshots()
 
@@ -468,16 +465,14 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_snapshots.spinner.wait_for_absence()
-        self.close_notification('info')
 
-        tab_snapshots = self.tab_snapshots()
+        if check:
+            self.close_notification('info')
+            self.tab_snapshots().table_snapshots.row(
+                name=new_snapshot_name,
+                status='Available').wait_for_presence(60)
 
-        with tab_snapshots.table_snapshots.row(name=new_snapshot_name) as row:
-            row.wait_for_presence(30)
-            with row.cell('status') as cell:
-                assert waiter.exe(30, lambda: cell.value == 'Available')
-
-    def create_volume_from_snapshot(self, snapshot_name):
+    def create_volume_from_snapshot(self, snapshot_name, check=True):
         """Step to create volume from spanshot."""
         tab_snapshots = self.tab_snapshots()
 
@@ -489,15 +484,14 @@ class VolumesSteps(BaseSteps):
         tab_snapshots.form_create_volume.submit()
 
         tab_snapshots.spinner.wait_for_absence()
-        self.close_notification('info')
 
-        with self.tab_volumes().table_volumes.row(name=snapshot_name) as row:
-            row.wait_for_presence()
-            with row.cell('status') as cell:
-                assert waiter.exe(60, lambda: cell.value == 'Available')
+        if check:
+            self.close_notification('info')
+            self.tab_volumes().table_volumes.row(
+                name=snapshot_name, status='Available').wait_for_presence(60)
 
     def create_backup(self, volume_name, backup_name, description=None,
-                      container=None):
+                      container=None, check=True):
         """Step to create volume backup."""
         tab_volumes = self.tab_volumes()
 
@@ -518,14 +512,11 @@ class VolumesSteps(BaseSteps):
             form.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        tab_backups = self.tab_backups()
-
-        with tab_backups.table_backups.row(name=backup_name) as row:
-            row.wait_for_presence()
-            with row.cell('status') as cell:
-                assert waiter.exe(300, lambda: cell.value == 'Available')
+        if check:
+            self.close_notification('success')
+            self.tab_backups().table_backups.row(
+                name=backup_name, status='Available').wait_for_presence(300)
 
     def delete_backups(self, *backup_names):
         """Step to delete volume backups."""

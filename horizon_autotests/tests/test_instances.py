@@ -44,13 +44,49 @@ class TestAdminOnly(object):
     def test_instances_pagination(self, instances_steps, create_instances,
                                   update_settings):
         """Verify that instances pagination works right and back."""
-        instance_name = generate_ids('instance').next()
-        create_instances(instance_name, count=3)
+        instance_name = next(generate_ids('instance'))
+        instances = create_instances(instance_name, count=3)
         update_settings(items_per_page=1)
+
+        page_instances = instances_steps.page_instances()
+
+        page_instances.table_volumes.row(
+            name=instances[2].name).wait_for_presence(30)
+        assert page_instances.table_volumes.link_next.is_present
+        assert not page_instances.table_volumes.link_prev.is_present
+
+        page_instances.table_volumes.link_next.click()
+
+        page_instances.table_volumes.row(
+            name=instances[1].name).wait_for_presence(30)
+        assert page_instances.table_volumes.link_next.is_present
+        assert page_instances.table_volumes.link_prev.is_present
+
+        page_instances.table_volumes.link_next.click()
+
+        page_instances.table_volumes.row(
+            name=instances[0].name).wait_for_presence(30)
+        assert not page_instances.table_volumes.link_next.is_present
+        assert page_instances.table_volumes.link_prev.is_present
+
+        page_instances.table_volumes.link_prev.click()
+
+        page_instances.table_volumes.row(
+            name=instances[1].name).wait_for_presence(30)
+        assert page_instances.table_volumes.link_next.is_present
+        assert page_instances.table_volumes.link_prev.is_present
+
+        page_instances.table_volumes.link_prev.click()
+
+        page_instances.table_volumes.row(
+            name=instances[2].name).wait_for_presence(30)
+        assert page_instances.table_volumes.link_next.is_present
+        assert not page_instances.table_volumes.link_prev.is_present
 
     def test_filter_instances(self, instances_steps, create_instances):
         """Verify that user can filter instances."""
         instance_name = next(generate_ids('instance'))
         instances = create_instances(instance_name, count=2)
+
         instances_steps.filter_instances(query=instances[0].name)
         instances_steps.reset_instances_filter()

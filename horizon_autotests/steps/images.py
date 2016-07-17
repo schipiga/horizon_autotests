@@ -17,7 +17,6 @@ Images steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ._utils import waiter
 from .base import BaseSteps
 
 CIRROS_URL = ('http://download.cirros-cloud.net/0.3.1/'
@@ -67,12 +66,8 @@ class ImagesSteps(BaseSteps):
 
         if check:
             self.close_notification('success')
-
-            with page_images.table_images.row(name=image_name) as row:
-                row.wait_for_presence()
-
-                with row.cell('status') as cell:
-                    waiter.exe(60, lambda: cell.value == 'Active')
+            page_images.table_images.row(
+                name=image_name, status='Active').wait_for_presence(60)
 
     def delete_image(self, image_name, check=True):
         """Step to delete image."""
@@ -128,12 +123,8 @@ class ImagesSteps(BaseSteps):
 
         if check:
             page_images.modal.wait_for_absence()
-
-            with page_images.table_images.row(name=image_name) as row:
-                row.wait_for_presence()
-
-                with row.cell('status') as cell:
-                    waiter.exe(60, lambda: cell.value == 'Active')
+            page_images.table_images.row(
+                name=image_name, status='Active').wait_for_presence(60)
 
     def get_metadata(self, image_name, check=True):
         """Step to get image metadata."""
@@ -184,12 +175,9 @@ class ImagesSteps(BaseSteps):
         if check:
             self.close_notification('success')
 
-            with page_images.table_images.row(
-                    name=new_image_name or image_name) as row:
-                row.wait_for_presence()
-
-                with row.cell('status') as cell:
-                    waiter.exe(60, lambda: cell.value == 'Active')
+            page_images.table_images.row(
+                name=new_image_name or image_name,
+                status='Active').wait_for_presence(60)
 
     def view_image(self, image_name, check=True):
         """Step to view image."""

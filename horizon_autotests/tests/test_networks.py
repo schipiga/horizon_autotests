@@ -40,8 +40,10 @@ class TestAdminOnly(object):
         """Verify that admin can create shared network."""
         network_name = next(generate_ids('network'))
         networks_steps.create_network(network_name, shared=True)
+
         networks_steps.delete_networks([network_name], check=False)
         networks_steps.close_notification('error')
+
         horizon.page_networks.table_networks.row(
             name=network_name).wait_for_presence()
         networks_steps.admin_delete_network(network_name)
@@ -55,5 +57,6 @@ class TestDemoOnly(object):
         """Verify that demo can not create shared network."""
         network_name = next(generate_ids('network'))
         create_network(network_name, shared=True)
+
         assert horizon.page_networks.table_networks.row(
             name=network_name).cell('shared').value == 'No'

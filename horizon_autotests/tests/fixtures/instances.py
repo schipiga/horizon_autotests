@@ -25,28 +25,29 @@ from horizon_autotests.steps import InstancesSteps
 from .utils import AttrDict, generate_ids
 
 __all__ = [
-    'create_instances',
+    'create_instance',
     'instance',
     'instances_steps'
 ]
 
 
 @pytest.yield_fixture
-def create_instances(instances_steps):
+def create_instance(instances_steps):
     """Create instances."""
     instances = []
 
-    def _create_instances(name, count=1):
-        instances_steps.create_instance(name, count)
-        if count == 1:
-            instances.append(AttrDict(name=name))
-        else:
-            for i in moves.range(1, count + 1):
-                instance_name = '{}-{}'.format(name, i)
-                instances.append(AttrDict(name=instance_name))
-        return instances
+    def _create_instance(instance_name, count=1):
+        _instances = []
+        instance_names = instances_steps.create_instance(instance_name, count)
 
-    yield _create_instances
+        for name in instance_names:
+            instance = AttrDict(name=name)
+            instances.append(instance)
+            _instances.append(instance)
+
+        return _instances
+
+    yield _create_instance
 
     if instances:
         instances_steps.delete_instances(*[i.name for i in instances])

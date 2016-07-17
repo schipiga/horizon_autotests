@@ -17,8 +17,4 @@ Fixtures aggregator.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from selenium.webdriver.remote.remote_connection import RemoteConnection
-
 from .fixtures import *  # noqa
-
-RemoteConnection.set_timeout(30)
