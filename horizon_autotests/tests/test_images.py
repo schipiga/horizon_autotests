@@ -162,5 +162,12 @@ class TestAnyUser(object):
 class TestAdminOnly(object):
     """Tests for admin only."""
 
-    def test_launch_instance_from_image(self):
+    def test_launch_instance_from_image(self, image, images_steps,
+                                        instances_steps):
         """Verify that user can launch instance from image."""
+        instance_name = next(generate_ids('instance'))
+        images_steps.launch_instance(image.name, instance_name)
+
+        instances_steps.page_instances().table_instances.row(
+            name=instance_name, status='Active').wait_for_presence(90)
+        instances_steps.delete_instance(instance_name)

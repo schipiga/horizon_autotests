@@ -217,3 +217,30 @@ class ImagesSteps(BaseSteps):
 
         if check:
             self.close_notification('info')
+
+    def launch_instance(self, image_name, instance_name):
+        """Step to launch instance from image."""
+        page_images = self.page_images()
+
+        with page_images.table_images.row(
+                name=image_name).dropdown_menu as menu:
+            menu.item_default.click()
+
+        with page_images.form_launch_instance as form:
+
+            with form.tab_details as tab:
+                tab.field_name.value = instance_name
+
+            form.item_flavor.click()
+            with form.tab_flavor as tab:
+                tab.table_available_flavors.row(
+                    name='m1.tiny').button_add.click()
+
+            form.item_network.click()
+            with form.tab_network as tab:
+                tab.table_available_networks.row(
+                    name='admin_internal_net').button_add.click()
+
+            form.submit()
+
+        page_images.modal.wait_for_absence()
