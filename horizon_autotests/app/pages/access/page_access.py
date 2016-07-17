@@ -20,8 +20,7 @@ Access & security page.
 from pom import ui
 from selenium.webdriver.common.by import By
 
-from horizon_autotests.app.pages.base import PageBase
-
+from ..base import PageBase
 from .tab_api_access import TabApiAccess
 from .tab_floating_ips import TabFloatingIPs
 from .tab_keypairs import TabKeypairs

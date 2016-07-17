@@ -27,13 +27,13 @@ from horizon_autotests.steps import (AuthSteps,
                                      ProjectsSteps,
                                      UsersSteps)
 
-from .config import (ADMIN_NAME,
-                     ADMIN_PASSWD,
-                     ADMIN_PROJECT,
-                     DASHBOARD_URL,
-                     DEMO_NAME,
-                     DEMO_PASSWD,
-                     DEMO_PROJECT)
+from ._config import (ADMIN_NAME,
+                      ADMIN_PASSWD,
+                      ADMIN_PROJECT,
+                      DASHBOARD_URL,
+                      DEMO_NAME,
+                      DEMO_PASSWD,
+                      DEMO_PROJECT)
 
 __all__ = [
     'auth_steps',

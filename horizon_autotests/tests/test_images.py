@@ -20,7 +20,7 @@ Image tests.
 import pytest
 from waiting import wait
 
-from .fixtures.utils import generate_ids, generate_files, get_size
+from .fixtures._utils import generate_ids, generate_files, get_size
 
 
 @pytest.mark.usefixtures('any_user')

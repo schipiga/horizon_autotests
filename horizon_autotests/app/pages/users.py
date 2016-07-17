@@ -84,3 +84,4 @@ class PageUsers(PageBase):
     """Users page."""
 
     url = '/identity/users/'
+    navigate_items = "Identity", "Users"

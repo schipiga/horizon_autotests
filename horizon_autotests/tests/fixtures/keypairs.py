@@ -21,7 +21,7 @@ import pytest
 
 from horizon_autotests.steps import KeypairsSteps
 
-from .utils import generate_ids, AttrDict
+from ._utils import generate_ids, AttrDict
 
 __all__ = [
     'import_keypair',
@@ -66,4 +66,4 @@ def import_keypair(keypairs_steps):
     yield _import_keypair
 
     if keypairs:
-        keypairs_steps.delete_keypairs(*[k.name for k in keypairs])
+        keypairs_steps.delete_keypairs([k.name for k in keypairs])

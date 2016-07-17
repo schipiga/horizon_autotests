@@ -21,7 +21,7 @@ from urlparse import urlparse
 
 import pytest
 
-from .fixtures.config import ADMIN_NAME, ADMIN_PASSWD
+from .fixtures._config import ADMIN_NAME, ADMIN_PASSWD
 
 
 @pytest.yield_fixture

@@ -58,5 +58,4 @@ class PageHostAggregates(PageBase):
     """Host aggregates Page."""
 
     url = "/admin/aggregates/"
-
     navigate_items = 'Admin', 'System', 'Host Aggregates'

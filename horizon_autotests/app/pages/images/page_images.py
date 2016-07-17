@@ -115,5 +115,4 @@ class PageImages(PageBase):
     """Images Page."""
 
     url = "/project/images/"
-
     navigate_items = 'Project', 'Compute', 'Images'

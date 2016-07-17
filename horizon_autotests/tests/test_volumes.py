@@ -19,8 +19,8 @@ Volumes tests.
 
 import pytest
 
-from .fixtures.config import DEMO_NAME, DEMO_PASSWD
-from .fixtures.utils import generate_ids
+from .fixtures._config import DEMO_NAME, DEMO_PASSWD
+from .fixtures._utils import generate_ids
 
 
 @pytest.mark.usefixtures('any_user')

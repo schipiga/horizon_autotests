@@ -30,21 +30,18 @@ class BaseSteps(object):
         self.app = app
 
     def _open(self, page):
-        if not isinstance(page, type):
-            page = page.__class__
-
         current_page = self.app.current_page
-        if not isinstance(current_page, page):
+        if page.__class__ != current_page.__class__:
 
             if getattr(page, 'navigate_items', None):
                 current_page.navigate(page.navigate_items)
 
             else:
-                self.app.open(page)
+                page.open()
 
-        return page(self.app)
+        return page
 
-    def switch_project(self, project_name):
+    def switch_project(self, project_name, check=True):
         """Switch project in user account.
 
         Arguments:
@@ -54,7 +51,9 @@ class BaseSteps(object):
             menu.click()
             menu.item_project(project_name).click()
 
-        self.close_notification('success')
+        if check:
+            self.close_notification('success')
+
         self.app.current_project = project_name
 
     def close_notification(self, level):

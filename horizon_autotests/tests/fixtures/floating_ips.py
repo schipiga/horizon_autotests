@@ -21,7 +21,7 @@ import pytest
 
 from horizon_autotests.steps import FloatingIPsSteps
 
-from .utils import AttrDict
+from ._utils import AttrDict
 
 __all__ = [
     'allocate_floating_ip',

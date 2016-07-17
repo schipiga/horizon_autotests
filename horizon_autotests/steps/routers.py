@@ -17,8 +17,6 @@ Routers steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import PageRouters
-
 from .base import BaseSteps
 
 
@@ -27,7 +25,7 @@ class RoutersSteps(BaseSteps):
 
     def page_routers(self):
         """Open routers page if it isn't opened."""
-        return self._open(PageRouters)
+        return self._open(self.app.page_routers)
 
     def create_router(self, router_name, admin_state=None,
                       external_network=None, check=True):

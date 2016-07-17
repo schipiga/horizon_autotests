@@ -17,8 +17,6 @@ Volume types steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import PageAdminVolumes
-
 from .base import BaseSteps
 
 
@@ -26,11 +24,12 @@ class VolumeTypesSteps(BaseSteps):
 
     def tab_volume_types(self):
         """Open volume types tab."""
-        with self._open(PageAdminVolumes) as page:
+        with self._open(self.app.page_admin_volumes) as page:
             page.label_volume_types.click()
             return page.tab_volume_types
 
-    def create_volume_type(self, volume_type_name, description=None):
+    def create_volume_type(self, volume_type_name, description=None,
+                           check=True):
         """Step to create volume type."""
         tab = self.tab_volume_types()
         tab.button_create_volume_type.click()
@@ -42,11 +41,13 @@ class VolumeTypesSteps(BaseSteps):
             form.submit()
 
         tab.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        tab.table_volume_types.row(name=volume_type_name).wait_for_presence()
+        if check:
+            self.close_notification('success')
+            tab.table_volume_types.row(
+                name=volume_type_name).wait_for_presence()
 
-    def delete_volume_type(self, volume_type_name):
+    def delete_volume_type(self, volume_type_name, check=True):
         """Step to delete volume type."""
         tab = self.tab_volume_types()
 
@@ -57,11 +58,13 @@ class VolumeTypesSteps(BaseSteps):
 
         tab.form_confirm.submit()
         tab.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        tab.table_volume_types.row(name=volume_type_name).wait_for_absence()
+        if check:
+            self.close_notification('success')
+            tab.table_volume_types.row(
+                name=volume_type_name).wait_for_absence()
 
-    def delete_volume_types(self, *volume_type_names):
+    def delete_volume_types(self, volume_type_names, check=True):
         """Step to delete volume types."""
         tab = self.tab_volume_types()
 
@@ -72,13 +75,14 @@ class VolumeTypesSteps(BaseSteps):
         tab.confirm_form.submit()
 
         tab.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        for volume_type_name in volume_type_names:
-            tab.table_volume_types.row(
-                name=volume_type_name).wait_for_absence()
+        if check:
+            self.close_notification('success')
+            for volume_type_name in volume_type_names:
+                tab.table_volume_types.row(
+                    name=volume_type_name).wait_for_absence()
 
-    def create_qos_spec(self, qos_spec_name, consumer=None):
+    def create_qos_spec(self, qos_spec_name, consumer=None, check=True):
         """Step to create qos spec."""
         tab = self.tab_volume_types()
         tab.button_create_qos_spec.click()
@@ -90,11 +94,12 @@ class VolumeTypesSteps(BaseSteps):
             form.submit()
 
         tab.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        tab.table_qos_specs.row(name=qos_spec_name).wait_for_presence()
+        if check:
+            self.close_notification('success')
+            tab.table_qos_specs.row(name=qos_spec_name).wait_for_presence()
 
-    def delete_qos_spec(self, qos_spec_name):
+    def delete_qos_spec(self, qos_spec_name, check=True):
         """Step to delete qos spec."""
         tab = self.tab_volume_types()
 
@@ -105,6 +110,7 @@ class VolumeTypesSteps(BaseSteps):
 
         tab.form_confirm.submit()
         tab.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        tab.table_qos_specs.row(name=qos_spec_name).wait_for_absence()
+        if check:
+            self.close_notification('success')
+            tab.table_qos_specs.row(name=qos_spec_name).wait_for_absence()

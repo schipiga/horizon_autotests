@@ -21,7 +21,8 @@ from pom import ui
 from selenium.webdriver.common.by import By
 
 from horizon_autotests.app import ui as _ui
-from horizon_autotests.app.pages.base import PageBase
+
+from ..base import PageBase
 
 
 @ui.register_ui(
@@ -45,5 +46,4 @@ class PageAdminNetworks(PageBase):
     """Admin networks page."""
 
     url = "/admin/networks/"
-
     navigate_items = 'Admin', 'System', 'Networks'

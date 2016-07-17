@@ -21,7 +21,13 @@ import pytest
 
 from horizon_autotests.steps import AccessSteps
 
-from .utils import AttrDict, generate_ids
+from ._utils import AttrDict, generate_ids
+
+__all__ = [
+    'access_steps',
+    'create_security_group',
+    'security_group'
+]
 
 
 @pytest.fixture

@@ -17,10 +17,6 @@ Volumes steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import (PageAdminVolumes,
-                                         PageVolume,
-                                         PageVolumes,
-                                         PageVolumeTransfer)
 from waiting import wait
 
 from .base import BaseSteps
@@ -31,7 +27,7 @@ class VolumesSteps(BaseSteps):
 
     def page_volumes(self):
         """Open volumes page if it isn't opened."""
-        return self._open(PageVolumes)
+        return self._open(self.app.page_volumes)
 
     def tab_volumes(self):
         """Open volumes tab."""
@@ -83,7 +79,7 @@ class VolumesSteps(BaseSteps):
             tab_volumes.table_volumes.row(
                 name=volume_name).wait_for_absence(30)
 
-    def edit_volume(self, volume_name, new_volume_name):
+    def edit_volume(self, volume_name, new_volume_name, check=True):
         """Step to edit volume."""
         tab_volumes = self.tab_volumes()
 
@@ -94,10 +90,11 @@ class VolumesSteps(BaseSteps):
         tab_volumes.form_edit_volume.submit()
 
         tab_volumes.spinner.wait_for_absence()
-        self.close_notification('info')
 
-        tab_volumes.table_volumes.row(
-            name=new_volume_name).wait_for_presence(30)
+        if check:
+            self.close_notification('info')
+            tab_volumes.table_volumes.row(
+                name=new_volume_name).wait_for_presence(30)
 
     def delete_volumes(self, volume_names, check=True):
         """Step to delete volumes."""
@@ -118,11 +115,14 @@ class VolumesSteps(BaseSteps):
                 tab_volumes.table_volumes.row(
                     name=volume_name).wait_for_absence(180)
 
-    def view_volume(self, volume_name):
+    def view_volume(self, volume_name, check=True):
         """Step to view volume."""
         self.tab_volumes().table_volumes.row(
             name=volume_name).link_volume.click()
-        assert PageVolume(self.app).info_volume.label_name.value == volume_name
+
+        if check:
+            assert self.app.page_volume.info_volume.label_name.value \
+                == volume_name
 
     def change_volume_type(self, volume_name, volume_type=None, check=True):
         """Step to change volume type."""
@@ -188,7 +188,7 @@ class VolumesSteps(BaseSteps):
 
     def page_admin_volumes(self):
         """Open admin volumes page if it isn't opened."""
-        return self._open(PageAdminVolumes)
+        return self._open(self.app.page_admin_volumes)
 
     def tab_admin_volumes(self):
         """Open admin volumes tab."""
@@ -218,7 +218,8 @@ class VolumesSteps(BaseSteps):
             tab_volumes.table_volumes.row(
                 name=volume_name, status=status).wait_for_presence(90)
 
-    def launch_volume_as_instance(self, volume_name, instance_name, count=1):
+    def launch_volume_as_instance(self, volume_name, instance_name, count=1,
+                                  check=True):
         """Step to launch volume as instance."""
         tab_volumes = self.tab_volumes()
 
@@ -245,7 +246,8 @@ class VolumesSteps(BaseSteps):
 
             form.submit()
 
-        tab_volumes.spinner.wait_for_absence()
+        if check:
+            tab_volumes.spinner.wait_for_absence()
 
     def attach_instance(self, volume_name, instance_name, check=True):
         """Step to attach instance."""
@@ -518,7 +520,7 @@ class VolumesSteps(BaseSteps):
             self.tab_backups().table_backups.row(
                 name=backup_name, status='Available').wait_for_presence(300)
 
-    def delete_backups(self, *backup_names):
+    def delete_backups(self, backup_names, check=True):
         """Step to delete volume backups."""
         tab_backups = self.tab_backups()
 
@@ -530,8 +532,9 @@ class VolumesSteps(BaseSteps):
         tab_backups.form_confirm.submit()
 
         tab_backups.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        for backup_name in backup_names:
-            tab_backups.table_backups.row(
-                name=backup_name).wait_for_absence(30)
+        if check:
+            self.close_notification('success')
+            for backup_name in backup_names:
+                tab_backups.table_backups.row(
+                    name=backup_name).wait_for_absence(30)

@@ -20,8 +20,8 @@ Flavor tests.
 import pytest
 from waiting import wait
 
-from .fixtures.config import ADMIN_NAME, ADMIN_PASSWD, DEMO_NAME, DEMO_PASSWD
-from .fixtures.utils import generate_ids
+from .fixtures._config import ADMIN_NAME, ADMIN_PASSWD, DEMO_NAME, DEMO_PASSWD
+from .fixtures._utils import generate_ids
 
 
 @pytest.mark.usefixtures('admin_only')

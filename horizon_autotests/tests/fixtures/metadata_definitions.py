@@ -21,7 +21,7 @@ import pytest
 
 from horizon_autotests.steps import NamespacesSteps
 
-from .utils import AttrDict, generate_ids
+from ._utils import AttrDict, generate_ids
 
 __all__ = [
     'create_namespace',

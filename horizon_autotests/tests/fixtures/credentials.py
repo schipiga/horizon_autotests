@@ -21,8 +21,8 @@ import os
 
 import pytest
 
-from .config import (ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
-                     DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)
+from ._config import (ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
+                      DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)
 
 __all__ = [
     'admin_only',

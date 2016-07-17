@@ -56,3 +56,4 @@ class PageProjects(PageBase):
     """Projects page."""
 
     url = "/identity/"
+    navigate_items = "Identity", "Projects"

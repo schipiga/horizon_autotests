@@ -17,41 +17,46 @@ Projects steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import PageProjects
-
 from .base import BaseSteps
 
 
 class ProjectsSteps(BaseSteps):
     """Projects steps."""
 
-    def projects_page(self):
+    def page_projects(self):
         """Open projects page if it isn't opened."""
-        return self._open(PageProjects)
+        return self._open(self.app.page_projects)
 
-    def create_project(self, project_name):
+    def create_project(self, project_name, check=True):
         """Step to create project."""
-        with self.projects_page() as page:
-            page.button_create_project.click()
+        page_projects = self.page_projects()
+        page_projects.button_create_project.click()
 
-            page.form_create_project.field_name.value = project_name
-            page.form_create_project.submit()
+        with page_projects.form_create_project as form:
+            form.field_name.value = project_name
+            form.submit()
 
-            page.spinner.wait_for_absence()
+        page_projects.spinner.wait_for_absence()
 
-        self.close_notification('success')
+        if check:
+            self.close_notification('success')
+            page_projects.table_projects.row(
+                name=project_name).wait_for_presence()
 
-    def delete_project(self, project_name):
+    def delete_project(self, project_name, check=True):
         """Step to delete project.
         """
-        projects_page = self.projects_page()
+        page_projects = self.page_projects()
 
-        with projects_page.table_projects.row(
+        with page_projects.table_projects.row(
                 name=project_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_delete.click()
 
-        projects_page.form_confirm.submit()
-        projects_page.spinner.wait_for_absence()
+        page_projects.form_confirm.submit()
+        page_projects.spinner.wait_for_absence()
 
-        self.close_notification('success')
+        if check:
+            self.close_notification('success')
+            page_projects.table_projects.row(
+                name=project_name).wait_for_absence()

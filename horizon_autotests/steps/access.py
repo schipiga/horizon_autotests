@@ -17,8 +17,6 @@ Horizon steps for authentication.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import PageAccess
-
 from .base import BaseSteps
 
 
@@ -27,7 +25,7 @@ class AccessSteps(BaseSteps):
 
     def page_access(self):
         """Open access & security page."""
-        return self._open(PageAccess)
+        return self._open(self.app.page_access)
 
     def tab_security_groups(self):
         """Open security groups tab."""

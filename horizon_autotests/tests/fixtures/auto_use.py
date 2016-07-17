@@ -25,8 +25,8 @@ import xvfbwrapper
 
 from horizon_autotests.third_party import VideoRecorder
 
-from .config import VIRTUAL_DISPLAY, TESTS_DIR
-from .utils import slugify
+from ._config import VIRTUAL_DISPLAY, TESTS_DIR
+from ._utils import slugify
 
 __all__ = [
     'report_dir',

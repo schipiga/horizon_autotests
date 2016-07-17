@@ -17,7 +17,6 @@ Users steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import PageUsers
 from waiting import wait
 
 from .base import BaseSteps
@@ -28,9 +27,9 @@ class UsersSteps(BaseSteps):
 
     def page_users(self):
         """Open users page if it isn't opened."""
-        return self._open(PageUsers)
+        return self._open(self.app.page_users)
 
-    def create_user(self, username, password, project=None):
+    def create_user(self, username, password, project=None, check=True):
         """Step to create user."""
         page_users = self.page_users()
 
@@ -46,9 +45,10 @@ class UsersSteps(BaseSteps):
             form.submit()
 
         page_users.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        page_users.table_users.row(name=username).wait_for_presence()
+        if check:
+            self.close_notification('success')
+            page_users.table_users.row(name=username).wait_for_presence()
 
     def delete_user(self, username, check=True):
         """Step to delete user."""
@@ -82,7 +82,7 @@ class UsersSteps(BaseSteps):
             for username in usernames:
                 page_users.table_users.row(name=username).wait_for_absence()
 
-    def change_user_password(self, username, new_password):
+    def change_user_password(self, username, new_password, check=True):
         """Step to change user password."""
         page_users = self.page_users()
 
@@ -96,7 +96,9 @@ class UsersSteps(BaseSteps):
             form.submit()
 
         page_users.spinner.wait_for_absence()
-        self.close_notification('success')
+
+        if check:
+            self.close_notification('success')
 
     def filter_users(self, query, check=True):
         """Step to filter users."""

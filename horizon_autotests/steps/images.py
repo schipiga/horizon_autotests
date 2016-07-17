@@ -206,7 +206,7 @@ class ImagesSteps(BaseSteps):
         if check:
             self.close_notification('info')
 
-    def launch_instance(self, image_name, instance_name):
+    def launch_instance(self, image_name, instance_name, check=True):
         """Step to launch instance from image."""
         page_images = self.page_images()
 
@@ -231,4 +231,5 @@ class ImagesSteps(BaseSteps):
 
             form.submit()
 
-        page_images.modal.wait_for_absence()
+        if check:
+            page_images.modal.wait_for_absence()

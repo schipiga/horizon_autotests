@@ -20,10 +20,9 @@ Admin volumes page.
 from pom import ui
 from selenium.webdriver.common.by import By
 
+from ..base import PageBase
 from .tab_admin_volumes import TabAdminVolumes
 from .tab_volume_types import TabVolumeTypes
-
-from horizon_autotests.app.pages.base import PageBase
 
 
 @ui.register_ui(

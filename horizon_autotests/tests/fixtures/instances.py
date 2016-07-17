@@ -19,10 +19,9 @@ Fixtures for instances.
 
 import pytest
 
-from six import moves
 from horizon_autotests.steps import InstancesSteps
 
-from .utils import AttrDict, generate_ids
+from ._utils import AttrDict, generate_ids
 
 __all__ = [
     'create_instance',
@@ -50,7 +49,7 @@ def create_instance(instances_steps):
     yield _create_instance
 
     if instances:
-        instances_steps.delete_instances(*[i.name for i in instances])
+        instances_steps.delete_instances([i.name for i in instances])
 
 
 @pytest.fixture
@@ -62,10 +61,10 @@ def instances_steps(login, horizon):
 @pytest.yield_fixture
 def instance(instances_steps):
     """Create instance."""
-    name = next(generate_ids('instance'))
+    instance_name = next(generate_ids('instance'))
 
-    instances_steps.create_instance(name)
-    instance = AttrDict(name=name)
+    instances_steps.create_instance(instance_name)
+    instance = AttrDict(name=instance_name)
 
     yield instance
 

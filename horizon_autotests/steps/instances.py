@@ -73,7 +73,7 @@ class InstancesSteps(BaseSteps):
 
         return instance_names
 
-    def delete_instances(self, *instance_names):
+    def delete_instances(self, instance_names, check=True):
         """Step to delete instances."""
         page_instances = self.page_instances()
 
@@ -85,13 +85,14 @@ class InstancesSteps(BaseSteps):
         page_instances.form_confirm.submit()
 
         page_instances.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        for instance_name in instance_names:
-            page_instances.table_instances.row(
-                name=instance_name).wait_for_absence(120)
+        if check:
+            self.close_notification('success')
+            for instance_name in instance_names:
+                page_instances.table_instances.row(
+                    name=instance_name).wait_for_absence(120)
 
-    def delete_instance(self, instance_name):
+    def delete_instance(self, instance_name, check=True):
         """Step to delete instance."""
         page_instances = self.page_instances()
 
@@ -102,28 +103,31 @@ class InstancesSteps(BaseSteps):
 
         page_instances.form_confirm.submit()
         page_instances.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        page_instances.table_instances.row(
-            name=instance_name).wait_for_absence(60)
+        if check:
+            self.close_notification('success')
+            page_instances.table_instances.row(
+                name=instance_name).wait_for_absence(60)
 
-    def lock_instance(self, instance_name):
+    def lock_instance(self, instance_name, check=True):
         """Step to lock instance."""
         with self.page_instances().table_instances.row(
                 name=instance_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_lock.click()
 
-        self.close_notification('success')
+        if check:
+            self.close_notification('success')
 
-    def unlock_instance(self, instance_name):
+    def unlock_instance(self, instance_name, check=True):
         """Step to unlock instance."""
         with self.page_instances().table_instances.row(
                 name=instance_name).dropdown_menu as menu:
             menu.button_toggle.click()
             menu.item_unlock.click()
 
-        self.close_notification('success')
+        if check:
+            self.close_notification('success')
 
     def view_instance(self, instance_name, check=True):
         """Step to view instance."""

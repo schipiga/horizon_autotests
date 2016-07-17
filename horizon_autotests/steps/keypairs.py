@@ -17,8 +17,6 @@ Keypairs steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from horizon_autotests.app.pages import PageAccess
-
 from .base import BaseSteps
 
 
@@ -27,11 +25,11 @@ class KeypairsSteps(BaseSteps):
 
     def tab_keypairs(self):
         """Open keypairs tab."""
-        with self._open(PageAccess) as page:
+        with self._open(self.app.page_access) as page:
             page.label_keypairs.click()
             return page.tab_keypairs
 
-    def create_keypair(self, keypair_name):
+    def create_keypair(self, keypair_name, check=True):
         """Step to create keypair."""
         tab_keypairs = self.tab_keypairs()
         tab_keypairs.button_create_keypair.click()
@@ -42,10 +40,11 @@ class KeypairsSteps(BaseSteps):
 
         tab_keypairs.spinner.wait_for_absence()
 
-        self.tab_keypairs().table_keypairs.row(
-            name=keypair_name).wait_for_presence()
+        if check:
+            self.tab_keypairs().table_keypairs.row(
+                name=keypair_name).wait_for_presence()
 
-    def delete_keypair(self, keypair_name):
+    def delete_keypair(self, keypair_name, check=True):
         """Step to delete keypair."""
         tab_keypairs = self.tab_keypairs()
 
@@ -54,12 +53,13 @@ class KeypairsSteps(BaseSteps):
         tab_keypairs.form_confirm.submit()
 
         tab_keypairs.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        tab_keypairs.table_keypairs.row(
-            name=keypair_name).wait_for_absence()
+        if check:
+            self.close_notification('success')
+            tab_keypairs.table_keypairs.row(
+                name=keypair_name).wait_for_absence()
 
-    def import_keypair(self, keypair_name, public_key):
+    def import_keypair(self, keypair_name, public_key, check=True):
         """Step to import keypair."""
         tab_keypairs = self.tab_keypairs()
         tab_keypairs.button_import_keypair.click()
@@ -70,12 +70,13 @@ class KeypairsSteps(BaseSteps):
             form.submit()
 
         tab_keypairs.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        tab_keypairs.table_keypairs.row(
-            name=keypair_name).wait_for_presence()
+        if check:
+            self.close_notification('success')
+            tab_keypairs.table_keypairs.row(
+                name=keypair_name).wait_for_presence()
 
-    def delete_keypairs(self, *keypair_names):
+    def delete_keypairs(self, keypair_names, check=True):
         """Step to delete keypairs."""
         tab_keypairs = self.tab_keypairs()
 
@@ -87,8 +88,9 @@ class KeypairsSteps(BaseSteps):
         tab_keypairs.form_confirm.submit()
 
         tab_keypairs.spinner.wait_for_absence()
-        self.close_notification('success')
 
-        for keypair_name in keypair_names:
-            tab_keypairs.table_keypairs.row(
-                name=keypair_name).wait_for_absence()
+        if check:
+            self.close_notification('success')
+            for keypair_name in keypair_names:
+                tab_keypairs.table_keypairs.row(
+                    name=keypair_name).wait_for_absence()

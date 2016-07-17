@@ -20,8 +20,7 @@ Volumes page.
 from pom import ui
 from selenium.webdriver.common.by import By
 
-from horizon_autotests.app.pages.base import PageBase
-
+from ..base import PageBase
 from .tab_backups import TabBackups
 from .tab_snapshots import TabSnapshots
 from .tab_volumes import TabVolumes

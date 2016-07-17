@@ -19,8 +19,8 @@ Tests for users.
 
 import pytest
 
-from .fixtures.config import ADMIN_NAME, ADMIN_PASSWD
-from .fixtures.utils import generate_ids
+from .fixtures._config import ADMIN_NAME, ADMIN_PASSWD
+from .fixtures._utils import generate_ids
 
 
 @pytest.mark.usefixtures('admin_only')
