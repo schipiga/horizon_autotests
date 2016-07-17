@@ -1,5 +1,5 @@
 """
-Instance page.
+Image pages and their components.
 
 @author: schipiga@mirantis.com
 """
@@ -17,21 +17,5 @@ Instance page.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pom import ui
-from selenium.webdriver.common.by import By
-
-from ..base import PageBase
-
-
-@ui.register_ui(label_name=ui.UI(By.CSS_SELECTOR, 'dd:nth-of-type(1)'))
-class Info(ui.Block):
-    """Instance info table."""
-
-
-@ui.register_ui(
-    info_instance=Info(By.CSS_SELECTOR,
-                       'div.detail dl.dl-horizontal:nth-of-type(1)'))
-class PageInstance(PageBase):
-    """Instance page."""
-
-    url = "/project/instances/{id}/"
+from .page_image import PageImage  # noqa
+from .page_images import PageImages  # noqa

@@ -189,3 +189,12 @@ class ImagesSteps(BaseSteps):
 
                 with row.cell('status') as cell:
                     waiter.exe(60, lambda: cell.value == 'Active')
+
+    def view_image(self, image_name, check=True):
+        """Step to view image."""
+        self.page_images().table_images.row(
+            name=image_name).link_image.click()
+
+        if check:
+            assert self.app.page_image.info_image.label_name.value \
+                == image_name

@@ -22,8 +22,8 @@ from selenium.webdriver.common.by import By
 
 from horizon_autotests.app import ui as _ui
 
-from .base import PageBase
-from .instances.page_instances import FormLaunchInstance
+from ..base import PageBase
+from ..instances.page_instances import FormLaunchInstance
 
 
 @ui.register_ui(
@@ -35,7 +35,8 @@ class DropdownMenu(_ui.DropdownMenu):
 
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
-    dropdown_menu=DropdownMenu())
+    dropdown_menu=DropdownMenu(),
+    link_image=ui.Link(By.CSS_SELECTOR, 'td > a'))
 class RowImage(ui.Row):
     """Row with image in images table."""
 

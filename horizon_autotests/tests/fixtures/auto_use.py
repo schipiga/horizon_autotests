@@ -77,12 +77,12 @@ def virtual_display(request):
 def video_capture(report_dir, virtual_display):
     """Capture video of test."""
     recorder = VideoRecorder(report_dir)
-    recorder.start()
+    #recorder.start()
 
     yield recorder
 
     LOGGER.info("Stop video recording")
-    recorder.stop()
+    #recorder.stop()
 
 
 @pytest.fixture(autouse=True)

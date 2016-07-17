@@ -23,7 +23,7 @@ from .containers import PageContainers
 from .defaults import PageDefaults
 from .flavors import PageFlavors
 from .host_aggregates import PageHostAggregates
-from .images import PageImages
+from .images import PageImage, PageImages
 from .instances import PageInstance, PageInstances
 from .login import PageLogin
 from .metadata_definitions import PageMetadataDefinitions
@@ -48,6 +48,7 @@ pages = [
     PageDefaults,
     PageFlavors,
     PageHostAggregates,
+    PageImage,
     PageImages,
     PageInstance,
     PageInstances,

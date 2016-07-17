@@ -24,7 +24,7 @@ from horizon_autotests.steps._utils import waiter
 from .fixtures.utils import generate_ids, generate_files, get_size
 
 
-@pytest.mark.usefixtures('any_user')
+@pytest.mark.usefixtures('admin_only')
 class TestAnyUser(object):
     """Tests for any user."""
 
@@ -41,8 +41,9 @@ class TestAnyUser(object):
         image_file = next(generate_files(postfix='.qcow2'))
         create_image(image_name, image_file)
 
-    def test_view_image(self):
+    def test_view_image(self, image, images_steps):
         """Verify that user can view image info."""
+        images_steps.view_image(image.name)
 
     def test_images_pagination(self, images_steps, create_images,
                                update_settings):

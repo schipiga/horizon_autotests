@@ -1,5 +1,5 @@
 """
-Instance page.
+Image page.
 
 @author: schipiga@mirantis.com
 """
@@ -25,13 +25,13 @@ from ..base import PageBase
 
 @ui.register_ui(label_name=ui.UI(By.CSS_SELECTOR, 'dd:nth-of-type(1)'))
 class Info(ui.Block):
-    """Instance info table."""
+    """Image info table."""
 
 
 @ui.register_ui(
-    info_instance=Info(By.CSS_SELECTOR,
-                       'div.detail dl.dl-horizontal:nth-of-type(1)'))
-class PageInstance(PageBase):
-    """Instance page."""
+    info_image=Info(By.CSS_SELECTOR,
+                    'div.detail dl.dl-horizontal:nth-of-type(1)'))
+class PageImage(PageBase):
+    """Image page."""
 
-    url = "/project/instances/{id}/"
+    url = "/project/images/{id}/"
