@@ -18,8 +18,7 @@ Image tests.
 # limitations under the License.
 
 import pytest
-
-from horizon_autotests.steps._utils import waiter
+from waiting import wait
 
 from .fixtures.utils import generate_ids, generate_files, get_size
 
@@ -131,8 +130,8 @@ class TestAnyUser(object):
 
             with page.form_launch_instance as form:
                 form.item_flavor.click()
-                waiter.exe(
-                    30, lambda: form.tab_flavor.table_available_flavors.rows)
+                wait(lambda: form.tab_flavor.table_available_flavors.rows,
+                     timeout_seconds=30, sleep_seconds=0.1)
 
                 for row in form.tab_flavor.table_available_flavors.rows:
 

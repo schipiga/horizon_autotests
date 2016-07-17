@@ -20,7 +20,6 @@ Fixtures for images.
 import pytest
 
 from horizon_autotests.steps import ImagesSteps
-from horizon_autotests.steps._utils import waiter
 
 from .utils import AttrDict, generate_ids
 
@@ -58,11 +57,8 @@ def create_images(images_steps, horizon):
             _images.append(image)
 
         for image_name in image_names:
-            with horizon.page_images.table_images.row(
-                    name=image_name) as row:
-                row.wait_for_presence()
-                with row.cell('status') as cell:
-                    waiter.exe(60, lambda: cell.value == 'Active')
+            horizon.page_images.table_images.row(
+                name=image_name, status='Active').wait_for_presence(60)
 
         return _images
 

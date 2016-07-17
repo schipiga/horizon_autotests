@@ -19,8 +19,9 @@ Horizon steps for api access.
 
 import os
 
+from waiting import wait
+
 from .base import BaseSteps
-from ._utils import waiter
 
 
 class ApiAccessSteps(BaseSteps):
@@ -40,8 +41,9 @@ class ApiAccessSteps(BaseSteps):
         tab_api_access.button_download_v2_file.click()
 
         if check:
-            assert waiter.exe(10, lambda: os.path.basename(self._rc_path) in
-                              os.listdir(self.app.download_dir))
+            wait(lambda: os.path.basename(self._rc_path) in
+                 os.listdir(self.app.download_dir),
+                 timeout_seconds=30, sleep_seconds=0.1)
             content = open(self._rc_path).read()
 
             assert 'OS_AUTH_URL='.format(self._auth_url) in content
@@ -57,8 +59,9 @@ class ApiAccessSteps(BaseSteps):
         tab_api_access.button_download_v3_file.click()
 
         if check:
-            assert waiter.exe(30, lambda: os.path.basename(self._rc_path) in
-                              os.listdir(self.app.download_dir))
+            wait(lambda: os.path.basename(self._rc_path) in
+                 os.listdir(self.app.download_dir),
+                 timeout_seconds=30, sleep_seconds=0.1)
             content = open(self._rc_path).read()
 
             assert 'OS_AUTH_URL='.format(self._auth_url) in content

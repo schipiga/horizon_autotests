@@ -20,7 +20,6 @@ Fixtures for volumes.
 import pytest
 
 from horizon_autotests.steps import VolumesSteps
-from horizon_autotests.steps._utils import waiter
 
 from .utils import AttrDict, generate_ids
 
@@ -63,10 +62,8 @@ def create_volumes(volumes_steps):
 
         tab_volumes = volumes_steps.tab_volumes()
         for volume_name in volume_names:
-            with tab_volumes.table_volumes.row(name=volume_name) as row:
-                row.wait_for_presence()
-                with row.cell('status') as cell:
-                    assert waiter.exe(60, lambda: cell.value == 'Available')
+            tab_volumes.table_volumes.row(
+                name=volume_name, status='Available').wait_for_presence(90)
 
         return _volumes
 
@@ -132,10 +129,8 @@ def create_snapshots(volume, volumes_steps):
 
         tab_snapshots = volumes_steps.tab_snapshots()
         for snapshot_name in snapshot_names:
-            with tab_snapshots.table_snapshots.row(name=snapshot_name) as row:
-                row.wait_for_presence()
-                with row.cell('status') as cell:
-                    assert waiter.exe(30, lambda: cell.value == 'Available')
+            tab_snapshots.table_snapshots.row(
+                name=snapshot_name, status='Available').wait_for_presence(30)
 
         return _snapshots
 

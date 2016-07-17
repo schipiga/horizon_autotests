@@ -18,8 +18,7 @@ Flavor tests.
 # limitations under the License.
 
 import pytest
-
-from horizon_autotests.steps._utils import waiter
+from waiting import wait
 
 from .fixtures.config import ADMIN_NAME, ADMIN_PASSWD, DEMO_NAME, DEMO_PASSWD
 from .fixtures.utils import generate_ids
@@ -59,8 +58,8 @@ class TestAdminOnly(object):
         with horizon.page_instances.form_launch_instance as form:
             form.item_flavor.click()
 
-            waiter.exe(
-                30, lambda: form.tab_flavor.table_available_flavors.rows)
+            wait(lambda: form.tab_flavor.table_available_flavors.rows,
+                 timeout_seconds=30, sleep_seconds=0.1)
 
             for row in form.tab_flavor.table_available_flavors.rows:
                 assert row.cell('name').value != flavor.name

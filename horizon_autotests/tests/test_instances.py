@@ -27,10 +27,10 @@ class TestAdminOnly(object):
     """Tests for admin only."""
 
     @pytest.mark.parametrize('instances_count', [2, 1])
-    def test_delete_instances(self, instances_count, create_instances):
+    def test_delete_instances(self, instances_count, create_instance):
         """Verify that user can delete instances as batch."""
         instance_name = generate_ids('instance').next()
-        create_instances(instance_name, count=instances_count)
+        create_instance(instance_name, count=instances_count)
 
     def test_lock_instance(self, instance, instances_steps):
         """Verify that user can lock instance."""
@@ -41,16 +41,52 @@ class TestAdminOnly(object):
         """Verify that user can view instance details."""
         instances_steps.view_instance(instance.name)
 
-    def test_instances_pagination(self, instances_steps, create_instances,
+    def test_instances_pagination(self, instances_steps, create_instance,
                                   update_settings):
         """Verify that instances pagination works right and back."""
-        instance_name = generate_ids('instance').next()
-        create_instances(instance_name, count=3)
+        instance_name = next(generate_ids('instance'))
+        instances = create_instance(instance_name, count=3)
         update_settings(items_per_page=1)
 
-    def test_filter_instances(self, instances_steps, create_instances):
+        page_instances = instances_steps.page_instances()
+
+        page_instances.table_instances.row(
+            name=instances[2].name).wait_for_presence(30)
+        page_instances.table_instances.link_next.wait_for_presence()
+        page_instances.table_instances.link_prev.wait_for_absence()
+
+        page_instances.table_instances.link_next.click()
+
+        page_instances.table_instances.row(
+            name=instances[1].name).wait_for_presence(30)
+        page_instances.table_instances.link_next.wait_for_presence()
+        page_instances.table_instances.link_prev.wait_for_presence()
+
+        page_instances.table_instances.link_next.click()
+
+        page_instances.table_instances.row(
+            name=instances[0].name).wait_for_presence(30)
+        page_instances.table_instances.link_next.wait_for_absence()
+        page_instances.table_instances.link_prev.wait_for_presence()
+
+        page_instances.table_instances.link_prev.click()
+
+        page_instances.table_instances.row(
+            name=instances[1].name).wait_for_presence(30)
+        page_instances.table_instances.link_next.wait_for_presence()
+        page_instances.table_instances.link_prev.wait_for_presence()
+
+        page_instances.table_instances.link_prev.click()
+
+        page_instances.table_instances.row(
+            name=instances[2].name).wait_for_presence(30)
+        page_instances.table_instances.link_next.wait_for_presence()
+        page_instances.table_instances.link_prev.wait_for_absence()
+
+    def test_filter_instances(self, instances_steps, create_instance):
         """Verify that user can filter instances."""
         instance_name = next(generate_ids('instance'))
-        instances = create_instances(instance_name, count=2)
+        instances = create_instance(instance_name, count=2)
+
         instances_steps.filter_instances(query=instances[0].name)
         instances_steps.reset_instances_filter()

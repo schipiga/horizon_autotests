@@ -154,7 +154,7 @@ class RowInstance(ui.Row):
     """Row with instance."""
 
 
-class TableInstances(ui.Table):
+class TableInstances(_ui.Table):
     """Instances table."""
 
     columns = {'name': 2, 'status': 7}

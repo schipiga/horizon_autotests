@@ -21,9 +21,11 @@ from tempfile import mkdtemp
 
 import pom
 from selenium.webdriver import FirefoxProfile
+from selenium.webdriver.remote.remote_connection import RemoteConnection
 
 from .pages import PageBase, pages
 
+RemoteConnection.set_timeout(30)
 sorted_pages = sorted(pages, key=lambda page: len(page.url))
 
 

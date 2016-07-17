@@ -114,9 +114,9 @@ class NetworksSteps(BaseSteps):
         if check:
             page_network = self.app.page_network
             self.close_notification('success')
-            with page_network.table_subnets.row(name=subnet_name) as row:
-                row.wait_for_presence()
-                assert row.cell('network_address').value == network_address
+            page_network.table_subnets.row(
+                name=subnet_name,
+                network_address=network_address).wait_for_presence()
 
     def admin_delete_network(self, network_name, check=True):
         """Step to delete network as admin."""

@@ -19,8 +19,6 @@ Volumes tests.
 
 import pytest
 
-from horizon_autotests.steps._utils import waiter
-
 from .fixtures.config import DEMO_NAME, DEMO_PASSWD
 from .fixtures.utils import generate_ids
 
@@ -124,12 +122,8 @@ class TestAdminOnly(object):
         instance_name = next(generate_ids('instance'))
         volumes_steps.launch_volume_as_instance(volume.name, instance_name)
 
-        with instances_steps.page_instances().table_instances.row(
-                name=instance_name) as row:
-            row.wait_for_presence(30)
-            with row.cell('status') as cell:
-                assert waiter.exe(60, lambda: cell.value == 'Active')
-
+        instances_steps.page_instances().table_instances.row(
+            name=instance_name, status='Active').wait_for_presence(90)
         instances_steps.delete_instance(instance_name)
 
     def test_manage_volume_attachments(self, volume, instance, volumes_steps):

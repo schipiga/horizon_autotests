@@ -18,8 +18,8 @@ Users steps.
 # limitations under the License.
 
 from horizon_autotests.app.pages import PageUsers
+from waiting import wait
 
-from ._utils import waiter
 from .base import BaseSteps
 
 
@@ -114,7 +114,7 @@ class UsersSteps(BaseSteps):
                         return False
                 return True
 
-            assert waiter.exe(10, check_rows)
+            wait(check_rows, timeout_seconds=10, sleep_seconds=0.1)
 
     def sort_users(self, reverse=False, check=True):
         """Step to sort users."""
@@ -135,7 +135,7 @@ class UsersSteps(BaseSteps):
 
                     return usernames == expected_usernames
 
-                assert waiter.exe(10, check_sort)
+            wait(check_sort, timeout_seconds=10, sleep_seconds=0.1)
 
     def toggle_user(self, username, enable, check=True):
         """Step to disable user."""

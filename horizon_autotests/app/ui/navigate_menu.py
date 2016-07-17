@@ -18,10 +18,8 @@ Navigate menu component.
 # limitations under the License.
 
 from pom import ui
-from pom.utils import Waiter
 from selenium.webdriver.common.by import By
-
-waiter = Waiter(polling=0.1)
+from waiting import wait
 
 
 class NavigateMenu(ui.Block):
@@ -53,11 +51,8 @@ class NavigateMenu(ui.Block):
 
             if not _is_expanded(sub_menu):
                 item.click()
-
-                if not waiter.exe(20, lambda: _is_expanded(sub_menu)):
-                    raise RuntimeError(
-                        "Menu {!r} is not expanded after click".format(
-                            item_name))
+                wait(lambda: _is_expanded(sub_menu),
+                     timeout_seconds=10, sleep_seconds=0.1)
 
             container = sub_menu
 
