@@ -48,8 +48,9 @@ class TestAdminOnly(object):
         create_instances(instance_name, count=3)
         update_settings(items_per_page=1)
 
-
-# def test_filter_instances(instances_steps, create_instances):
-#     instance_name = generate_ids('instance').next()
-#     instances = create_instances(instance_name, count=2)
-#     instances_steps.filter_instances(query=instances[0].name)
+    def test_filter_instances(self, instances_steps, create_instances):
+        """Verify that user can filter instances."""
+        instance_name = next(generate_ids('instance'))
+        instances = create_instances(instance_name, count=2)
+        instances_steps.filter_instances(query=instances[0].name)
+        instances_steps.reset_instances_filter()

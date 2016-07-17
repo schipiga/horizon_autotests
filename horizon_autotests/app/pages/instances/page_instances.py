@@ -149,7 +149,7 @@ class DropdownMenu(_ui.DropdownMenu):
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu(),
-    link_instance=ui.UI(By.CSS_SELECTOR, 'td > a'))
+    link_instance=ui.Link(By.CSS_SELECTOR, 'td > a'))
 class RowInstance(ui.Row):
     """Row with instance."""
 
@@ -163,7 +163,9 @@ class TableInstances(ui.Table):
 
 @ui.register_ui(
     button_delete_instances=ui.Button(By.ID, 'instances__action_delete'),
+    button_filter_instances=ui.Button(By.ID, 'instances__action_filter'),
     button_launch_instance=ui.Button(By.ID, "instances__action_launch-ng"),
+    field_filter_instances=ui.TextField(By.NAME, 'instances__filter__q'),
     form_launch_instance=FormLaunchInstance(
         By.CSS_SELECTOR,
         'wizard[ng-controller="LaunchInstanceWizardController"]'),
@@ -172,3 +174,4 @@ class PageInstances(PageBase):
     """Instances page."""
 
     url = "/project/instances/"
+    navigate_items = "Project", "Compute", "Instances"

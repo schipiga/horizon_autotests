@@ -127,5 +127,31 @@ class InstancesSteps(BaseSteps):
         """Step to view instance."""
         self.page_instances().table_instances.row(
             name=instance_name).link_instance.click()
-        assert self.app.page_instance.info_instance.label_name.value \
-            == instance_name
+
+        if check:
+            assert self.app.page_instance.info_instance.label_name.value \
+                == instance_name
+
+    def filter_instances(self, query, check=True):
+        """Step to filter instances."""
+        page_instances = self.page_instances()
+
+        page_instances.field_filter_instances.value = query
+        page_instances.button_filter_instances.click()
+
+        if check:
+
+            def check_rows():
+                for row in page_instances.table_instances.rows:
+                    if not (row.is_present and
+                            query in row.link_instance.value):
+                        return False
+                return True
+
+            assert waiter.exe(10, check_rows)
+
+    def reset_instances_filter(self):
+        """Step to reset instances filter."""
+        page_instances = self.page_instances()
+        page_instances.field_filter_instances.value = ''
+        page_instances.button_filter_instances.click()

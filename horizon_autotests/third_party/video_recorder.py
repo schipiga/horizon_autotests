@@ -2,7 +2,6 @@ import logging
 import os
 import signal
 import subprocess
-from tempfile import mktemp
 from threading import Thread
 import time
 
