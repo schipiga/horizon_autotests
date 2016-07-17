@@ -161,6 +161,7 @@ class ImagesSteps(BaseSteps):
                      check=True):
         """Step to update image."""
         page_images = self.page_images()
+
         with page_images.table_images.row(
                 name=image_name).dropdown_menu as menu:
             menu.button_toggle.click()
@@ -198,3 +199,21 @@ class ImagesSteps(BaseSteps):
         if check:
             assert self.app.page_image.info_image.label_name.value \
                 == image_name
+
+    def create_volume(self, image_name, volume_name, check=True):
+        """Step to create volume from image."""
+        page_images = self.page_images()
+
+        with page_images.table_images.row(
+                name=image_name).dropdown_menu as menu:
+            menu.button_toggle.click()
+            menu.item_create_volume.click()
+
+        with page_images.form_create_volume as form:
+            form.field_name.value = volume_name
+            form.submit()
+
+        page_images.spinner.wait_for_absence()
+
+        if check:
+            self.close_notification('info')

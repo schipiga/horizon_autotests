@@ -24,7 +24,7 @@ from horizon_autotests.steps._utils import waiter
 from .fixtures.utils import generate_ids, generate_files, get_size
 
 
-@pytest.mark.usefixtures('admin_only')
+@pytest.mark.usefixtures('any_user')
 class TestAnyUser(object):
     """Tests for any user."""
 
@@ -107,8 +107,15 @@ class TestAnyUser(object):
         with image.put(name=new_image_name):
             images_steps.update_image(image.name, new_image_name)
 
-    def test_create_volume_from_image(self):
+    def test_create_volume_from_image(self, image, images_steps,
+                                      volumes_steps):
         """Verify that user can create volume from image."""
+        volume_name = next(generate_ids('volume'))
+        images_steps.create_volume(image.name, volume_name)
+
+        volumes_steps.tab_volumes().table_volumes.row(
+            name=volume_name, status='Available').wait_for_presence(90)
+        volumes_steps.delete_volume(volume_name)
 
     def test_set_image_disk_and_ram_size(self, horizon, create_image):
         """Verify that image limits has influence to flavor choice."""

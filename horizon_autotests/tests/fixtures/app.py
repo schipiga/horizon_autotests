@@ -51,9 +51,9 @@ def horizon():
     """
     app = Horizon(DASHBOARD_URL)
     try:
-        #_create_demo_user(app)
+        _create_demo_user(app)
         yield app
-        #_delete_demo_user(app)
+        _delete_demo_user(app)
     finally:
         app.quit()
 

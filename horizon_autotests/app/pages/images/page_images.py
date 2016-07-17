@@ -24,11 +24,14 @@ from horizon_autotests.app import ui as _ui
 
 from ..base import PageBase
 from ..instances.page_instances import FormLaunchInstance
+from ..volumes.tab_volumes import FormCreateVolume
 
 
 @ui.register_ui(
-    item_update_metadata=ui.UI(By.CSS_SELECTOR,
-                               '[id$="action_update_metadata"]'))
+    item_create_volume=ui.UI(
+        By.CSS_SELECTOR, '[id$="action_create_volume_from_image"]'),
+    item_update_metadata=ui.UI(
+        By.CSS_SELECTOR, '[id$="action_update_metadata"]'))
 class DropdownMenu(_ui.DropdownMenu):
     """Dropdown menu for image row."""
 
@@ -99,6 +102,8 @@ class FormUpdateImage(_ui.Form):
     button_delete_images=ui.Button(By.ID, 'images__action_delete'),
     button_public_images=ui.Button(By.CSS_SELECTOR, 'button[value="public"]'),
     form_create_image=FormCreateImage(By.ID, 'create_image_form'),
+    form_create_volume=FormCreateVolume(
+        By.CSS_SELECTOR, '[action*="volumes/create"]'),
     form_launch_instance=FormLaunchInstance(
         By.CSS_SELECTOR,
         'wizard[ng-controller="LaunchInstanceWizardController"]'),
