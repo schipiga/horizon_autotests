@@ -19,17 +19,19 @@ Auto use fixtures.
 
 import logging
 import os
+import shutil
 
 import pytest
 import xvfbwrapper
 
 from horizon_autotests.third_party import VideoRecorder
 
-from ._config import VIRTUAL_DISPLAY, TESTS_DIR
+from ._config import VIRTUAL_DISPLAY, TEST_REPORTS_DIR
 from ._utils import slugify
 
 __all__ = [
     'report_dir',
+    'reports_dir',
     'sanitizer',
     'video_capture',
     'virtual_display'
@@ -38,10 +40,19 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 
 
+@pytest.fixture(scope='session')
+def reports_dir():
+    """Fixture to clear reports directory before tests."""
+    if os.path.exists(TEST_REPORTS_DIR):
+        shutil.rmtree(TEST_REPORTS_DIR)
+        os.makedirs(TEST_REPORTS_DIR)
+    return TEST_REPORTS_DIR
+
+
 @pytest.fixture
-def report_dir(request):
-    """Create report dir to put test logs."""
-    _report_dir = os.path.join(TESTS_DIR, slugify(request.node.name))
+def report_dir(request, reports_dir):
+    """Create report directory to put test logs."""
+    _report_dir = os.path.join(reports_dir, slugify(request.node.name))
     if not os.path.isdir(_report_dir):
         os.makedirs(_report_dir)
     return _report_dir
