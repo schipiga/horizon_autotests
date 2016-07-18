@@ -29,7 +29,8 @@ class UsersSteps(BaseSteps):
         """Open users page if it isn't opened."""
         return self._open(self.app.page_users)
 
-    def create_user(self, username, password, project=None, check=True):
+    def create_user(self, username, password, project=None, role=None,
+                    check=True):
         """Step to create user."""
         page_users = self.page_users()
 
@@ -42,6 +43,10 @@ class UsersSteps(BaseSteps):
 
             if project:
                 form.combobox_project.value = project
+
+            if role:
+                form.combobox_role.value = role
+
             form.submit()
 
         page_users.spinner.wait_for_absence()

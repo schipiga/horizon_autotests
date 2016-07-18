@@ -23,12 +23,12 @@ import requests
 from .fixtures._utils import generate_ids, generate_files
 
 
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
-    """Tests for any user."""
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
+    """Tests for any one."""
 
     def test_create_public_container(self, create_container):
-        """Verify that user can create public container."""
+        """Verify that one can create public container."""
         container_name = next(generate_ids('container'))
         create_container(container_name, public=True)
 
@@ -49,7 +49,7 @@ class TestAnyUser(object):
             containers_steps.delete_folder(folder_name)
 
     def test_upload_file_to_container(self, container, containers_steps):
-        """Verify that user can upload file to container."""
+        """Verify that one can upload file to container."""
         with containers_steps.container(container.name):
             file_path = next(generate_files())
 
@@ -57,7 +57,7 @@ class TestAnyUser(object):
             containers_steps.delete_file(file_name)
 
     def test_upload_file_to_folder(self, container, containers_steps):
-        """Verify that user can upload file to folder."""
+        """Verify that one can upload file to folder."""
         with containers_steps.container(container.name):
             folder_name = next(generate_ids('folder'))
             containers_steps.create_folder(folder_name)

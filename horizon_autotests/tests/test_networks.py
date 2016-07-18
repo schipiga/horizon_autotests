@@ -22,8 +22,8 @@ import pytest
 from .fixtures._utils import generate_ids
 
 
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
     """Tests for any user."""
 
     def test_subnet_add(self, network, networks_steps):
@@ -49,8 +49,8 @@ class TestAdminOnly(object):
         networks_steps.admin_delete_network(network_name)
 
 
-@pytest.mark.usefixtures('demo_only')
-class TestDemoOnly(object):
+@pytest.mark.usefixtures('user_only')
+class TestUserOnly(object):
     """Tests for demo only."""
 
     def test_not_create_shared_network(self, horizon, create_network):

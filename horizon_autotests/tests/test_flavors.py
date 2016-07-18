@@ -20,7 +20,7 @@ Flavor tests.
 import pytest
 from waiting import wait
 
-from .fixtures._config import ADMIN_NAME, ADMIN_PASSWD, DEMO_NAME, DEMO_PASSWD
+from .fixtures._config import ADMIN_NAME, ADMIN_PASSWD, USER_NAME, USER_PASSWD
 from .fixtures._utils import generate_ids
 
 
@@ -50,7 +50,7 @@ class TestAdminOnly(object):
         flavors_steps.modify_access(flavor.name)
 
         auth_steps.logout()
-        auth_steps.login(DEMO_NAME, DEMO_PASSWD)
+        auth_steps.login(USER_NAME, USER_PASSWD)
 
         horizon.page_instances.open()
         horizon.page_instances.button_launch_instance.click()

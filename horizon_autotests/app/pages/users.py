@@ -50,6 +50,7 @@ class TableUsers(_ui.Table):
 
 @ui.register_ui(
     combobox_project=ui.ComboBox(By.NAME, 'project'),
+    combobox_role=ui.ComboBox(By.NAME, 'role_id'),
     field_confirm_password=ui.TextField(By.NAME, 'confirm_password'),
     field_name=ui.TextField(By.NAME, 'name'),
     field_password=ui.TextField(By.NAME, 'password'))

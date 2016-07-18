@@ -20,8 +20,8 @@ Security group tests.
 import pytest
 
 
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
     """Tests for any user."""
 
     def test_create_security_group(self, security_group):

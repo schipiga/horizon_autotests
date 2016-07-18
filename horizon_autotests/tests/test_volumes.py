@@ -19,12 +19,12 @@ Volumes tests.
 
 import pytest
 
-from .fixtures._config import DEMO_NAME, DEMO_PASSWD
+from .fixtures._config import USER_NAME, USER_PASSWD
 from .fixtures._utils import generate_ids
 
 
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
     """Tests for any user."""
 
     def test_edit_volume(self, volume, volumes_steps):
@@ -137,7 +137,7 @@ class TestAdminOnly(object):
         transfer_id, transfer_key = volumes_steps.create_transfer(
             volume.name, transfer_name)
         auth_steps.logout()
-        auth_steps.login(DEMO_NAME, DEMO_PASSWD)
+        auth_steps.login(USER_NAME, USER_PASSWD)
         volumes_steps.accept_transfer(transfer_id, transfer_key, volume.name)
 
     def test_migrate_volume(self, volume, volumes_steps):

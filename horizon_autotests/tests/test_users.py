@@ -89,8 +89,8 @@ class TestAdminOnly(object):
             users_steps.update_user(user.name, new_username)
 
 
-@pytest.mark.usefixtures('demo_only')
-class TestDemoOnly(object):
+@pytest.mark.usefixtures('user_only')
+class TestUserOnly(object):
     """Tests for demo user only."""
 
     def test_unavailable_users_list_for_unprivileged_user(

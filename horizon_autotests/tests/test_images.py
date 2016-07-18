@@ -23,9 +23,9 @@ from waiting import wait
 from .fixtures._utils import generate_ids, generate_files, get_size
 
 
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
-    """Tests for any user."""
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
+    """Tests for any one."""
 
     @pytest.mark.parametrize('images_count', [1, 2])
     def test_delete_images(self, images_count, create_images):

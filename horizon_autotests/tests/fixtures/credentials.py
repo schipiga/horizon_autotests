@@ -22,26 +22,26 @@ import os
 import pytest
 
 from ._config import (ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
-                      DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)
+                      USER_NAME, USER_PASSWD, USER_PROJECT)
 
 __all__ = [
     'admin_only',
-    'any_user',
-    'demo_only'
+    'any_one',
+    'user_only'
 ]
 
 
-@pytest.fixture(params=('admin', 'demo'))
-def any_user(request):
+@pytest.fixture(params=('admin', 'user'))
+def any_one(request):
     """Define user to log in account."""
     if request.param == 'admin':
         os.environ['OS_LOGIN'] = ADMIN_NAME
         os.environ['OS_PASSWD'] = ADMIN_PASSWD
         os.environ['OS_PROJECT'] = ADMIN_PROJECT
-    if request.param == 'demo':
-        os.environ['OS_LOGIN'] = DEMO_NAME
-        os.environ['OS_PASSWD'] = DEMO_PASSWD
-        os.environ['OS_PROJECT'] = DEMO_PROJECT
+    if request.param == 'user':
+        os.environ['OS_LOGIN'] = USER_NAME
+        os.environ['OS_PASSWD'] = USER_PASSWD
+        os.environ['OS_PROJECT'] = USER_PROJECT
 
 
 @pytest.fixture
@@ -53,8 +53,8 @@ def admin_only():
 
 
 @pytest.fixture
-def demo_only():
-    """Set demo credentials for test."""
-    os.environ['OS_LOGIN'] = DEMO_NAME
-    os.environ['OS_PASSWD'] = DEMO_PASSWD
-    os.environ['OS_PROJECT'] = DEMO_PROJECT
+def user_only():
+    """Set user credentials for test."""
+    os.environ['OS_LOGIN'] = USER_NAME
+    os.environ['OS_PASSWD'] = USER_PASSWD
+    os.environ['OS_PROJECT'] = USER_PROJECT

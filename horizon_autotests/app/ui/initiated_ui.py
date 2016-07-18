@@ -48,25 +48,13 @@ class DropdownMenuProject(ui.Block):
 class Spinner(ui.UI):
     """Spinner to wait loading."""
 
-    def wait_for_absence(self, timeout=30):
-        """Wait spinner absence with predefined timeout.
-
-        Arguments:
-            - timeout: integer, default is 30 sec.
-        """
-        super(Spinner, self).wait_for_absence(timeout)
+    timeout = 60
 
 
 class Modal(ui.Block):
     """Spinner to wait loading."""
 
-    def wait_for_absence(self, timeout=30):
-        """Wait spinner absence with predefined timeout.
-
-        Arguments:
-            - timeout: integer, default is 30 sec.
-        """
-        super(Modal, self).wait_for_absence(timeout)
+    timeout = 60
 
 
 @ui.register_ui(

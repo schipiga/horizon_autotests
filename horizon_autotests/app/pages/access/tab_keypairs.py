@@ -44,7 +44,7 @@ class TableKeypairs(ui.Table):
 
 @ui.register_ui(field_name=ui.TextField(By.NAME, 'name'),
                 field_public_key=ui.TextField(By.NAME, 'public_key'))
-class FormImportKeypair(ui.Form):
+class FormImportKeypair(_ui.Form):
     """Form to import keypair."""
 
 

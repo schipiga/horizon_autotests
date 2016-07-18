@@ -20,6 +20,6 @@ Auth tests.
 import pytest
 
 
-@pytest.mark.usefixtures('any_user')
+@pytest.mark.usefixtures('any_one')
 def test_login(login):
-    """Verify that user can login and logout."""
+    """Verify that one can login and logout."""

@@ -25,8 +25,8 @@ with open(path.join(path.dirname(__file__), 'test_data', 'key.pub')) as f:
     PUBLIC_KEY = f.read()
 
 
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
     """Tests for any user."""
 
     def test_create_keypair(self, keypair):

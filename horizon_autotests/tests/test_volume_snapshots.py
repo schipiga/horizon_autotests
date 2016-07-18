@@ -22,8 +22,8 @@ import pytest
 from .fixtures._utils import generate_ids
 
 
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
     """Tests for any user."""
 
     def test_edit_volume_snapshot(self, snapshot, volumes_steps):

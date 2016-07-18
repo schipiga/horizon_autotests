@@ -24,6 +24,8 @@ from selenium.webdriver.common.by import By
 class Form(ui.Form):
     """Custom form."""
 
+    timeout = 60
+
     submit_locator = By.CSS_SELECTOR, '.btn.btn-primary'
     cancel_locator = By.CSS_SELECTOR, '.btn.cancel'
 

@@ -24,7 +24,7 @@ import shutil
 import pytest
 import xvfbwrapper
 
-from horizon_autotests.third_party import VideoRecorder
+from horizon_autotests.third_party import VideoRecorder, Lock
 
 from ._config import VIRTUAL_DISPLAY, TEST_REPORTS_DIR
 from ._utils import slugify
@@ -43,9 +43,9 @@ LOGGER = logging.getLogger(__name__)
 @pytest.fixture(scope='session')
 def reports_dir():
     """Fixture to clear reports directory before tests."""
-    if os.path.exists(TEST_REPORTS_DIR):
-        shutil.rmtree(TEST_REPORTS_DIR)
-        os.makedirs(TEST_REPORTS_DIR)
+    # if os.path.exists(TEST_REPORTS_DIR):
+    #     shutil.rmtree(TEST_REPORTS_DIR)
+    #     os.makedirs(TEST_REPORTS_DIR)
     return TEST_REPORTS_DIR
 
 
@@ -75,7 +75,8 @@ def virtual_display(request):
     else:
         _virtual_display.xvfb_cmd.extend(args)
 
-    _virtual_display.start()
+    with Lock('/tmp/xvfb.lock'):
+        _virtual_display.start()
 
     def fin():
         LOGGER.info('Stop xvfb')

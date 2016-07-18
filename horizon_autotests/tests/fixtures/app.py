@@ -31,9 +31,12 @@ from ._config import (ADMIN_NAME,
                       ADMIN_PASSWD,
                       ADMIN_PROJECT,
                       DASHBOARD_URL,
-                      DEMO_NAME,
-                      DEMO_PASSWD,
-                      DEMO_PROJECT)
+                      DEFAULT_ADMIN_NAME,
+                      DEFAULT_ADMIN_PASSWD,
+                      DEFAULT_ADMIN_PROJECT,
+                      USER_NAME,
+                      USER_PASSWD,
+                      USER_PROJECT)
 
 __all__ = [
     'auth_steps',
@@ -51,9 +54,9 @@ def horizon():
     """
     app = Horizon(DASHBOARD_URL)
     try:
-        _create_demo_user(app)
+        _create_admin_user(app)
         yield app
-        _delete_demo_user(app)
+        _delete_admin_user(app)
     finally:
         app.quit()
 
@@ -81,23 +84,34 @@ def login(auth_steps):
     auth_steps.logout()
 
 
-def _create_demo_user(app):
+def _create_admin_user(app):
     auth_steps = AuthSteps(app)
-    auth_steps.login(ADMIN_NAME, ADMIN_PASSWD)
-    auth_steps.switch_project(ADMIN_PROJECT)
+    auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
+    auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
 
-    ProjectsSteps(app).create_project(DEMO_PROJECT)
-    UsersSteps(app).create_user(DEMO_NAME, DEMO_PASSWD, DEMO_PROJECT)
+    projects_steps = ProjectsSteps(app)
+    projects_steps.create_project(ADMIN_PROJECT)
+    projects_steps.create_project(USER_PROJECT)
+
+    users_steps = UsersSteps(app)
+    users_steps.create_user(ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
+                            role='admin')
+    users_steps.create_user(USER_NAME, USER_PASSWD, USER_PROJECT)
 
     auth_steps.logout()
 
 
-def _delete_demo_user(app):
+def _delete_admin_user(app):
     auth_steps = AuthSteps(app)
-    auth_steps.login(ADMIN_NAME, ADMIN_PASSWD)
-    auth_steps.switch_project(ADMIN_PROJECT)
+    auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
+    auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
 
-    UsersSteps(app).delete_user(DEMO_NAME)
-    ProjectsSteps(app).delete_project(DEMO_PROJECT)
+    users_steps = UsersSteps(app)
+    users_steps.delete_user(USER_NAME)
+    users_steps.delete_user(ADMIN_NAME)
+
+    projects_steps = ProjectsSteps(app)
+    projects_steps.delete_project(USER_PROJECT)
+    projects_steps.delete_project(ADMIN_PROJECT)
 
     auth_steps.logout()

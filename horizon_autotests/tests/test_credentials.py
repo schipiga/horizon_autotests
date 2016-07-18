@@ -20,18 +20,18 @@ Credentials tests.
 import pytest
 
 
-@pytest.mark.usefixtures('any_user')
-class TestAnyUser(object):
-    """Tests for any user."""
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
+    """Tests for any one."""
 
     def test_download_rc_v2(self, api_access_steps):
-        """Verify that user can download RCv2."""
+        """Verify that one can download RCv2."""
         api_access_steps.download_rc_v2()
 
     def test_download_rc_v3(self, api_access_steps):
-        """Verify that user can download RCv2."""
+        """Verify that one can download RCv2."""
         api_access_steps.download_rc_v3()
 
     def test_view_credentials(self, api_access_steps):
-        """Verify that user can view credentials."""
+        """Verify that one can view credentials."""
         api_access_steps.view_credentials()
