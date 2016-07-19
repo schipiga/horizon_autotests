@@ -17,6 +17,10 @@ Projects steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from time import sleep
+
+from waiting import wait
+
 from .base import BaseSteps
 
 
@@ -44,8 +48,7 @@ class ProjectsSteps(BaseSteps):
                 name=project_name).wait_for_presence()
 
     def delete_project(self, project_name, check=True):
-        """Step to delete project.
-        """
+        """Step to delete project."""
         page_projects = self.page_projects()
 
         with page_projects.table_projects.row(
@@ -60,3 +63,22 @@ class ProjectsSteps(BaseSteps):
             self.close_notification('success')
             page_projects.table_projects.row(
                 name=project_name).wait_for_absence()
+
+    def filter_projects(self, query, check=True):
+        """Step to filter projects."""
+        page_projects = self.page_projects()
+
+        page_projects.field_filter_projects.value = query
+        page_projects.button_filter_projects.click()
+        sleep(1)
+
+        if check:
+
+            def check_rows():
+                for row in page_projects.table_projects.rows:
+                    if not (row.is_present and
+                            query in row.link_project.value):
+                        return False
+                return True
+
+            wait(check_rows, timeout_seconds=10, sleep_seconds=0.1)

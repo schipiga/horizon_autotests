@@ -27,7 +27,8 @@ from ..base import PageBase
 
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
-    dropdown_menu=_ui.DropdownMenu())
+    dropdown_menu=_ui.DropdownMenu(),
+    link_network=ui.UI(By.CSS_SELECTOR, 'td.anchor > a'))
 class RowNetwork(ui.Row):
     """Row with network in networks table."""
 
@@ -41,6 +42,8 @@ class TableNetworks(_ui.Table):
 
 @ui.register_ui(
     button_delete_networks=ui.Button(By.ID, 'networks__action_delete'),
+    button_filter_networks=ui.Button(By.CLASS_NAME, 'fa-search'),
+    field_filter_networks=ui.TextField(By.NAME, 'networks__filter__q'),
     table_networks=TableNetworks(By.ID, 'networks'))
 class PageAdminNetworks(PageBase):
     """Admin networks page."""

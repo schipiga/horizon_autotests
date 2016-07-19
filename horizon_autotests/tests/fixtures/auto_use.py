@@ -17,9 +17,9 @@ Auto use fixtures.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import contextlib
 import logging
 import os
-import shutil
 
 import pytest
 import xvfbwrapper
@@ -46,11 +46,8 @@ from ._config import (ADMIN_NAME,
                       VIRTUAL_DISPLAY)
 from ._utils import slugify
 
-
 __all__ = [
     'report_dir',
-    'reports_dir',
-    'sanitizer',
     'video_capture',
     'virtual_display',
     'test_env'
@@ -59,19 +56,10 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 
 
-@pytest.fixture(scope='session')
-def reports_dir():
-    """Fixture to clear reports directory before tests."""
-    # if os.path.exists(TEST_REPORTS_DIR):
-    #     shutil.rmtree(TEST_REPORTS_DIR)
-    #     os.makedirs(TEST_REPORTS_DIR)
-    return TEST_REPORTS_DIR
-
-
 @pytest.fixture
-def report_dir(request, reports_dir):
+def report_dir(request):
     """Create report directory to put test logs."""
-    _report_dir = os.path.join(reports_dir, slugify(request.node.name))
+    _report_dir = os.path.join(TEST_REPORTS_DIR, slugify(request.node.name))
     if not os.path.isdir(_report_dir):
         os.makedirs(_report_dir)
     return _report_dir
@@ -104,7 +92,7 @@ def virtual_display(request):
     request.addfinalizer(fin)
 
 
-@pytest.yield_fixture
+@pytest.yield_fixture(autouse=True)
 def video_capture(report_dir, virtual_display):
     """Capture video of test."""
     recorder = VideoRecorder(report_dir)
@@ -116,58 +104,75 @@ def video_capture(report_dir, virtual_display):
     recorder.stop()
 
 
-@pytest.fixture(autouse=True)
-def sanitizer(video_capture):
-    """Fixture to aggregate sanity fixtures."""
-
-
 @pytest.yield_fixture(scope='session', autouse=True)
-def test_env():
+def test_env(virtual_display):
     """Fixture to prepare test environment."""
-    _create_test_env()
+    _build_test_env()
     yield
-    _delete_test_env()
+    _destroy_test_env()
 
 
-def _create_test_env():
+def _build_test_env():
     app = Horizon(DASHBOARD_URL)
-    auth_steps = AuthSteps(app)
-    auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
-    auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
+    try:
+        auth_steps = AuthSteps(app)
+        auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
+        auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
 
-    projects_steps = ProjectsSteps(app)
-    projects_steps.create_project(ADMIN_PROJECT)
-    projects_steps.create_project(USER_PROJECT)
+        projects_steps = ProjectsSteps(app)
+        projects_steps.create_project(ADMIN_PROJECT)
+        projects_steps.create_project(USER_PROJECT)
 
-    users_steps = UsersSteps(app)
-    users_steps.create_user(ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
-                            role='admin')
-    users_steps.create_user(USER_NAME, USER_PASSWD, USER_PROJECT)
+        users_steps = UsersSteps(app)
+        users_steps.create_user(ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
+                                role='admin')
+        users_steps.create_user(USER_NAME, USER_PASSWD, USER_PROJECT)
 
-    networks_steps = NetworksSteps(app)
-    networks_steps.create_network(
-        SHARED_NETWORK_NAME, shared=True, create_subnet=True)
+        networks_steps = NetworksSteps(app)
+        networks_steps.create_network(
+            SHARED_NETWORK_NAME, shared=True, create_subnet=True)
 
-    auth_steps.logout()
-    app.quit()
+        auth_steps.logout()
+    finally:
+        app.quit()
 
 
-def _delete_test_env():
+@contextlib.contextmanager
+def _try_delete(resource_name):
+    try:
+        yield
+    except Exception:
+        LOGGER.error("Can't delete resource {!r}".format(resource_name))
+
+
+def _destroy_test_env():
     app = Horizon(DASHBOARD_URL)
-    auth_steps = AuthSteps(app)
-    auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
-    auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
+    try:
+        auth_steps = AuthSteps(app)
+        auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
+        auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
 
-    networks_steps = NetworksSteps(app)
-    networks_steps.admin_delete_network(SHARED_NETWORK_NAME)
+        networks_steps = NetworksSteps(app)
+        with _try_delete(SHARED_NETWORK_NAME):
+            networks_steps.admin_filter_networks(SHARED_NETWORK_NAME)
+            networks_steps.admin_delete_network(SHARED_NETWORK_NAME)
 
-    users_steps = UsersSteps(app)
-    users_steps.delete_user(USER_NAME)
-    users_steps.delete_user(ADMIN_NAME)
+        users_steps = UsersSteps(app)
+        with _try_delete(USER_NAME):
+            users_steps.filter_users(USER_NAME)
+            users_steps.delete_user(USER_NAME)
+        with _try_delete(ADMIN_NAME):
+            users_steps.filter_users(ADMIN_NAME)
+            users_steps.delete_user(ADMIN_NAME)
 
-    projects_steps = ProjectsSteps(app)
-    projects_steps.delete_project(USER_PROJECT)
-    projects_steps.delete_project(ADMIN_PROJECT)
+        projects_steps = ProjectsSteps(app)
+        with _try_delete(USER_PROJECT):
+            projects_steps.filter_projects(USER_PROJECT)
+            projects_steps.delete_project(USER_PROJECT)
+        with _try_delete(ADMIN_PROJECT):
+            projects_steps.filter_projects(ADMIN_PROJECT)
+            projects_steps.delete_project(ADMIN_PROJECT)
 
-    auth_steps.logout()
-    app.quit()
+        auth_steps.logout()
+    finally:
+        app.quit()

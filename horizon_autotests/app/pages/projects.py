@@ -27,7 +27,8 @@ from .base import PageBase
 
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
-    dropdown_menu=_ui.DropdownMenu())
+    dropdown_menu=_ui.DropdownMenu(),
+    link_project=ui.UI(By.CSS_SELECTOR, 'td[data-cell-name="name"] a'))
 class RowProject(ui.Row):
     """Project row of projects table."""
 
@@ -48,6 +49,8 @@ class FormCreateProject(_ui.Form):
 
 @ui.register_ui(
     button_create_project=ui.Button(By.ID, 'tenants__action_create'),
+    button_filter_projects=ui.Button(By.CLASS_NAME, 'fa-search'),
+    field_filter_projects=ui.TextField(By.NAME, 'tenants__filter__q'),
     form_create_project=FormCreateProject(By.CSS_SELECTOR,
                                           'form[action*="identity/create"]'),
     form_delete_project_confirm=_ui.Form(By.CSS_SELECTOR, 'div.modal-content'),

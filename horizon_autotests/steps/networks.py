@@ -17,6 +17,10 @@ Networks steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from time import sleep
+
+from waiting import wait
+
 from .base import BaseSteps
 
 
@@ -142,3 +146,22 @@ class NetworksSteps(BaseSteps):
             self.close_notification('success')
             page_networks.table_networks.row(
                 name=network_name).wait_for_absence()
+
+    def admin_filter_networks(self, query, check=True):
+        """Step to filter networks."""
+        page_networks = self.page_admin_networks()
+
+        page_networks.field_filter_networks.value = query
+        page_networks.button_filter_networks.click()
+        sleep(1)
+
+        if check:
+
+            def check_rows():
+                for row in page_networks.table_networks.rows:
+                    if not (row.is_present and
+                            query in row.link_network.value):
+                        return False
+                return True
+
+            wait(check_rows, timeout_seconds=10, sleep_seconds=0.1)

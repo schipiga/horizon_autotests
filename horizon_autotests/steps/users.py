@@ -17,6 +17,8 @@ Users steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from time import sleep
+
 from waiting import wait
 
 from .base import BaseSteps
@@ -111,6 +113,7 @@ class UsersSteps(BaseSteps):
 
         page_users.field_filter_users.value = query
         page_users.button_filter_users.click()
+        sleep(1)
 
         if check:
 
@@ -130,6 +133,7 @@ class UsersSteps(BaseSteps):
             table.header.cell('name').click()
             if reverse:
                 table.header.cell('name').click()
+            sleep(1)
 
             if check:
 
