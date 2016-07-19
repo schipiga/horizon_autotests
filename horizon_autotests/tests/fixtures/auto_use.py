@@ -24,17 +24,36 @@ import shutil
 import pytest
 import xvfbwrapper
 
+from horizon_autotests.app import Horizon
+from horizon_autotests.steps import (AuthSteps,
+                                     ProjectsSteps,
+                                     NetworksSteps,
+                                     UsersSteps)
 from horizon_autotests.third_party import VideoRecorder, Lock
 
-from ._config import VIRTUAL_DISPLAY, TEST_REPORTS_DIR
+from ._config import (ADMIN_NAME,
+                      ADMIN_PASSWD,
+                      ADMIN_PROJECT,
+                      DASHBOARD_URL,
+                      DEFAULT_ADMIN_NAME,
+                      DEFAULT_ADMIN_PASSWD,
+                      DEFAULT_ADMIN_PROJECT,
+                      SHARED_NETWORK_NAME,
+                      TEST_REPORTS_DIR,
+                      USER_NAME,
+                      USER_PASSWD,
+                      USER_PROJECT,
+                      VIRTUAL_DISPLAY)
 from ._utils import slugify
+
 
 __all__ = [
     'report_dir',
     'reports_dir',
     'sanitizer',
     'video_capture',
-    'virtual_display'
+    'virtual_display',
+    'test_env'
 ]
 
 LOGGER = logging.getLogger(__name__)
@@ -100,3 +119,55 @@ def video_capture(report_dir, virtual_display):
 @pytest.fixture(autouse=True)
 def sanitizer(video_capture):
     """Fixture to aggregate sanity fixtures."""
+
+
+@pytest.yield_fixture(scope='session', autouse=True)
+def test_env():
+    """Fixture to prepare test environment."""
+    _create_test_env()
+    yield
+    _delete_test_env()
+
+
+def _create_test_env():
+    app = Horizon(DASHBOARD_URL)
+    auth_steps = AuthSteps(app)
+    auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
+    auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
+
+    projects_steps = ProjectsSteps(app)
+    projects_steps.create_project(ADMIN_PROJECT)
+    projects_steps.create_project(USER_PROJECT)
+
+    users_steps = UsersSteps(app)
+    users_steps.create_user(ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT,
+                            role='admin')
+    users_steps.create_user(USER_NAME, USER_PASSWD, USER_PROJECT)
+
+    networks_steps = NetworksSteps(app)
+    networks_steps.create_network(
+        SHARED_NETWORK_NAME, shared=True, create_subnet=True)
+
+    auth_steps.logout()
+    app.quit()
+
+
+def _delete_test_env():
+    app = Horizon(DASHBOARD_URL)
+    auth_steps = AuthSteps(app)
+    auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
+    auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
+
+    networks_steps = NetworksSteps(app)
+    networks_steps.admin_delete_network(SHARED_NETWORK_NAME)
+
+    users_steps = UsersSteps(app)
+    users_steps.delete_user(USER_NAME)
+    users_steps.delete_user(ADMIN_NAME)
+
+    projects_steps = ProjectsSteps(app)
+    projects_steps.delete_project(USER_PROJECT)
+    projects_steps.delete_project(ADMIN_PROJECT)
+
+    auth_steps.logout()
+    app.quit()
