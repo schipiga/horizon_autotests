@@ -31,3 +31,4 @@ SHARED_NETWORK_NAME = next(generate_ids('network', length=15))
 
 TEST_REPORTS_DIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..', 'test_reports'))
+XVFB_LOCK = '/tmp/xvfb.lock'

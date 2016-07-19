@@ -17,4 +17,16 @@ Fixtures aggregator.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import shutil
+
 from .fixtures import *  # noqa
+from .fixtures._config import TEST_REPORTS_DIR, XVFB_LOCK
+
+
+def pytest_configure(config):
+    """Pytest configure hook."""
+    if not hasattr(config, 'slaveinput'):
+        # on xdist-master node do all the important stuff
+        shutil.rmtree(TEST_REPORTS_DIR)
+        os.remove(XVFB_LOCK)

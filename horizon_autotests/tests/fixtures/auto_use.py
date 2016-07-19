@@ -43,7 +43,8 @@ from ._config import (ADMIN_NAME,
                       USER_NAME,
                       USER_PASSWD,
                       USER_PROJECT,
-                      VIRTUAL_DISPLAY)
+                      VIRTUAL_DISPLAY,
+                      XVFB_LOCK)
 from ._utils import slugify
 
 __all__ = [
@@ -82,7 +83,7 @@ def virtual_display(request):
     else:
         _virtual_display.xvfb_cmd.extend(args)
 
-    with Lock('/tmp/xvfb.lock'):
+    with Lock(XVFB_LOCK):
         _virtual_display.start()
 
     def fin():
