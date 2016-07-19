@@ -19,6 +19,8 @@ Instances steps.
 
 from waiting import wait
 
+from horizon_autotests import EVENT_TIMEOUT, UI_TIMEOUT
+
 from .base import BaseSteps
 
 
@@ -73,7 +75,7 @@ class InstancesSteps(BaseSteps):
                     row.wait_for_presence()
                     with row.cell('status') as cell:
                         wait(lambda: cell.value != 'Build',
-                             timeout_seconds=300, sleep_seconds=0.1)
+                             timeout_seconds=EVENT_TIMEOUT, sleep_seconds=0.1)
                         assert cell.value == 'Active'
 
         return instance_names
@@ -95,7 +97,7 @@ class InstancesSteps(BaseSteps):
             self.close_notification('success')
             for instance_name in instance_names:
                 page_instances.table_instances.row(
-                    name=instance_name).wait_for_absence(120)
+                    name=instance_name).wait_for_absence(EVENT_TIMEOUT)
 
     def delete_instance(self, instance_name, check=True):
         """Step to delete instance."""
@@ -112,7 +114,7 @@ class InstancesSteps(BaseSteps):
         if check:
             self.close_notification('success')
             page_instances.table_instances.row(
-                name=instance_name).wait_for_absence(60)
+                name=instance_name).wait_for_absence(EVENT_TIMEOUT)
 
     def lock_instance(self, instance_name, check=True):
         """Step to lock instance."""
@@ -158,7 +160,7 @@ class InstancesSteps(BaseSteps):
                         return False
                 return True
 
-            wait(check_rows, timeout_seconds=10, sleep_seconds=0.1)
+            wait(check_rows, timeout_seconds=UI_TIMEOUT, sleep_seconds=0.1)
 
     def reset_instances_filter(self):
         """Step to reset instances filter."""
