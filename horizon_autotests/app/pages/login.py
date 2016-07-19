@@ -33,7 +33,8 @@ class FormLogin(_ui.Form):
 @ui.register_ui(
     form_login=FormLogin(By.CSS_SELECTOR, 'form'),
     label_alert_message=ui.UI(By.CSS_SELECTOR, 'div.alert-message'),
-    label_error_message=ui.UI(By.CSS_SELECTOR, 'div.error'))
+    label_error_message=ui.UI(By.CSS_SELECTOR, 'div.error'),
+    modal=_ui.initiated_ui.Modal(By.CLASS_NAME, 'modal-backdrop'))
 class PageLogin(pom.Page):
     """Page to login user."""
 

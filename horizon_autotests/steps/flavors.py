@@ -136,7 +136,7 @@ class FlavorsSteps(BaseSteps):
 
         return metadata
 
-    def modify_access(self, flavor_name, project='admin', check=True):
+    def modify_access(self, flavor_name, project, check=True):
         """Step to modify flavor access."""
         page_flavors = self.page_flavors()
 

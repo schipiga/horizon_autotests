@@ -21,6 +21,7 @@ import pytest
 
 from horizon_autotests.steps import UsersSteps
 
+from ._config import USER_PROJECT
 from ._utils import AttrDict, generate_ids
 
 __all__ = [
@@ -70,7 +71,7 @@ def create_users(users_steps):
         _users = []
 
         for username in usernames:
-            users_steps.create_user(username, username, 'admin')
+            users_steps.create_user(username, username, USER_PROJECT)
             user = AttrDict(name=username, password=username)
 
             users.append(user)
@@ -88,4 +89,4 @@ def create_users(users_steps):
 def user(create_user):
     """Fixture to create user with default options before test."""
     username = next(generate_ids('user'))
-    return create_user(username, username, 'admin')
+    return create_user(username, username, USER_PROJECT)

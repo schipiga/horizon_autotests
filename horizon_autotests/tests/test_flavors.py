@@ -20,7 +20,11 @@ Flavor tests.
 import pytest
 from waiting import wait
 
-from .fixtures._config import ADMIN_NAME, ADMIN_PASSWD, USER_NAME, USER_PASSWD
+from .fixtures._config import (ADMIN_NAME,
+                               ADMIN_PASSWD,
+                               ADMIN_PROJECT,
+                               USER_NAME,
+                               USER_PASSWD)
 from .fixtures._utils import generate_ids
 
 
@@ -47,7 +51,7 @@ class TestAdminOnly(object):
     def test_modify_flavor_access(self, horizon, flavor, auth_steps,
                                   flavors_steps):
         """Verify that admin can modify flavor access."""
-        flavors_steps.modify_access(flavor.name)
+        flavors_steps.modify_access(flavor.name, project=ADMIN_PROJECT)
 
         auth_steps.logout()
         auth_steps.login(USER_NAME, USER_PASSWD)
