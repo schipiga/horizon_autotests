@@ -40,8 +40,6 @@ class FlavorsSteps(BaseSteps):
             form.field_root_disk.value = root_disk
             form.submit()
 
-        page_flavors.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             page_flavors.table_flavors.row(
@@ -57,7 +55,6 @@ class FlavorsSteps(BaseSteps):
             menu.item_delete.click()
 
         page_flavors.form_confirm.submit()
-        page_flavors.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -74,7 +71,6 @@ class FlavorsSteps(BaseSteps):
 
         page_flavors.button_delete_flavors.click()
         page_flavors.form_confirm.submit()
-        page_flavors.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -93,8 +89,6 @@ class FlavorsSteps(BaseSteps):
             if new_flavor_name:
                 form.field_name.value = new_flavor_name
             form.submit()
-
-        page_flavors.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -120,11 +114,10 @@ class FlavorsSteps(BaseSteps):
             form.submit()
 
         if check:
-            page_flavors.modal.wait_for_absence()
             page_flavors.table_flavors.row(
                 name=flavor_name).wait_for_presence()
 
-    def get_metadata(self, flavor_name, check=True):
+    def get_metadata(self, flavor_name):
         """Step to get flavor metadata."""
         metadata = {}
 
@@ -140,9 +133,6 @@ class FlavorsSteps(BaseSteps):
                 row.field_metadata_value.value
 
         page_flavors.form_update_metadata.cancel()
-
-        if check:
-            page_flavors.modal.wait_for_absence()
 
         return metadata
 

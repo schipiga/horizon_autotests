@@ -150,7 +150,6 @@ class TestAnyOne(object):
                     else:
                         assert not disk_cell.label_alert.is_present
                 form.cancel()
-            page.modal.wait_for_absence()
 
     def test_public_image_visibility(self, horizon, login):
         """Verify that public image is visible for other users."""

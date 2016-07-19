@@ -38,8 +38,6 @@ class FloatingIPsSteps(BaseSteps):
         with tab_floating_ips.form_allocate_ip as form:
             form.submit()
 
-        tab_floating_ips.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
 
@@ -59,7 +57,6 @@ class FloatingIPsSteps(BaseSteps):
             menu.item_release.click()
 
         tab_floating_ips.form_confirm.submit()
-        tab_floating_ips.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -75,8 +72,6 @@ class FloatingIPsSteps(BaseSteps):
         with tab_floating_ips.form_associate as form:
             form.combobox_port.value = instance_name
             form.submit()
-
-        tab_floating_ips.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

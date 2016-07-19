@@ -64,8 +64,6 @@ class ImagesSteps(BaseSteps):
             form.combobox_disk_format.value = disk_format
             form.submit()
 
-        page_images.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             page_images.table_images.row(
@@ -81,7 +79,6 @@ class ImagesSteps(BaseSteps):
             menu.item_delete.click()
 
         page_images.form_confirm.submit()
-        page_images.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -98,7 +95,6 @@ class ImagesSteps(BaseSteps):
 
         page_images.button_delete_images.click()
         page_images.form_confirm.submit()
-        page_images.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -124,11 +120,10 @@ class ImagesSteps(BaseSteps):
             form.submit()
 
         if check:
-            page_images.modal.wait_for_absence()
             page_images.table_images.row(
                 name=image_name, status='Active').wait_for_presence()
 
-    def get_metadata(self, image_name, check=True):
+    def get_metadata(self, image_name):
         """Step to get image metadata."""
         metadata = {}
 
@@ -144,9 +139,6 @@ class ImagesSteps(BaseSteps):
                 row.field_metadata_value.value
 
         page_images.form_update_metadata.cancel()
-
-        if check:
-            page_images.modal.wait_for_absence()
 
         return metadata
 
@@ -171,8 +163,6 @@ class ImagesSteps(BaseSteps):
                 form.checkbox_protected.unselect()
 
             form.submit()
-
-        page_images.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -203,8 +193,6 @@ class ImagesSteps(BaseSteps):
             form.field_name.value = volume_name
             form.submit()
 
-        page_images.spinner.wait_for_absence()
-
         if check:
             self.close_notification('info')
 
@@ -233,6 +221,3 @@ class ImagesSteps(BaseSteps):
                     name=network_name).button_add.click()
 
             form.submit()
-
-        if check:
-            page_images.modal.wait_for_absence()

@@ -57,8 +57,6 @@ class VolumesSteps(BaseSteps):
 
             form.submit()
 
-        tab_volumes.spinner.wait_for_absence()
-
         if check:
             self.close_notification('info')
             tab_volumes.table_volumes.row(
@@ -74,7 +72,6 @@ class VolumesSteps(BaseSteps):
             menu.item_delete.click()
 
         tab_volumes.form_confirm.submit()
-        tab_volumes.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -91,8 +88,6 @@ class VolumesSteps(BaseSteps):
         tab_volumes.form_edit_volume.field_name.value = new_volume_name
         tab_volumes.form_edit_volume.submit()
 
-        tab_volumes.spinner.wait_for_absence()
-
         if check:
             self.close_notification('info')
             tab_volumes.table_volumes.row(
@@ -108,8 +103,6 @@ class VolumesSteps(BaseSteps):
 
         tab_volumes.button_delete_volumes.click()
         tab_volumes.form_confirm.submit()
-
-        tab_volumes.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -141,8 +134,6 @@ class VolumesSteps(BaseSteps):
             form.combobox_volume_type.value = volume_type
             form.submit()
 
-        tab_volumes.spinner.wait_for_absence()
-
         if check:
             self.close_notification('info')
             tab_volumes.table_volumes.row(
@@ -161,8 +152,6 @@ class VolumesSteps(BaseSteps):
             form.field_image_name.value = image_name
             form.submit()
 
-        tab_volumes.spinner.wait_for_absence()
-
         if check:
             self.close_notification('info')
             tab_volumes.table_volumes.row(
@@ -180,8 +169,6 @@ class VolumesSteps(BaseSteps):
         with tab_volumes.form_extend_volume as form:
             form.field_new_size.value = new_size
             form.submit()
-
-        tab_volumes.spinner.wait_for_absence()
 
         if check:
             self.close_notification('info')
@@ -212,8 +199,6 @@ class VolumesSteps(BaseSteps):
                 status = form.combobox_status.values[-1]
             form.combobox_status.value = status
             form.submit()
-
-        tab_volumes.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -248,9 +233,6 @@ class VolumesSteps(BaseSteps):
 
             form.submit()
 
-        if check:
-            tab_volumes.spinner.wait_for_absence()
-
     def attach_instance(self, volume_name, instance_name, check=True):
         """Step to attach instance."""
         tab_volumes = self.tab_volumes()
@@ -265,8 +247,6 @@ class VolumesSteps(BaseSteps):
                                   if instance_name in val)
             form.combobox_instance.value = instance_value
             form.submit()
-
-        tab_volumes.spinner.wait_for_absence()
 
         if check:
             self.close_notification('info')
@@ -289,8 +269,6 @@ class VolumesSteps(BaseSteps):
 
         tab_volumes.form_confirm.submit()
 
-        tab_volumes.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             tab_volumes.table_volumes.row(
@@ -308,8 +286,6 @@ class VolumesSteps(BaseSteps):
         with tab_volumes.form_create_transfer as form:
             form.field_name.value = transfer_name
             form.submit()
-
-        tab_volumes.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -336,8 +312,6 @@ class VolumesSteps(BaseSteps):
             form.field_transfer_key.value = transfer_key
             form.submit()
 
-        tab_volumes.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             tab_volumes.table_volumes.row(
@@ -360,8 +334,6 @@ class VolumesSteps(BaseSteps):
 
             form.combobox_destination_host.value = new_host
             form.submit()
-
-        tab_volumes.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -410,8 +382,6 @@ class VolumesSteps(BaseSteps):
                 self.field_description.value = description
             form.submit()
 
-        tab_volumes.spinner.wait_for_absence()
-
         if check:
             self.close_notification('info')
             self.tab_snapshots().table_snapshots.row(
@@ -427,7 +397,6 @@ class VolumesSteps(BaseSteps):
             menu.item_delete.click()
 
         tab_snapshots.form_confirm.submit()
-        tab_snapshots.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -444,8 +413,6 @@ class VolumesSteps(BaseSteps):
 
         tab_snapshots.button_delete_snapshots.click()
         tab_snapshots.form_confirm.submit()
-
-        tab_snapshots.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -469,8 +436,6 @@ class VolumesSteps(BaseSteps):
                 form.field_description.value = description
             form.submit()
 
-        tab_snapshots.spinner.wait_for_absence()
-
         if check:
             self.close_notification('info')
             self.tab_snapshots().table_snapshots.row(
@@ -487,8 +452,6 @@ class VolumesSteps(BaseSteps):
             menu.item_default.click()
 
         tab_snapshots.form_create_volume.submit()
-
-        tab_snapshots.spinner.wait_for_absence()
 
         if check:
             self.close_notification('info')
@@ -516,8 +479,6 @@ class VolumesSteps(BaseSteps):
 
             form.submit()
 
-        tab_volumes.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             self.tab_backups().table_backups.row(
@@ -534,8 +495,6 @@ class VolumesSteps(BaseSteps):
 
         tab_backups.button_delete_backups.click()
         tab_backups.form_confirm.submit()
-
-        tab_backups.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

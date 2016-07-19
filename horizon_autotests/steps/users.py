@@ -51,8 +51,6 @@ class UsersSteps(BaseSteps):
 
             form.submit()
 
-        page_users.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             page_users.table_users.row(name=username).wait_for_presence()
@@ -66,7 +64,6 @@ class UsersSteps(BaseSteps):
             menu.item_delete.click()
 
         page_users.form_confirm.submit()
-        page_users.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -81,7 +78,6 @@ class UsersSteps(BaseSteps):
 
         page_users.button_delete_users.click()
         page_users.form_confirm.submit()
-        page_users.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -101,8 +97,6 @@ class UsersSteps(BaseSteps):
             form.field_password.value = new_password
             form.field_confirm_password.value = new_password
             form.submit()
-
-        page_users.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -179,8 +173,6 @@ class UsersSteps(BaseSteps):
         with page_users.form_update_user as form:
             form.field_name.value = new_username
             form.submit()
-
-        page_users.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

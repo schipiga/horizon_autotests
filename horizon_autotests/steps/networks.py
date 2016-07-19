@@ -63,7 +63,6 @@ class NetworksSteps(BaseSteps):
                 form.checkbox_create_subnet.unselect()
 
             form.submit()
-        page_networks.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -80,7 +79,6 @@ class NetworksSteps(BaseSteps):
             menu.item_delete.click()
 
         page_networks.form_confirm.submit()
-        page_networks.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -97,7 +95,6 @@ class NetworksSteps(BaseSteps):
 
         page_networks.button_delete_networks.click()
         page_networks.form_confirm.submit()
-        page_networks.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -121,8 +118,6 @@ class NetworksSteps(BaseSteps):
             form.button_next.click()
             form.submit()
 
-        page_networks.spinner.wait_for_absence()
-
         if check:
             page_network = self.app.page_network
             self.close_notification('success')
@@ -140,7 +135,6 @@ class NetworksSteps(BaseSteps):
             menu.item_delete.click()
 
         page_networks.form_confirm.submit()
-        page_networks.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

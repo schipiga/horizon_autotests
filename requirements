@@ -1,6 +1,7 @@
 six
 selenium
 pytest
+pytest-xdist
 ipdb
 attrdict
 requests

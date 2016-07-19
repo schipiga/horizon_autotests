@@ -44,8 +44,6 @@ class RoutersSteps(BaseSteps):
 
             form.submit()
 
-        page_routers.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             page_routers.table_routers.row(
@@ -61,7 +59,6 @@ class RoutersSteps(BaseSteps):
             menu.item_delete.click()
 
         page_routers.form_confirm.submit()
-        page_routers.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

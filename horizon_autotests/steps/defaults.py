@@ -37,8 +37,6 @@ class DefaultsSteps(BaseSteps):
                 getattr(form, 'field_' + default_name).value = default_value
             form.submit()
 
-        page_defaults.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             for default_name, default_value in defaults.items():

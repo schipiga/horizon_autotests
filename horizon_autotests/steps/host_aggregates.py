@@ -36,8 +36,6 @@ class HostAggregatesSteps(BaseSteps):
             form.field_name.value = host_aggregate_name
             form.submit()
 
-        page_host_aggregates.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             page_host_aggregates.table_host_aggregates.row(
@@ -53,7 +51,6 @@ class HostAggregatesSteps(BaseSteps):
             menu.item_delete.click()
 
         page_host_aggregates.form_confirm.submit()
-        page_host_aggregates.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -70,7 +67,6 @@ class HostAggregatesSteps(BaseSteps):
 
         page_host_aggregates.button_delete_host_aggregates.click()
         page_host_aggregates.form_confirm.submit()
-        page_host_aggregates.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

@@ -40,8 +40,6 @@ class VolumeTypesSteps(BaseSteps):
                 form.field_description.value = description
             form.submit()
 
-        tab.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             tab.table_volume_types.row(
@@ -57,7 +55,6 @@ class VolumeTypesSteps(BaseSteps):
             menu.item_delete.click()
 
         tab.form_confirm.submit()
-        tab.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -73,8 +70,6 @@ class VolumeTypesSteps(BaseSteps):
 
         tab.button_delete_volume_types.click()
         tab.confirm_form.submit()
-
-        tab.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -93,8 +88,6 @@ class VolumeTypesSteps(BaseSteps):
                 form.field_consumer.value = consumer
             form.submit()
 
-        tab.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             tab.table_qos_specs.row(name=qos_spec_name).wait_for_presence()
@@ -109,7 +102,6 @@ class VolumeTypesSteps(BaseSteps):
             menu.item_delete.click()
 
         tab.form_confirm.submit()
-        tab.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

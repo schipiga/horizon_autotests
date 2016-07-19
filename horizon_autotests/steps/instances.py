@@ -87,8 +87,6 @@ class InstancesSteps(BaseSteps):
         page_instances.button_delete_instances.click()
         page_instances.form_confirm.submit()
 
-        page_instances.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             for instance_name in instance_names:
@@ -105,7 +103,6 @@ class InstancesSteps(BaseSteps):
             menu.item_delete.click()
 
         page_instances.form_confirm.submit()
-        page_instances.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

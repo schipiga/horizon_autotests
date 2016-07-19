@@ -38,8 +38,6 @@ class KeypairsSteps(BaseSteps):
             form.field_name.value = keypair_name
             form.submit()
 
-        tab_keypairs.spinner.wait_for_absence()
-
         if check:
             self.tab_keypairs().table_keypairs.row(
                 name=keypair_name).wait_for_presence()
@@ -51,8 +49,6 @@ class KeypairsSteps(BaseSteps):
         tab_keypairs.table_keypairs.row(
             name=keypair_name).button_delete_keypair.click()
         tab_keypairs.form_confirm.submit()
-
-        tab_keypairs.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
@@ -69,8 +65,6 @@ class KeypairsSteps(BaseSteps):
             form.field_public_key.value = public_key
             form.submit()
 
-        tab_keypairs.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             tab_keypairs.table_keypairs.row(
@@ -86,8 +80,6 @@ class KeypairsSteps(BaseSteps):
 
         tab_keypairs.button_delete_keypairs.click()
         tab_keypairs.form_confirm.submit()
-
-        tab_keypairs.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

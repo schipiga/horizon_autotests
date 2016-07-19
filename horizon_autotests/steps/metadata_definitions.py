@@ -61,8 +61,6 @@ class NamespacesSteps(BaseSteps):
                 NAMESPACE_TEMPLATE % {'name': namespace_name}
             form.submit()
 
-        page_metadata_definitions.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             page_metadata_definitions.table_namespaces.row(
@@ -78,7 +76,6 @@ class NamespacesSteps(BaseSteps):
             menu.item_delete.click()
 
         page_metadata_definitions.form_confirm.submit()
-        page_metadata_definitions.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

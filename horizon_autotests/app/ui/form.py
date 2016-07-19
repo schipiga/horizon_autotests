@@ -18,6 +18,7 @@ Custom form.
 # limitations under the License.
 
 from pom import ui
+from pom.ui.base import cache
 from selenium.webdriver.common.by import By
 
 from horizon_autotests import ACTION_TIMEOUT
@@ -32,15 +33,32 @@ class Form(ui.Form):
     cancel_locator = By.CSS_SELECTOR, '.btn.cancel'
 
     @ui.wait_for_presence
-    def submit(self):
+    def submit(self, modal_absent=True):
         """Submit form."""
         submit_button = ui.Button(*self.submit_locator)
         submit_button.container = self
         submit_button.click()
 
+        if modal_absent:
+            self._modal.wait_for_absence()
+
     @ui.wait_for_presence
-    def cancel(self):
+    def cancel(self, modal_absent=True):
         """Cancel form."""
         cancel_button = ui.Button(*self.cancel_locator)
         cancel_button.container = self
         cancel_button.click()
+
+        if modal_absent:
+            self._modal.wait_for_absence()
+
+    @property
+    @cache
+    def _modal(self):
+        container = self.container
+        while True:
+            ui = getattr(container, 'modal', None)
+            if ui:
+                return ui
+            else:
+                container = container.container

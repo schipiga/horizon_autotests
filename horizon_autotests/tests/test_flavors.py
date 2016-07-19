@@ -65,7 +65,6 @@ class TestAdminOnly(object):
                 assert row.cell('name').value != flavor.name
 
             form.cancel()
-        horizon.page_instances.modal.wait_for_absence()
 
         auth_steps.logout()
         auth_steps.login(ADMIN_NAME, ADMIN_PASSWD)

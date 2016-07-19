@@ -46,8 +46,6 @@ class AccessSteps(BaseSteps):
 
             form.submit()
 
-        tab_security_groups.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             tab_security_groups.table_security_groups.row(
@@ -63,7 +61,6 @@ class AccessSteps(BaseSteps):
             menu.item_delete.click()
 
         tab_security_groups.form_confirm.submit()
-        tab_security_groups.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')

@@ -40,8 +40,6 @@ class ProjectsSteps(BaseSteps):
             form.field_name.value = project_name
             form.submit()
 
-        page_projects.spinner.wait_for_absence()
-
         if check:
             self.close_notification('success')
             page_projects.table_projects.row(
@@ -57,7 +55,6 @@ class ProjectsSteps(BaseSteps):
             menu.item_delete.click()
 
         page_projects.form_confirm.submit()
-        page_projects.spinner.wait_for_absence()
 
         if check:
             self.close_notification('success')
