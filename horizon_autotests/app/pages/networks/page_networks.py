@@ -34,7 +34,7 @@ class DropdownMenu(_ui.DropdownMenu):
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu())
-class RowNetwork(ui.Row):
+class RowNetwork(_ui.Row):
     """Row with network in networks table."""
 
 

@@ -31,7 +31,7 @@ class FormCreateSecurityGroup(_ui.Form):
 
 
 @ui.register_ui(dropdown_menu=_ui.DropdownMenu())
-class RowSecurityGroup(ui.Row):
+class RowSecurityGroup(_ui.Row):
     """Security group row."""
 
 

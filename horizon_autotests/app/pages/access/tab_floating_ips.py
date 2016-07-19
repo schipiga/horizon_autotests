@@ -36,7 +36,7 @@ class DropdownMenu(_ui.DropdownMenu):
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu())
-class RowFloatingIP(ui.Row):
+class RowFloatingIP(_ui.Row):
     """Row with floating ip."""
 
 

@@ -17,8 +17,40 @@ Custom table component.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
 from pom import ui
 from selenium.webdriver.common.by import By
+from waiting import wait
+
+from horizon_autotests import EVENT_TIMEOUT
+
+
+class Cell(ui.Block):
+    """Cell."""
+
+    @property
+    def value(self):
+        """Cell value."""
+        def _clean_html(raw_html):
+            return re.sub(r'<.*?>', '', raw_html)
+
+        return _clean_html(super(Cell, self).value).strip()
+
+
+class Row(ui.Row):
+    """Row."""
+
+    cell_cls = Cell
+    transit_statuses = ()
+
+    def wait_for_status(self, status, timeout=EVENT_TIMEOUT):
+        """Wait status value after transit statuses."""
+        self.wait_for_presence()
+        with self.cell('status') as cell:
+            wait(lambda: cell.value not in self.transit_statuses,
+                 timeout_seconds=EVENT_TIMEOUT, sleep_seconds=0.1)
+            assert cell.value == status
 
 
 @ui.register_ui(
@@ -27,6 +59,8 @@ from selenium.webdriver.common.by import By
     row_empty=ui.UI(By.CSS_SELECTOR, 'tr.empty'))
 class Table(ui.Table):
     """Custom table."""
+
+    row_cls = Row
 
     @property
     def rows(self):

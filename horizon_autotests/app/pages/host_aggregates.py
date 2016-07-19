@@ -28,7 +28,7 @@ from .base import PageBase
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=_ui.DropdownMenu())
-class RowHostAggregate(ui.Row):
+class RowHostAggregate(_ui.Row):
     """Row with host aggregate in host aggregates table."""
 
 

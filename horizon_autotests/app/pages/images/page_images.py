@@ -40,8 +40,10 @@ class DropdownMenu(_ui.DropdownMenu):
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu(),
     link_image=ui.Link(By.CSS_SELECTOR, 'td > a'))
-class RowImage(ui.Row):
+class RowImage(_ui.Row):
     """Row with image in images table."""
+
+    transit_statuses = ('Queued', 'Saving')
 
 
 class TableImages(_ui.Table):
@@ -68,7 +70,7 @@ class FormCreateImage(_ui.Form):
     field_metadata_name=ui.UI(By.CSS_SELECTOR, '[ng-bind$="item.leaf.name"]'),
     field_metadata_value=ui.TextField(By.CSS_SELECTOR,
                                       '[ng-model$="item.leaf.value"]'))
-class RowMetadata(ui.Row):
+class RowMetadata(_ui.Row):
     """Row of added metadata."""
 
 

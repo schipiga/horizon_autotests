@@ -20,11 +20,13 @@ Custom form.
 from pom import ui
 from selenium.webdriver.common.by import By
 
+from horizon_autotests import ACTION_TIMEOUT
+
 
 class Form(ui.Form):
     """Custom form."""
 
-    timeout = 60
+    timeout = ACTION_TIMEOUT
 
     submit_locator = By.CSS_SELECTOR, '.btn.btn-primary'
     cancel_locator = By.CSS_SELECTOR, '.btn.cancel'

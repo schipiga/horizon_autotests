@@ -19,6 +19,8 @@ Volumes steps.
 
 from waiting import wait
 
+from horizon_autotests import EVENT_TIMEOUT
+
 from .base import BaseSteps
 
 
@@ -60,7 +62,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('info')
             tab_volumes.table_volumes.row(
-                name=volume_name, status='Available').wait_for_presence(60)
+                name=volume_name).wait_for_status('Available')
 
     def delete_volume(self, volume_name, check=True):
         """Step to delete volume."""
@@ -77,7 +79,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('success')
             tab_volumes.table_volumes.row(
-                name=volume_name).wait_for_absence(30)
+                name=volume_name).wait_for_absence(EVENT_TIMEOUT)
 
     def edit_volume(self, volume_name, new_volume_name, check=True):
         """Step to edit volume."""
@@ -94,7 +96,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('info')
             tab_volumes.table_volumes.row(
-                name=new_volume_name).wait_for_presence(30)
+                name=new_volume_name).wait_for_presence()
 
     def delete_volumes(self, volume_names, check=True):
         """Step to delete volumes."""
@@ -113,7 +115,7 @@ class VolumesSteps(BaseSteps):
             self.close_notification('success')
             for volume_name in volume_names:
                 tab_volumes.table_volumes.row(
-                    name=volume_name).wait_for_absence(180)
+                    name=volume_name).wait_for_absence(EVENT_TIMEOUT)
 
     def view_volume(self, volume_name, check=True):
         """Step to view volume."""
@@ -144,7 +146,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('info')
             tab_volumes.table_volumes.row(
-                name=volume_name, type=volume_type).wait_for_presence(30)
+                name=volume_name, type=volume_type).wait_for_presence()
 
     def upload_volume_to_image(self, volume_name, image_name, check=True):
         """Step to upload volume to image."""
@@ -164,7 +166,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('info')
             tab_volumes.table_volumes.row(
-                name=volume_name, status='Available').wait_for_presence(90)
+                name=volume_name).wait_for_status('Available')
 
     def extend_volume(self, volume_name, new_size=2, check=True):
         """Step to extend volume size."""
@@ -184,7 +186,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('info')
             tab_volumes.table_volumes.row(
-                name=volume_name, size=new_size).wait_for_presence(90)
+                name=volume_name, size=new_size).wait_for_presence()
 
     def page_admin_volumes(self):
         """Open admin volumes page if it isn't opened."""
@@ -216,10 +218,10 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('success')
             tab_volumes.table_volumes.row(
-                name=volume_name, status=status).wait_for_presence(90)
+                name=volume_name, status=status).wait_for_presence()
 
-    def launch_volume_as_instance(self, volume_name, instance_name, count=1,
-                                  check=True):
+    def launch_volume_as_instance(self, volume_name, instance_name,
+                                  network_name, count=1, check=True):
         """Step to launch volume as instance."""
         tab_volumes = self.tab_volumes()
 
@@ -242,7 +244,7 @@ class VolumesSteps(BaseSteps):
             form.item_network.click()
             with form.tab_network as tab:
                 tab.table_available_networks.row(
-                    name='admin_internal_net').button_add.click()
+                    name=network_name).button_add.click()
 
             form.submit()
 
@@ -268,9 +270,10 @@ class VolumesSteps(BaseSteps):
 
         if check:
             self.close_notification('info')
-            tab_volumes.table_volumes.row(
-                name=volume_name, status='In-use',
-                attached_to=instance_name).wait_for_presence(60)
+
+            with tab_volumes.table_volumes.row(name=volume_name) as row:
+                row.wait_for_status('In-use')
+                assert instance_name in row.cell('attached_to').value
 
     def detach_instance(self, volume_name, instance_name, check=True):
         """Step to detach instance."""
@@ -291,7 +294,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('success')
             tab_volumes.table_volumes.row(
-                name=volume_name, status='Available').wait_for_presence(60)
+                name=volume_name).wait_for_status('Available')
 
     def create_transfer(self, volume_name, transfer_name, check=True):
         """Step to create transfer."""
@@ -338,7 +341,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('success')
             tab_volumes.table_volumes.row(
-                name=volume_name, status='Available').wait_for_presence(30)
+                name=volume_name, status='Available').wait_for_presence()
 
     def migrate_volume(self, volume_name, new_host=None, check=True):
         """Step to migrate host."""
@@ -365,7 +368,7 @@ class VolumesSteps(BaseSteps):
 
             tab_volumes.table_volumes.row(
                 name=volume_name, host=new_host,
-                status='Available').wait_for_presence(60)
+                status='Available').wait_for_presence()
 
             page_volumes = self.page_admin_volumes()
 
@@ -375,7 +378,7 @@ class VolumesSteps(BaseSteps):
                 return not page_volumes.tab_volumes.table_volumes.row(
                     name=volume_name, host=old_host).is_present
 
-            wait(is_old_host_volume_absent, timeout_seconds=300)
+            wait(is_old_host_volume_absent, timeout_seconds=EVENT_TIMEOUT * 2)
 
             return old_host, new_host
 
@@ -412,7 +415,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('info')
             self.tab_snapshots().table_snapshots.row(
-                name=snapshot_name, status='Available').wait_for_presence(30)
+                name=snapshot_name, status='Available').wait_for_presence()
 
     def delete_snapshot(self, snapshot_name, check=True):
         """Step to delete volume snapshot."""
@@ -429,7 +432,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('success')
             tab_snapshots.table_snapshots.row(
-                name=snapshot_name).wait_for_absence(30)
+                name=snapshot_name).wait_for_absence(EVENT_TIMEOUT)
 
     def delete_snapshots(self, snapshot_names, check=True):
         """Step to delete volume snapshots."""
@@ -448,7 +451,7 @@ class VolumesSteps(BaseSteps):
             self.close_notification('success')
             for snapshot_name in snapshot_names:
                 tab_snapshots.table_snapshots.row(
-                    name=snapshot_name).wait_for_absence(30)
+                    name=snapshot_name).wait_for_absence(EVENT_TIMEOUT)
 
     def update_snapshot(self, snapshot_name, new_snapshot_name,
                         description=None, check=True):
@@ -472,7 +475,7 @@ class VolumesSteps(BaseSteps):
             self.close_notification('info')
             self.tab_snapshots().table_snapshots.row(
                 name=new_snapshot_name,
-                status='Available').wait_for_presence(60)
+                status='Available').wait_for_presence()
 
     def create_volume_from_snapshot(self, snapshot_name, check=True):
         """Step to create volume from spanshot."""
@@ -490,7 +493,7 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('info')
             self.tab_volumes().table_volumes.row(
-                name=snapshot_name, status='Available').wait_for_presence(60)
+                name=snapshot_name).wait_for_status('Available')
 
     def create_backup(self, volume_name, backup_name, description=None,
                       container=None, check=True):
@@ -518,7 +521,8 @@ class VolumesSteps(BaseSteps):
         if check:
             self.close_notification('success')
             self.tab_backups().table_backups.row(
-                name=backup_name, status='Available').wait_for_presence(300)
+                name=backup_name,
+                status='Available').wait_for_presence(EVENT_TIMEOUT)
 
     def delete_backups(self, backup_names, check=True):
         """Step to delete volume backups."""
@@ -537,4 +541,4 @@ class VolumesSteps(BaseSteps):
             self.close_notification('success')
             for backup_name in backup_names:
                 tab_backups.table_backups.row(
-                    name=backup_name).wait_for_absence(30)
+                    name=backup_name).wait_for_absence(EVENT_TIMEOUT)

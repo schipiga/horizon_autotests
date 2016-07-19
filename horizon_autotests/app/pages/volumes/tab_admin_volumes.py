@@ -34,11 +34,11 @@ class DropdownMenu(_ui.DropdownMenu):
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu())
-class RowVolume(ui.Row):
+class RowVolume(_ui.Row):
     """Row of admin volume."""
 
 
-class TableVolumes(ui.Table):
+class TableVolumes(_ui.Table):
     """Admin volumes table."""
 
     columns = {'project': 2,

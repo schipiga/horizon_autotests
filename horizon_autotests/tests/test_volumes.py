@@ -18,8 +18,11 @@ Volumes tests.
 # limitations under the License.
 
 import pytest
+from waiting import wait
 
-from .fixtures._config import USER_NAME, USER_PASSWD
+from horizon_autotests import EVENT_TIMEOUT
+
+from .fixtures._config import SHARED_NETWORK_NAME, USER_NAME, USER_PASSWD
 from .fixtures._utils import generate_ids
 
 
@@ -120,10 +123,18 @@ class TestAdminOnly(object):
                                        volumes_steps):
         """Verify that admin can launch volume as instance."""
         instance_name = next(generate_ids('instance'))
-        volumes_steps.launch_volume_as_instance(volume.name, instance_name)
+        volumes_steps.launch_volume_as_instance(
+            volume.name, instance_name, network_name=SHARED_NETWORK_NAME)
 
-        instances_steps.page_instances().table_instances.row(
-            name=instance_name, status='Active').wait_for_presence(90)
+        with instances_steps.page_instances().table_instances.row(
+                name=instance_name) as row:
+            row.wait_for_presence()
+
+            with row.cell('status') as cell:
+                wait(lambda: cell.value != 'Build',
+                     timeout_seconds=EVENT_TIMEOUT, sleep_seconds=0.1)
+                assert cell.value == 'Active'
+
         instances_steps.delete_instance(instance_name)
 
     def test_manage_volume_attachments(self, volume, instance, volumes_steps):

@@ -31,11 +31,11 @@ class FormCreateVolumeType(_ui.Form):
 
 
 @ui.register_ui(dropdown_menu=_ui.DropdownMenu())
-class RowVolumeType(ui.Row):
+class RowVolumeType(_ui.Row):
     """Volume type row of volume types table."""
 
 
-class TableVolumeTypes(ui.Table):
+class TableVolumeTypes(_ui.Table):
     """Volume types table."""
 
     columns = {'name': 2}
@@ -43,11 +43,11 @@ class TableVolumeTypes(ui.Table):
 
 
 @ui.register_ui(dropdown_menu=_ui.DropdownMenu())
-class RowQosSpec(ui.Row):
+class RowQosSpec(_ui.Row):
     """QoS Spec row of QoS Specs table."""
 
 
-class TableQosSpecs(ui.Table):
+class TableQosSpecs(_ui.Table):
     """QoS Specs table."""
 
     columns = {'name': 2}

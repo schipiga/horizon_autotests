@@ -36,7 +36,7 @@ class DropdownMenu(_ui.DropdownMenu):
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu())
-class RowFlavor(ui.Row):
+class RowFlavor(_ui.Row):
     """Row with flavor in flavors table."""
 
 
@@ -60,7 +60,7 @@ class FormCreateFlavor(_ui.Form):
 
 @ui.register_ui(
     button_add=ui.Button(By.CSS_SELECTOR, '.btn.btn-primary'))
-class RowProject(ui.Row):
+class RowProject(_ui.Row):
     """Row with project."""
 
 
@@ -88,7 +88,7 @@ class FormUpdateFlavor(_ui.Form):
     field_metadata_name=ui.UI(By.CSS_SELECTOR, '[ng-bind$="item.leaf.name"]'),
     field_metadata_value=ui.TextField(By.CSS_SELECTOR,
                                       '[ng-model$="item.leaf.value"]'))
-class RowMetadata(ui.Row):
+class RowMetadata(_ui.Row):
     """Row of added metadata."""
 
 

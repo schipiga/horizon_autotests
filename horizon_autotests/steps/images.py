@@ -17,6 +17,8 @@ Images steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from horizon_autotests import EVENT_TIMEOUT
+
 from .base import BaseSteps
 
 CIRROS_URL = ('http://download.cirros-cloud.net/0.3.1/'
@@ -67,7 +69,7 @@ class ImagesSteps(BaseSteps):
         if check:
             self.close_notification('success')
             page_images.table_images.row(
-                name=image_name, status='Active').wait_for_presence(60)
+                name=image_name).wait_for_status('Active')
 
     def delete_image(self, image_name, check=True):
         """Step to delete image."""
@@ -84,7 +86,7 @@ class ImagesSteps(BaseSteps):
         if check:
             self.close_notification('success')
             page_images.table_images.row(
-                name=image_name).wait_for_absence(60)
+                name=image_name).wait_for_absence(EVENT_TIMEOUT)
 
     def delete_images(self, image_names, check=True):
         """Step to delete images."""
@@ -102,7 +104,7 @@ class ImagesSteps(BaseSteps):
             self.close_notification('success')
             for image_name in image_names:
                 page_images.table_images.row(
-                    name=image_name).wait_for_absence(60)
+                    name=image_name).wait_for_absence(EVENT_TIMEOUT)
 
     def update_metadata(self, image_name, metadata, check=True):
         """Step to update image metadata."""
@@ -124,7 +126,7 @@ class ImagesSteps(BaseSteps):
         if check:
             page_images.modal.wait_for_absence()
             page_images.table_images.row(
-                name=image_name, status='Active').wait_for_presence(60)
+                name=image_name, status='Active').wait_for_presence()
 
     def get_metadata(self, image_name, check=True):
         """Step to get image metadata."""
@@ -177,7 +179,7 @@ class ImagesSteps(BaseSteps):
 
             page_images.table_images.row(
                 name=new_image_name or image_name,
-                status='Active').wait_for_presence(60)
+                status='Active').wait_for_presence()
 
     def view_image(self, image_name, check=True):
         """Step to view image."""
@@ -206,7 +208,8 @@ class ImagesSteps(BaseSteps):
         if check:
             self.close_notification('info')
 
-    def launch_instance(self, image_name, instance_name, check=True):
+    def launch_instance(self, image_name, instance_name, network_name,
+                        check=True):
         """Step to launch instance from image."""
         page_images = self.page_images()
 
@@ -227,7 +230,7 @@ class ImagesSteps(BaseSteps):
             form.item_network.click()
             with form.tab_network as tab:
                 tab.table_available_networks.row(
-                    name='admin_internal_net').button_add.click()
+                    name=network_name).button_add.click()
 
             form.submit()
 

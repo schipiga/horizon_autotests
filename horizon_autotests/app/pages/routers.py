@@ -34,7 +34,7 @@ class FormCreateRouter(_ui.Form):
 
 
 @ui.register_ui(dropdown_menu=_ui.DropdownMenu())
-class RowRouter(ui.Row):
+class RowRouter(_ui.Row):
     """Router row."""
 
 

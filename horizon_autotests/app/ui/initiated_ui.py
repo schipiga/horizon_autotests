@@ -20,6 +20,8 @@ Predefined UI components for page or tab.
 from pom import ui
 from selenium.webdriver.common.by import By
 
+from horizon_autotests import ACTION_TIMEOUT
+
 from .form import Form
 
 
@@ -48,13 +50,13 @@ class DropdownMenuProject(ui.Block):
 class Spinner(ui.UI):
     """Spinner to wait loading."""
 
-    timeout = 60
+    timeout = ACTION_TIMEOUT
 
 
 class Modal(ui.Block):
     """Spinner to wait loading."""
 
-    timeout = 60
+    timeout = ACTION_TIMEOUT
 
 
 @ui.register_ui(

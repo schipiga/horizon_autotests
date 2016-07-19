@@ -60,8 +60,15 @@ class DropdownMenu(_ui.DropdownMenu):
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu(),
     link_volume=ui.UI(By.CSS_SELECTOR, 'td > a'))
-class RowVolume(ui.Row):
+class RowVolume(_ui.Row):
     """Volume row of volumes table."""
+
+    transit_statuses = ('Attaching',
+                        'Creating',
+                        'Detaching',
+                        'downloading',
+                        'Extending',
+                        'uploading')
 
 
 class TableVolume(_ui.Table):
@@ -99,11 +106,11 @@ class FormCreateSnapshot(_ui.Form):
 
 @ui.register_ui(
     detach_volume_button=ui.Button(By.CSS_SELECTOR, '[id$="action_detach"]'))
-class RowAttachedInstance(ui.Row):
+class RowAttachedInstance(_ui.Row):
     """Row with attached instance to volume."""
 
 
-class TableAttachedInstances(ui.Table):
+class TableAttachedInstances(_ui.Table):
     """Table of attached instances to volume."""
 
     columns = {'name': 2}

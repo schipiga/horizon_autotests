@@ -17,8 +17,6 @@ Instances page.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
-
 from pom import ui
 from selenium.webdriver.common.by import By
 
@@ -53,27 +51,19 @@ class RadioVolumeCreate(ui.UI):
 
 @ui.register_ui(
     label_alert=ui.UI(By.CSS_SELECTOR, 'span.invalid'))
-class Cell(ui.Block):
+class CellAvailable(_ui.Cell):
     """Cell."""
-
-    @property
-    def value(self):
-        """Cell value."""
-        def _clean_html(raw_html):
-            return re.sub(r'<.*?>', '', raw_html)
-
-        return _clean_html(super(Cell, self).value).strip()
 
 
 @ui.register_ui(
     button_add=ui.Button(By.CSS_SELECTOR, 'button.btn.btn-default'))
-class RowAvailable(ui.Row):
+class RowAvailable(_ui.Row):
     """Row with available item."""
 
-    cell_cls = Cell
+    cell_cls = CellAvailable
 
 
-class TableAvailableSources(ui.Table):
+class TableAvailableSources(_ui.Table):
     """Available sources table."""
 
     columns = {'name': 2}
@@ -91,7 +81,7 @@ class TabSource(ui.Block):
     """Source tab."""
 
 
-class TableAvailableFlavors(ui.Table):
+class TableAvailableFlavors(_ui.Table):
     """Available flavors table."""
 
     columns = {'name': 2, 'ram': 4, 'root_disk': 6}
@@ -106,7 +96,7 @@ class TabFlavor(ui.Block):
     """Flavor tab."""
 
 
-class TableAvailableNetworks(ui.Table):
+class TableAvailableNetworks(_ui.Table):
     """Available networks table."""
 
     columns = {'name': 2}
@@ -150,8 +140,10 @@ class DropdownMenu(_ui.DropdownMenu):
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu(),
     link_instance=ui.Link(By.CSS_SELECTOR, 'td > a'))
-class RowInstance(ui.Row):
+class RowInstance(_ui.Row):
     """Row with instance."""
+
+    transit_statuses = ('Build',)
 
 
 class TableInstances(_ui.Table):

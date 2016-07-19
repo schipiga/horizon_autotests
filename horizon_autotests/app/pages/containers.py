@@ -43,7 +43,7 @@ class FormCreateContainer(_ui.Form):
         By.CSS_SELECTOR, '.hz-object-size .hz-object-val'),
     link_public_url=ui.Link(
         By.CSS_SELECTOR, '.hz-object-link a[ng-show*="public_url"]'))
-class RowContainer(ui.Row):
+class RowContainer(_ui.Row):
     """Row with container."""
 
 
@@ -63,7 +63,7 @@ class DropdownMenu(_ui.DropdownMenu):
     button_delete=ui.Button(By.CSS_SELECTOR, 'button.btn-danger'),
     dropdown_menu=DropdownMenu(),
     link_folder=ui.Link(By.CSS_SELECTOR, 'td > a'))
-class RowObject(ui.Row):
+class RowObject(_ui.Row):
     """Row with object."""
 
 

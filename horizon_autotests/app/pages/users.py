@@ -37,7 +37,7 @@ class DropdownMenu(_ui.DropdownMenu):
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=DropdownMenu(),
     link_username=ui.UI(By.CSS_SELECTOR, 'td[data-cell-name="name"] a'))
-class RowUser(ui.Row):
+class RowUser(_ui.Row):
     """User row of users table."""
 
 

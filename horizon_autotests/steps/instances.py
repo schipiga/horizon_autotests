@@ -71,12 +71,8 @@ class InstancesSteps(BaseSteps):
 
         if check:
             for name in instance_names:
-                with page_instances.table_instances.row(name=name) as row:
-                    row.wait_for_presence()
-                    with row.cell('status') as cell:
-                        wait(lambda: cell.value != 'Build',
-                             timeout_seconds=EVENT_TIMEOUT, sleep_seconds=0.1)
-                        assert cell.value == 'Active'
+                page_instances.table_instances.row(
+                    name=name).wait_for_status('Active')
 
         return instance_names
 

@@ -18,7 +18,9 @@ Fixtures for volumes.
 # limitations under the License.
 
 import pytest
+from waiting import wait
 
+from horizon_autotests import EVENT_TIMEOUT
 from horizon_autotests.steps import VolumesSteps
 
 from ._utils import AttrDict, generate_ids
@@ -63,7 +65,7 @@ def create_volumes(volumes_steps):
         tab_volumes = volumes_steps.tab_volumes()
         for volume_name in volume_names:
             tab_volumes.table_volumes.row(
-                name=volume_name, status='Available').wait_for_presence(90)
+                name=volume_name).wait_for_status('Available')
 
         return _volumes
 

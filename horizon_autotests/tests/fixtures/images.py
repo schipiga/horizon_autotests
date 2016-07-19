@@ -58,7 +58,7 @@ def create_images(images_steps, horizon):
 
         for image_name in image_names:
             horizon.page_images.table_images.row(
-                name=image_name, status='Active').wait_for_presence(60)
+                name=image_name).wait_for_status('Active')
 
         return _images
 

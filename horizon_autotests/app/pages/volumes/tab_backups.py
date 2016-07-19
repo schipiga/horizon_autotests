@@ -26,7 +26,7 @@ from horizon_autotests.app import ui as _ui
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=_ui.DropdownMenu())
-class RowBackup(ui.Row):
+class RowBackup(_ui.Row):
     """Volume backup row of volume backups table."""
 
 

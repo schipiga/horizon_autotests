@@ -20,6 +20,9 @@ Image tests.
 import pytest
 from waiting import wait
 
+from horizon_autotests import EVENT_TIMEOUT
+
+from .fixtures._config import SHARED_NETWORK_NAME
 from .fixtures._utils import generate_ids, generate_files, get_size
 
 
@@ -165,8 +168,16 @@ class TestAdminOnly(object):
                                         instances_steps):
         """Verify that user can launch instance from image."""
         instance_name = next(generate_ids('instance'))
-        images_steps.launch_instance(image.name, instance_name)
+        images_steps.launch_instance(image.name, instance_name,
+                                     network_name=SHARED_NETWORK_NAME)
 
-        instances_steps.page_instances().table_instances.row(
-            name=instance_name, status='Active').wait_for_presence(90)
+        with instances_steps.page_instances().table_instances.row(
+                name=instance_name) as row:
+            row.wait_for_presence()
+
+            with row.cell('status') as cell:
+                wait(lambda: cell.value != 'Build',
+                     timeout_seconds=EVENT_TIMEOUT, sleep_seconds=0.1)
+                assert cell.value == 'Active'
+
         instances_steps.delete_instance(instance_name)

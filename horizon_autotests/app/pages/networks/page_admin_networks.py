@@ -29,7 +29,7 @@ from ..base import PageBase
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=_ui.DropdownMenu(),
     link_network=ui.UI(By.CSS_SELECTOR, 'td.anchor > a'))
-class RowNetwork(ui.Row):
+class RowNetwork(_ui.Row):
     """Row with network in networks table."""
 
 

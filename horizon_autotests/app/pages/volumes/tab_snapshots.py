@@ -28,7 +28,7 @@ from .tab_volumes import FormCreateSnapshot
 @ui.register_ui(
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=_ui.DropdownMenu())
-class RowSnapshot(ui.Row):
+class RowSnapshot(_ui.Row):
     """Volume snapshot row of volume snapshots table."""
 
 

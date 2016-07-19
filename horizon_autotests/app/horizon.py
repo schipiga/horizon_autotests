@@ -20,12 +20,15 @@ Horizon application implementation.
 from tempfile import mkdtemp
 
 import pom
-from horizon_autotests import ACTION_TIMEOUT
+from pom import ui
 from selenium.webdriver import FirefoxProfile
 from selenium.webdriver.remote.remote_connection import RemoteConnection
 
+from horizon_autotests import ACTION_TIMEOUT, UI_TIMEOUT
+
 from .pages import PageBase, pages
 
+ui.UI.timeout = UI_TIMEOUT
 RemoteConnection.set_timeout(ACTION_TIMEOUT)
 sorted_pages = sorted(pages, key=lambda page: len(page.url))
 
@@ -57,9 +60,11 @@ class Horizon(pom.App):
         self.profile = Profile()
         super(Horizon, self).__init__(
             url, 'firefox', firefox_profile=self.profile, *args, **kwgs)
+
         self.webdriver.maximize_window()
         self.webdriver.set_window_size(1920, 1080)
         self.webdriver.set_page_load_timeout(ACTION_TIMEOUT)
+
         self.current_username = None
         self.current_project = None
 

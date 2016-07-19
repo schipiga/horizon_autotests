@@ -31,11 +31,11 @@ class FormCreateKeypair(_ui.Form):
 @ui.register_ui(
     button_delete_keypair=ui.Button(By.CSS_SELECTOR, '[id*="action_delete"]'),
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'))
-class RowKeypair(ui.Row):
+class RowKeypair(_ui.Row):
     """Row of keypair in keypairs table."""
 
 
-class TableKeypairs(ui.Table):
+class TableKeypairs(_ui.Table):
     """Keypairs table."""
 
     columns = {'name': 2}

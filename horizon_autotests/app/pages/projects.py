@@ -29,11 +29,11 @@ from .base import PageBase
     checkbox=_ui.CheckBox(By.CSS_SELECTOR, 'input[type="checkbox"]'),
     dropdown_menu=_ui.DropdownMenu(),
     link_project=ui.UI(By.CSS_SELECTOR, 'td[data-cell-name="name"] a'))
-class RowProject(ui.Row):
+class RowProject(_ui.Row):
     """Project row of projects table."""
 
 
-class TableProjects(ui.Table):
+class TableProjects(_ui.Table):
     """Projects table."""
 
     columns = {'name': 2}
