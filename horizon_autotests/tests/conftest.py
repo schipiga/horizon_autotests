@@ -28,5 +28,7 @@ def pytest_configure(config):
     """Pytest configure hook."""
     if not hasattr(config, 'slaveinput'):
         # on xdist-master node do all the important stuff
-        shutil.rmtree(TEST_REPORTS_DIR)
-        os.remove(XVFB_LOCK)
+        if os.path.exists(TEST_REPORTS_DIR):
+            shutil.rmtree(TEST_REPORTS_DIR)
+        if os.path.exists(XVFB_LOCK):
+            os.remove(XVFB_LOCK)
