@@ -46,9 +46,13 @@ class TableNetworks(_ui.Table):
 
 
 @ui.register_ui(
+    button_next=ui.Button(By.CSS_SELECTOR, '.button-next'),
     checkbox_create_subnet=_ui.CheckBox(By.NAME, 'with_subnet'),
     checkbox_shared=_ui.CheckBox(By.NAME, 'shared'),
-    field_name=ui.TextField(By.NAME, 'net_name'))
+    field_gateway_ip=ui.TextField(By.NAME, 'gateway_ip'),
+    field_name=ui.TextField(By.NAME, 'net_name'),
+    field_network_address=ui.TextField(By.NAME, 'cidr'),
+    field_subnet_name=ui.TextField(By.NAME, 'subnet_name'))
 class FormCreateNetwork(_ui.Form):
     """Form to create network."""
 

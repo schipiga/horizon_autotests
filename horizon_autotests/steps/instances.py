@@ -29,7 +29,8 @@ class InstancesSteps(BaseSteps):
         """Open instances page if it isn't opened."""
         return self._open(self.app.page_instances)
 
-    def create_instance(self, instance_name, count=1, check=True):
+    def create_instance(self, instance_name, network_name='admin_internal_net',
+                        count=1, check=True):
         """Step to create instance."""
         page_instances = self.page_instances()
 
@@ -55,7 +56,7 @@ class InstancesSteps(BaseSteps):
             form.item_network.click()
             with form.tab_network as tab:
                 tab.table_available_networks.row(
-                    name='admin_internal_net').button_add.click()
+                    name=network_name).button_add.click()
 
             form.submit()
 

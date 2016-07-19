@@ -25,6 +25,7 @@ from horizon_autotests.app import Horizon
 from horizon_autotests.app.pages import PageLogin
 from horizon_autotests.steps import (AuthSteps,
                                      ProjectsSteps,
+                                     NetworksSteps,
                                      UsersSteps)
 
 from ._config import (ADMIN_NAME,
@@ -34,6 +35,7 @@ from ._config import (ADMIN_NAME,
                       DEFAULT_ADMIN_NAME,
                       DEFAULT_ADMIN_PASSWD,
                       DEFAULT_ADMIN_PROJECT,
+                      SHARED_NETWORK_NAME,
                       USER_NAME,
                       USER_PASSWD,
                       USER_PROJECT)
@@ -54,9 +56,9 @@ def horizon():
     """
     app = Horizon(DASHBOARD_URL)
     try:
-        _create_admin_user(app)
+        _create_test_env(app)
         yield app
-        _delete_admin_user(app)
+        _delete_test_env(app)
     finally:
         app.quit()
 
@@ -84,7 +86,7 @@ def login(auth_steps):
     auth_steps.logout()
 
 
-def _create_admin_user(app):
+def _create_test_env(app):
     auth_steps = AuthSteps(app)
     auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
     auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
@@ -98,13 +100,20 @@ def _create_admin_user(app):
                             role='admin')
     users_steps.create_user(USER_NAME, USER_PASSWD, USER_PROJECT)
 
+    networks_steps = NetworksSteps(app)
+    networks_steps.create_network(
+        SHARED_NETWORK_NAME, shared=True, create_subnet=True)
+
     auth_steps.logout()
 
 
-def _delete_admin_user(app):
+def _delete_test_env(app):
     auth_steps = AuthSteps(app)
     auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
     auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
+
+    networks_steps = NetworksSteps(app)
+    networks_steps.admin_delete_network(SHARED_NETWORK_NAME)
 
     users_steps = UsersSteps(app)
     users_steps.delete_user(USER_NAME)

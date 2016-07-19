@@ -32,7 +32,8 @@ class NetworksSteps(BaseSteps):
         return self._open(self.app.page_admin_networks)
 
     def create_network(self, network_name, shared=False, create_subnet=False,
-                       check=True):
+                       subnet_name='subnet', network_adress='192.168.0.0/24',
+                       gateway_ip='192.168.0.1', check=True):
         """Step to create network."""
         page_networks = self.page_networks()
         page_networks.button_create_network.click()
@@ -47,6 +48,13 @@ class NetworksSteps(BaseSteps):
 
             if create_subnet:
                 form.checkbox_create_subnet.select()
+                form.button_next.click()
+
+                form.field_subnet_name.value = subnet_name
+                form.field_network_address.value = network_adress
+                form.field_gateway_ip.value = gateway_ip
+
+                form.button_next.click()
             else:
                 form.checkbox_create_subnet.unselect()
 
