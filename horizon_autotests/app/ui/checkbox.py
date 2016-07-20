@@ -38,7 +38,8 @@ class CheckBox(pom.ui.CheckBox):
         label_locator = By.CSS_SELECTOR, 'label[for="{}"]'.format(web_id)
 
         return WebElementProxy(
-            lambda: self.container.find_element(label_locator))
+            lambda: self.container.find_element(label_locator),
+            ui_info=repr(self))
 
     @property
     def _webelement(self):

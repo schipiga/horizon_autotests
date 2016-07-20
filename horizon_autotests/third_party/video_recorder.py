@@ -34,6 +34,7 @@ class VideoRecorder(object):
             LOGGER.warn('Video recording is stopped already')
             return
 
+        LOGGER.info('Stop video recording')
         self._popen.send_signal(signal.SIGINT)
 
         def terminate_avconv():

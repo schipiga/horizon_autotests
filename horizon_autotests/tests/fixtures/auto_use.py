@@ -85,6 +85,7 @@ def virtual_display(request):
         _virtual_display.xvfb_cmd.extend(args)
 
     with Lock(XVFB_LOCK):
+        LOGGER.info('Start xvfb')
         _virtual_display.start()
 
     def fin():
@@ -146,10 +147,7 @@ def video_capture(report_dir, logger):
     """Capture video of test."""
     recorder = VideoRecorder(report_dir)
     recorder.start()
-
     yield recorder
-
-    LOGGER.info("Stop video recording")
     recorder.stop()
 
 
