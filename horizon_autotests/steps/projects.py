@@ -17,9 +17,7 @@ Projects steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from time import sleep
-
-from pom import ui
+import pom
 from waiting import wait
 
 from .base import BaseSteps
@@ -32,7 +30,7 @@ class ProjectsSteps(BaseSteps):
         """Open projects page if it isn't opened."""
         return self._open(self.app.page_projects)
 
-    @ui.timeit
+    @pom.timeit('Step')
     def create_project(self, project_name, check=True):
         """Step to create project."""
         page_projects = self.page_projects()
@@ -47,7 +45,7 @@ class ProjectsSteps(BaseSteps):
             page_projects.table_projects.row(
                 name=project_name).wait_for_presence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def delete_project(self, project_name, check=True):
         """Step to delete project."""
         page_projects = self.page_projects()
@@ -64,14 +62,14 @@ class ProjectsSteps(BaseSteps):
             page_projects.table_projects.row(
                 name=project_name).wait_for_absence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def filter_projects(self, query, check=True):
         """Step to filter projects."""
         page_projects = self.page_projects()
 
         page_projects.field_filter_projects.value = query
         page_projects.button_filter_projects.click()
-        sleep(1)
+        pom.sleep(1, 'Wait table will be refreshed')
 
         if check:
 

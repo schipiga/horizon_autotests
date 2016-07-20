@@ -17,7 +17,7 @@ Floating IPs steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pom import ui
+import pom
 
 from .base import BaseSteps
 
@@ -31,7 +31,7 @@ class FloatingIPsSteps(BaseSteps):
         page_access.label_floating_ips.click()
         return page_access.tab_floating_ips
 
-    @ui.timeit
+    @pom.timeit('Step')
     def allocate_floating_ip(self, check=True):
         """Step to allocate floating IP."""
         tab_floating_ips = self.tab_floating_ips()
@@ -50,7 +50,7 @@ class FloatingIPsSteps(BaseSteps):
             assert len(allocated_ip) == 1
             return allocated_ip.pop()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def release_floating_ip(self, ip, check=True):
         """Step to release floating IP."""
         tab_floating_ips = self.tab_floating_ips()
@@ -67,7 +67,7 @@ class FloatingIPsSteps(BaseSteps):
             tab_floating_ips.table_floating_ips.row(
                 ip_address=ip).wait_for_absence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def associate_floating_ip(self, ip, instance_name, check=True):
         """Step to associate floating IP."""
         tab_floating_ips = self.tab_floating_ips()

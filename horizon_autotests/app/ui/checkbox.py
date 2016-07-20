@@ -17,12 +17,12 @@ Themable checkbox.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pom import ui
+import pom
 from pom.ui.base import WebElementProxy
 from selenium.webdriver.common.by import By
 
 
-class CheckBox(ui.CheckBox):
+class CheckBox(pom.ui.CheckBox):
     """Themable checkbox."""
 
     @property
@@ -31,7 +31,7 @@ class CheckBox(ui.CheckBox):
         return self._webelement.is_selected()
 
     @property
-    @ui.cache
+    @pom.cache
     def webelement(self):
         """Label of checkbox."""
         web_id = self._webelement.get_attribute('id')

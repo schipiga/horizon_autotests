@@ -17,12 +17,13 @@ Volume types steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pom import ui
+import pom
 
 from .base import BaseSteps
 
 
 class VolumeTypesSteps(BaseSteps):
+    """Volume types steps."""
 
     def tab_volume_types(self):
         """Open volume types tab."""
@@ -30,7 +31,7 @@ class VolumeTypesSteps(BaseSteps):
             page.label_volume_types.click()
             return page.tab_volume_types
 
-    @ui.timeit
+    @pom.timeit('Step')
     def create_volume_type(self, volume_type_name, description=None,
                            check=True):
         """Step to create volume type."""
@@ -48,7 +49,7 @@ class VolumeTypesSteps(BaseSteps):
             tab.table_volume_types.row(
                 name=volume_type_name).wait_for_presence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def delete_volume_type(self, volume_type_name, check=True):
         """Step to delete volume type."""
         tab = self.tab_volume_types()
@@ -65,7 +66,7 @@ class VolumeTypesSteps(BaseSteps):
             tab.table_volume_types.row(
                 name=volume_type_name).wait_for_absence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def delete_volume_types(self, volume_type_names, check=True):
         """Step to delete volume types."""
         tab = self.tab_volume_types()
@@ -82,7 +83,7 @@ class VolumeTypesSteps(BaseSteps):
                 tab.table_volume_types.row(
                     name=volume_type_name).wait_for_absence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def create_qos_spec(self, qos_spec_name, consumer=None, check=True):
         """Step to create qos spec."""
         tab = self.tab_volume_types()
@@ -98,7 +99,7 @@ class VolumeTypesSteps(BaseSteps):
             self.close_notification('success')
             tab.table_qos_specs.row(name=qos_spec_name).wait_for_presence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def delete_qos_spec(self, qos_spec_name, check=True):
         """Step to delete qos spec."""
         tab = self.tab_volume_types()

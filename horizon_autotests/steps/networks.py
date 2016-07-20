@@ -17,9 +17,7 @@ Networks steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from time import sleep
-
-from pom import ui
+import pom
 from waiting import wait
 
 from .base import BaseSteps
@@ -36,7 +34,7 @@ class NetworksSteps(BaseSteps):
         """Open admin networks page if it isn't opened."""
         return self._open(self.app.page_admin_networks)
 
-    @ui.timeit
+    @pom.timeit('Step')
     def create_network(self, network_name, shared=False, create_subnet=False,
                        subnet_name='subnet', network_adress='192.168.0.0/24',
                        gateway_ip='192.168.0.1', check=True):
@@ -71,7 +69,7 @@ class NetworksSteps(BaseSteps):
             page_networks.table_networks.row(
                 name=network_name).wait_for_presence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def delete_network(self, network_name, check=True):
         """Step to delete network."""
         page_networks = self.page_networks()
@@ -88,7 +86,7 @@ class NetworksSteps(BaseSteps):
             page_networks.table_networks.row(
                 name=network_name).wait_for_absence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def delete_networks(self, network_names, check=True):
         """Step to delete networks as batch."""
         page_networks = self.page_networks()
@@ -106,7 +104,7 @@ class NetworksSteps(BaseSteps):
                 page_networks.table_networks.row(
                     name=network_name).wait_for_absence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def add_subnet(self, network_name, subnet_name,
                    network_address='10.109.3.0/24', check=True):
         """Step to add subnet for network."""
@@ -130,7 +128,7 @@ class NetworksSteps(BaseSteps):
                 name=subnet_name,
                 network_address=network_address).wait_for_presence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def admin_delete_network(self, network_name, check=True):
         """Step to delete network as admin."""
         page_networks = self.page_admin_networks()
@@ -147,14 +145,14 @@ class NetworksSteps(BaseSteps):
             page_networks.table_networks.row(
                 name=network_name).wait_for_absence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def admin_filter_networks(self, query, check=True):
         """Step to filter networks."""
         page_networks = self.page_admin_networks()
 
         page_networks.field_filter_networks.value = query
         page_networks.button_filter_networks.click()
-        sleep(1)
+        pom.sleep(1, 'Wait table will be refreshed')
 
         if check:
 

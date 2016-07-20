@@ -19,7 +19,7 @@ Horizon steps for api access.
 
 import os
 
-from pom import ui
+import pom
 from waiting import wait
 
 from .base import BaseSteps
@@ -34,7 +34,7 @@ class ApiAccessSteps(BaseSteps):
         access_page.label_api_access.click()
         return access_page.tab_api_access
 
-    @ui.timeit
+    @pom.timeit('Step')
     def download_rc_v2(self, check=True):
         """Step to download v2 file."""
         self._remove_rc_file()
@@ -53,7 +53,7 @@ class ApiAccessSteps(BaseSteps):
             assert 'OS_TENANT_NAME="{}"'.format(self._project_name) in content
             assert 'OS_TENANT_ID={}'.format(self._project_id) in content
 
-    @ui.timeit
+    @pom.timeit('Step')
     def download_rc_v3(self, check=True):
         """Step to download v3 file."""
         self._remove_rc_file()
@@ -72,7 +72,7 @@ class ApiAccessSteps(BaseSteps):
             assert 'OS_PROJECT_NAME="{}"'.format(self._project_name) in content
             assert 'OS_PROJECT_ID={}'.format(self._project_id) in content
 
-    @ui.timeit
+    @pom.timeit('Step')
     def view_credentials(self, check=True):
         """Step to view credentials."""
         tab_api_access = self.tab_api_access()

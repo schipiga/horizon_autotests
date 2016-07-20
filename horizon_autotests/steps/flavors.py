@@ -17,7 +17,7 @@ Flavors steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pom import ui
+import pom
 
 from .base import BaseSteps
 
@@ -29,7 +29,7 @@ class FlavorsSteps(BaseSteps):
         """Open flavors page if it isn't opened."""
         return self._open(self.app.page_flavors)
 
-    @ui.timeit
+    @pom.timeit('Step')
     def create_flavor(self, flavor_name, cpu_count=1, ram=1024, root_disk=1,
                       check=True):
         """Step to create flavor."""
@@ -48,7 +48,7 @@ class FlavorsSteps(BaseSteps):
             page_flavors.table_flavors.row(
                 name=flavor_name).wait_for_presence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def delete_flavor(self, flavor_name, check=True):
         """Step to delete flavor."""
         page_flavors = self.page_flavors()
@@ -65,7 +65,7 @@ class FlavorsSteps(BaseSteps):
             page_flavors.table_flavors.row(
                 name=flavor_name).wait_for_absence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def delete_flavors(self, flavor_names, check=True):
         """Step to delete flavors as batch."""
         page_flavors = self.page_flavors()
@@ -83,7 +83,7 @@ class FlavorsSteps(BaseSteps):
                 page_flavors.table_flavors.row(
                     name=flavor_name).wait_for_absence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def update_flavor(self, flavor_name, new_flavor_name=None, check=True):
         """Step to update flavor."""
         page_flavors = self.page_flavors()
@@ -101,7 +101,7 @@ class FlavorsSteps(BaseSteps):
             page_flavors.table_flavors.row(
                 name=new_flavor_name or flavor_name).wait_for_presence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def update_metadata(self, flavor_name, metadata, check=True):
         """Step to update flavor metadata."""
         page_flavors = self.page_flavors()
@@ -124,7 +124,7 @@ class FlavorsSteps(BaseSteps):
             page_flavors.table_flavors.row(
                 name=flavor_name).wait_for_presence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def get_metadata(self, flavor_name):
         """Step to get flavor metadata."""
         metadata = {}
@@ -144,7 +144,7 @@ class FlavorsSteps(BaseSteps):
 
         return metadata
 
-    @ui.timeit
+    @pom.timeit('Step')
     def modify_access(self, flavor_name, project, check=True):
         """Step to modify flavor access."""
         page_flavors = self.page_flavors()

@@ -17,6 +17,7 @@ Navigate menu component.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pom
 from pom import ui
 from selenium.webdriver.common.by import By
 from waiting import wait
@@ -25,7 +26,7 @@ from waiting import wait
 class NavigateMenu(ui.Block):
     """Navigate menu."""
 
-    @ui.timeit
+    @pom.timeit
     def go_to(self, item_names):
         """Go to page via navigate menu.
 

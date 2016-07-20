@@ -17,7 +17,7 @@ Metadata definitions steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pom import ui
+import pom
 
 from .base import BaseSteps
 
@@ -51,7 +51,7 @@ class NamespacesSteps(BaseSteps):
         """Open namespaces page if it isn't opened."""
         return self._open(self.app.page_metadata_definitions)
 
-    @ui.timeit
+    @pom.timeit('Step')
     def create_namespace(self, namespace_name, namespace_source='Direct Input',
                          check=True):
         """Step to create namespace."""
@@ -69,7 +69,7 @@ class NamespacesSteps(BaseSteps):
             page_metadata_definitions.table_namespaces.row(
                 name=namespace_name).wait_for_presence()
 
-    @ui.timeit
+    @pom.timeit('Step')
     def delete_namespace(self, namespace_name, check=True):
         """Step to delete namespace."""
         page_metadata_definitions = self.page_metadata_definitions()
