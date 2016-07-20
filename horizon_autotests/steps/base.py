@@ -51,6 +51,11 @@ class BaseSteps(object):
             - project_name: string, name of project.
         """
         with self.app.page_base.dropdown_menu_project as menu:
+
+            if menu.label_project.value == project_name:
+                self.app.current_project = project_name
+                return
+
             menu.click()
             menu.item_project(project_name).click()
 

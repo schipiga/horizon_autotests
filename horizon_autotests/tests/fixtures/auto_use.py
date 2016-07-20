@@ -94,23 +94,55 @@ def virtual_display(request):
     request.addfinalizer(fin)
 
 
-@pytest.fixture
-def logger(report_dir):
+@pytest.yield_fixture
+def logger(report_dir, test_env):
     """Fixture to put test log in report."""
-    root_logger = logging.getLogger('timeit')
-    root_logger.setLevel(logging.DEBUG)
-    filename = os.path.join(report_dir, 'timeit.log')
-    file_handler = logging.FileHandler(filename)
-    file_handler.setLevel(logging.DEBUG)
+    class RootFilter(logging.Filter):
 
-    formatter = logging.Formatter(
-        '%(asctime)s - %(levelname)s - %(name)s#%(lineno)d - %(message)s')
-    file_handler.setFormatter(formatter)
-    root_logger.addHandler(file_handler)
+        def filter(self, record):
+            return record.name not in \
+                ('timeit', 'selenium.webdriver.remote.remote_connection')
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+    root_handler = logging.FileHandler(
+        os.path.join(report_dir, 'test.log'))
+    root_formatter = logging.Formatter(
+        '%(asctime)s - %(levelname)s - %(pathname)s#%(lineno)d - %(message)s')
+    root_handler.setFormatter(root_formatter)
+    root_handler.addFilter(RootFilter())
+    root_logger.addHandler(root_handler)
+
+    timeit_logger = logging.getLogger('timeit')
+    timeit_logger.setLevel(logging.DEBUG)
+    timeit_handler = logging.FileHandler(
+        os.path.join(report_dir, 'timeit.log'))
+    timeit_handler.setLevel(logging.DEBUG)
+
+    remote_logger = logging.getLogger(
+        'selenium.webdriver.remote.remote_connection')
+    remote_logger.setLevel(logging.DEBUG)
+    remote_handler = logging.FileHandler(
+        os.path.join(report_dir, 'remote_connection.log'))
+    remote_handler.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter('%(asctime)s - %(message)s')
+
+    timeit_handler.setFormatter(formatter)
+    timeit_logger.addHandler(timeit_handler)
+
+    remote_handler.setFormatter(formatter)
+    remote_logger.addHandler(remote_handler)
+
+    yield
+
+    timeit_logger.handlers[:] = []
+    remote_logger.handlers[:] = []
+    root_logger.handlers[:] = []
 
 
 @pytest.yield_fixture(autouse=True)
-def video_capture(report_dir, virtual_display, logger):
+def video_capture(report_dir, logger):
     """Capture video of test."""
     recorder = VideoRecorder(report_dir)
     recorder.start()
@@ -121,7 +153,7 @@ def video_capture(report_dir, virtual_display, logger):
     recorder.stop()
 
 
-@pytest.yield_fixture(scope='session', autouse=True)
+@pytest.yield_fixture(scope='session')
 def test_env(virtual_display):
     """Fixture to prepare test environment."""
     _build_test_env()
