@@ -48,6 +48,7 @@ from ._config import (ADMIN_NAME,
 from ._utils import slugify
 
 __all__ = [
+    'logger',
     'report_dir',
     'video_capture',
     'virtual_display',
@@ -93,8 +94,23 @@ def virtual_display(request):
     request.addfinalizer(fin)
 
 
+@pytest.fixture
+def logger(report_dir):
+    """Fixture to put test log in report."""
+    root_logger = logging.getLogger('timeit')
+    root_logger.setLevel(logging.DEBUG)
+    filename = os.path.join(report_dir, 'timeit.log')
+    file_handler = logging.FileHandler(filename)
+    file_handler.setLevel(logging.DEBUG)
+
+    formatter = logging.Formatter(
+        '%(asctime)s - %(levelname)s - %(name)s#%(lineno)d - %(message)s')
+    file_handler.setFormatter(formatter)
+    root_logger.addHandler(file_handler)
+
+
 @pytest.yield_fixture(autouse=True)
-def video_capture(report_dir, virtual_display):
+def video_capture(report_dir, virtual_display, logger):
     """Capture video of test."""
     recorder = VideoRecorder(report_dir)
     recorder.start()
