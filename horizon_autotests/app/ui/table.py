@@ -44,6 +44,7 @@ class Row(ui.Row):
     cell_cls = Cell
     transit_statuses = ()
 
+    @ui.timeit
     def wait_for_status(self, status, timeout=EVENT_TIMEOUT):
         """Wait status value after transit statuses."""
         self.wait_for_presence()

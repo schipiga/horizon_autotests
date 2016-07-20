@@ -17,6 +17,8 @@ Horizon steps for authentication.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pom import ui
+
 from .base import BaseSteps
 
 
@@ -33,6 +35,7 @@ class AccessSteps(BaseSteps):
             page.label_security_groups.click()
             return page.tab_security_groups
 
+    @ui.timeit
     def create_security_group(self, group_name, description=None, check=True):
         """Step to create security group."""
         tab_security_groups = self.tab_security_groups()
@@ -51,6 +54,7 @@ class AccessSteps(BaseSteps):
             tab_security_groups.table_security_groups.row(
                 name=group_name).wait_for_presence(30)
 
+    @ui.timeit
     def delete_security_group(self, group_name, check=True):
         """Step to delete security group."""
         tab_security_groups = self.tab_security_groups()

@@ -17,6 +17,8 @@ Horizon steps for defaults.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pom import ui
+
 from .base import BaseSteps
 
 
@@ -27,6 +29,7 @@ class DefaultsSteps(BaseSteps):
         """Open access & security page."""
         return self._open(self.app.page_defaults)
 
+    @ui.timeit
     def update_defaults(self, defaults, check=True):
         """Step to update defaults."""
         page_defaults = self.page_defaults()
@@ -43,6 +46,7 @@ class DefaultsSteps(BaseSteps):
                 assert getattr(page_defaults, 'label_' + default_name).value \
                     == str(default_value)
 
+    @ui.timeit
     def get_defaults(self, defaults):
         """Step to get defaults."""
         result = {}

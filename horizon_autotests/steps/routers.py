@@ -17,6 +17,8 @@ Routers steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pom import ui
+
 from .base import BaseSteps
 
 
@@ -27,6 +29,7 @@ class RoutersSteps(BaseSteps):
         """Open routers page if it isn't opened."""
         return self._open(self.app.page_routers)
 
+    @ui.timeit
     def create_router(self, router_name, admin_state=None,
                       external_network=None, check=True):
         """Step to create router."""
@@ -49,6 +52,7 @@ class RoutersSteps(BaseSteps):
             page_routers.table_routers.row(
                 name=router_name).wait_for_presence(30)
 
+    @ui.timeit
     def delete_router(self, router_name, check=True):
         """Step to delete router."""
         page_routers = self.page_routers()

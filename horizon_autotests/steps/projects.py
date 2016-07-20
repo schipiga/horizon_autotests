@@ -19,6 +19,7 @@ Projects steps.
 
 from time import sleep
 
+from pom import ui
 from waiting import wait
 
 from .base import BaseSteps
@@ -31,6 +32,7 @@ class ProjectsSteps(BaseSteps):
         """Open projects page if it isn't opened."""
         return self._open(self.app.page_projects)
 
+    @ui.timeit
     def create_project(self, project_name, check=True):
         """Step to create project."""
         page_projects = self.page_projects()
@@ -45,6 +47,7 @@ class ProjectsSteps(BaseSteps):
             page_projects.table_projects.row(
                 name=project_name).wait_for_presence()
 
+    @ui.timeit
     def delete_project(self, project_name, check=True):
         """Step to delete project."""
         page_projects = self.page_projects()
@@ -61,6 +64,7 @@ class ProjectsSteps(BaseSteps):
             page_projects.table_projects.row(
                 name=project_name).wait_for_absence()
 
+    @ui.timeit
     def filter_projects(self, query, check=True):
         """Step to filter projects."""
         page_projects = self.page_projects()

@@ -17,6 +17,8 @@ Settings steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pom import ui
+
 from .base import BaseSteps
 
 
@@ -27,6 +29,7 @@ class SettingsSteps(BaseSteps):
         """Open settings page if it isn't opened."""
         return self._open(self.app.page_settings)
 
+    @ui.timeit
     def update_settings(self,
                         lang=None,
                         timezone=None,
@@ -49,6 +52,7 @@ class SettingsSteps(BaseSteps):
             self.close_notification('success')
 
     @property
+    @ui.timeit
     def current_settings(self):
         """Current user settings."""
         with self.page_settings().form_settings as form:
@@ -62,6 +66,7 @@ class SettingsSteps(BaseSteps):
         """Open page to change user password if it isn't opened."""
         return self._open(self.app.page_password)
 
+    @ui.timeit
     def change_user_password(self, current_password, new_password, check=True):
         """Step to change user password."""
         page_password = self.page_password()

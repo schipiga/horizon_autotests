@@ -17,6 +17,8 @@ Images steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pom import ui
+
 from horizon_autotests import EVENT_TIMEOUT
 
 from .base import BaseSteps
@@ -32,6 +34,7 @@ class ImagesSteps(BaseSteps):
         """Open images page if it isn't opened."""
         return self._open(self.app.page_images)
 
+    @ui.timeit
     def create_image(self, image_name, image_url=CIRROS_URL, image_file=None,
                      disk_format='QCOW2', min_disk=None, min_ram=None,
                      protected=False, check=True):
@@ -69,6 +72,7 @@ class ImagesSteps(BaseSteps):
             page_images.table_images.row(
                 name=image_name).wait_for_status('Active')
 
+    @ui.timeit
     def delete_image(self, image_name, check=True):
         """Step to delete image."""
         page_images = self.page_images()
@@ -85,6 +89,7 @@ class ImagesSteps(BaseSteps):
             page_images.table_images.row(
                 name=image_name).wait_for_absence(EVENT_TIMEOUT)
 
+    @ui.timeit
     def delete_images(self, image_names, check=True):
         """Step to delete images."""
         page_images = self.page_images()
@@ -102,6 +107,7 @@ class ImagesSteps(BaseSteps):
                 page_images.table_images.row(
                     name=image_name).wait_for_absence(EVENT_TIMEOUT)
 
+    @ui.timeit
     def update_metadata(self, image_name, metadata, check=True):
         """Step to update image metadata."""
         page_images = self.page_images()
@@ -123,6 +129,7 @@ class ImagesSteps(BaseSteps):
             page_images.table_images.row(
                 name=image_name, status='Active').wait_for_presence()
 
+    @ui.timeit
     def get_metadata(self, image_name):
         """Step to get image metadata."""
         metadata = {}
@@ -142,6 +149,7 @@ class ImagesSteps(BaseSteps):
 
         return metadata
 
+    @ui.timeit
     def update_image(self, image_name, new_image_name=None, protected=False,
                      check=True):
         """Step to update image."""
@@ -171,6 +179,7 @@ class ImagesSteps(BaseSteps):
                 name=new_image_name or image_name,
                 status='Active').wait_for_presence()
 
+    @ui.timeit
     def view_image(self, image_name, check=True):
         """Step to view image."""
         self.page_images().table_images.row(
@@ -180,6 +189,7 @@ class ImagesSteps(BaseSteps):
             assert self.app.page_image.info_image.label_name.value \
                 == image_name
 
+    @ui.timeit
     def create_volume(self, image_name, volume_name, check=True):
         """Step to create volume from image."""
         page_images = self.page_images()
@@ -196,6 +206,7 @@ class ImagesSteps(BaseSteps):
         if check:
             self.close_notification('info')
 
+    @ui.timeit
     def launch_instance(self, image_name, instance_name, network_name,
                         check=True):
         """Step to launch instance from image."""

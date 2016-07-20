@@ -25,6 +25,7 @@ from waiting import wait
 class NavigateMenu(ui.Block):
     """Navigate menu."""
 
+    @ui.timeit
     def go_to(self, item_names):
         """Go to page via navigate menu.
 

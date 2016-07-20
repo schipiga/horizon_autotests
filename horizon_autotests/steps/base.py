@@ -17,6 +17,8 @@ Horizon base steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pom import ui
+
 
 class BaseSteps(object):
     """Base steps."""
@@ -41,6 +43,7 @@ class BaseSteps(object):
 
         return page
 
+    @ui.timeit
     def switch_project(self, project_name, check=True):
         """Switch project in user account.
 
@@ -56,6 +59,7 @@ class BaseSteps(object):
 
         self.app.current_project = project_name
 
+    @ui.timeit
     def close_notification(self, level):
         """Close notification popup window.
 

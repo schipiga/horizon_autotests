@@ -17,6 +17,8 @@ Horizon steps for authentication.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pom import ui
+
 from .base import BaseSteps
 
 
@@ -27,6 +29,7 @@ class AuthSteps(BaseSteps):
         """Open login page if it's not opened."""
         return self._open(self.app.page_login)
 
+    @ui.timeit
     def login(self, username, password, check=True):
         """Step to log in user account.
 
@@ -44,6 +47,7 @@ class AuthSteps(BaseSteps):
 
         self.app.current_username = username
 
+    @ui.timeit
     def logout(self, check=True):
         """Step to log out user account."""
         with self.app.page_base.dropdown_menu_account as menu:

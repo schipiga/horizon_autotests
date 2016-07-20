@@ -18,7 +18,7 @@ Themable checkbox.
 # limitations under the License.
 
 from pom import ui
-from pom.ui.base import cache, WebElementProxy
+from pom.ui.base import WebElementProxy
 from selenium.webdriver.common.by import By
 
 
@@ -31,7 +31,7 @@ class CheckBox(ui.CheckBox):
         return self._webelement.is_selected()
 
     @property
-    @cache
+    @ui.cache
     def webelement(self):
         """Label of checkbox."""
         web_id = self._webelement.get_attribute('id')

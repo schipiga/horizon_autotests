@@ -32,6 +32,7 @@ class Form(ui.Form):
     submit_locator = By.CSS_SELECTOR, '.btn.btn-primary'
     cancel_locator = By.CSS_SELECTOR, '.btn.cancel'
 
+    @ui.timeit
     @ui.wait_for_presence
     def submit(self, modal_absent=True):
         """Submit form."""
@@ -42,6 +43,7 @@ class Form(ui.Form):
         if modal_absent:
             self._modal.wait_for_absence()
 
+    @ui.timeit
     @ui.wait_for_presence
     def cancel(self, modal_absent=True):
         """Cancel form."""

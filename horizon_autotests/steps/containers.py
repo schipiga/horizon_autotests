@@ -17,6 +17,8 @@ Containers steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pom import ui
+
 from .base import BaseSteps
 
 
@@ -27,6 +29,7 @@ class ContainersSteps(BaseSteps):
         """Open containers page if it isn't opened."""
         return self._open(self.app.page_containers)
 
+    @ui.timeit
     def create_container(self, container_name, public=False, check=True):
         """Step to create container."""
         page_containers = self.page_containers()
@@ -47,6 +50,7 @@ class ContainersSteps(BaseSteps):
             page_containers.list_containers.row(
                 container_name).wait_for_presence()
 
+    @ui.timeit
     def delete_container(self, container_name, check=True):
         """Step to delete container."""
         page_containers = self.page_containers()
@@ -70,6 +74,7 @@ class ContainersSteps(BaseSteps):
         """Exit from context manager."""
         self._callback()
 
+    @ui.timeit
     def container(self, container_name):
         """Step to enter to container."""
         self.app.page_containers.list_containers.row(container_name).click()
@@ -81,6 +86,7 @@ class ContainersSteps(BaseSteps):
         self._callback = exit
         return self
 
+    @ui.timeit
     def folder(self, folder_name):
         """Step to enter to folder."""
         self.app.page_containers.table_objects.row(
@@ -92,6 +98,7 @@ class ContainersSteps(BaseSteps):
         self._callback = exit
         return self
 
+    @ui.timeit
     def create_folder(self, folder_name, check=True):
         """Step to create folder."""
         with self.app.page_containers as page:
@@ -106,6 +113,7 @@ class ContainersSteps(BaseSteps):
             self.app.page_containers.table_objects.row(
                 name=folder_name).wait_for_presence()
 
+    @ui.timeit
     def delete_folder(self, folder_name, check=True):
         """Step to delete folder."""
         with self.app.page_containers as page:
@@ -118,6 +126,7 @@ class ContainersSteps(BaseSteps):
             self.app.page_containers.table_objects.row(
                 name=folder_name).wait_for_absence()
 
+    @ui.timeit
     def container_info(self, container_name):
         """Step to get container info."""
         with self.app.page_containers.list_containers.row(
@@ -128,6 +137,7 @@ class ContainersSteps(BaseSteps):
                 'created_date': row.label_created_date.value,
                 'public_url': row.link_public_url.href}
 
+    @ui.timeit
     def upload_file(self, file_path, file_name=None, check=True):
         """Step to upload file."""
         self.app.page_containers.button_upload_file.click()
@@ -148,6 +158,7 @@ class ContainersSteps(BaseSteps):
 
         return file_name
 
+    @ui.timeit
     def delete_file(self, file_name, check=True):
         """Step to delete file."""
         with self.app.page_containers.table_objects.row(

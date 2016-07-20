@@ -17,6 +17,8 @@ Keypairs steps.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from pom import ui
+
 from .base import BaseSteps
 
 
@@ -29,6 +31,7 @@ class KeypairsSteps(BaseSteps):
             page.label_keypairs.click()
             return page.tab_keypairs
 
+    @ui.timeit
     def create_keypair(self, keypair_name, check=True):
         """Step to create keypair."""
         tab_keypairs = self.tab_keypairs()
@@ -42,6 +45,7 @@ class KeypairsSteps(BaseSteps):
             self.tab_keypairs().table_keypairs.row(
                 name=keypair_name).wait_for_presence()
 
+    @ui.timeit
     def delete_keypair(self, keypair_name, check=True):
         """Step to delete keypair."""
         tab_keypairs = self.tab_keypairs()
@@ -55,6 +59,7 @@ class KeypairsSteps(BaseSteps):
             tab_keypairs.table_keypairs.row(
                 name=keypair_name).wait_for_absence()
 
+    @ui.timeit
     def import_keypair(self, keypair_name, public_key, check=True):
         """Step to import keypair."""
         tab_keypairs = self.tab_keypairs()
@@ -70,6 +75,7 @@ class KeypairsSteps(BaseSteps):
             tab_keypairs.table_keypairs.row(
                 name=keypair_name).wait_for_presence()
 
+    @ui.timeit
     def delete_keypairs(self, keypair_names, check=True):
         """Step to delete keypairs."""
         tab_keypairs = self.tab_keypairs()
