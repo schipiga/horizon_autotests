@@ -137,9 +137,9 @@ def logger(report_dir, test_env):
 
     yield
 
-    timeit_logger.handlers[:] = []
-    remote_logger.handlers[:] = []
-    root_logger.handlers[:] = []
+    timeit_logger.handlers.remove(timeit_handler)
+    remote_logger.handlers.remove(remote_handler)
+    root_logger.handlers.remove(root_handler)
 
 
 @pytest.yield_fixture(autouse=True)
