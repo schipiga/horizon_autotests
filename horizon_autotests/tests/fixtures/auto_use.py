@@ -38,7 +38,8 @@ from ._config import (ADMIN_NAME,
                       DEFAULT_ADMIN_NAME,
                       DEFAULT_ADMIN_PASSWD,
                       DEFAULT_ADMIN_PROJECT,
-                      SHARED_NETWORK_NAME,
+                      FLOATING_NETWORK_NAME,
+                      INTERNAL_NETWORK_NAME,
                       TEST_REPORTS_DIR,
                       USER_NAME,
                       USER_PASSWD,
@@ -176,8 +177,10 @@ def _build_test_env():
         users_steps.create_user(USER_NAME, USER_PASSWD, USER_PROJECT)
 
         networks_steps = NetworksSteps(app)
-        networks_steps.create_network(
-            SHARED_NETWORK_NAME, shared=True, create_subnet=True)
+        networks_steps.admin_update_network(INTERNAL_NETWORK_NAME,
+                                            shared=True, check=False)
+        networks_steps.admin_update_network(FLOATING_NETWORK_NAME,
+                                            shared=True, check=False)
 
         auth_steps.logout()
     finally:
@@ -198,11 +201,6 @@ def _destroy_test_env():
         auth_steps = AuthSteps(app)
         auth_steps.login(DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD)
         auth_steps.switch_project(DEFAULT_ADMIN_PROJECT)
-
-        networks_steps = NetworksSteps(app)
-        with _try_delete(SHARED_NETWORK_NAME):
-            networks_steps.admin_filter_networks(SHARED_NETWORK_NAME)
-            networks_steps.admin_delete_network(SHARED_NETWORK_NAME)
 
         users_steps = UsersSteps(app)
         with _try_delete(USER_NAME):

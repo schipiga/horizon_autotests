@@ -22,7 +22,7 @@ from waiting import wait
 
 from horizon_autotests import EVENT_TIMEOUT
 
-from .fixtures._config import SHARED_NETWORK_NAME
+from .fixtures._config import INTERNAL_NETWORK_NAME
 from .fixtures._utils import generate_ids, generate_files, get_size
 
 
@@ -168,7 +168,7 @@ class TestAdminOnly(object):
         """Verify that user can launch instance from image."""
         instance_name = next(generate_ids('instance'))
         images_steps.launch_instance(image.name, instance_name,
-                                     network_name=SHARED_NETWORK_NAME)
+                                     network_name=INTERNAL_NETWORK_NAME)
 
         with instances_steps.page_instances().table_instances.row(
                 name=instance_name) as row:

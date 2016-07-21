@@ -41,9 +41,17 @@ class TableNetworks(_ui.Table):
 
 
 @ui.register_ui(
+    checkbox_shared=_ui.CheckBox(By.NAME, 'shared'),
+    field_name=ui.TextField(By.NAME, 'name'))
+class FormUpdateNetwork(_ui.Form):
+    """Form to update network as admin."""
+
+
+@ui.register_ui(
     button_delete_networks=ui.Button(By.ID, 'networks__action_delete'),
     button_filter_networks=ui.Button(By.CLASS_NAME, 'fa-search'),
     field_filter_networks=ui.TextField(By.NAME, 'networks__filter__q'),
+    form_update_network=FormUpdateNetwork(By.ID, 'update_network_form'),
     table_networks=TableNetworks(By.ID, 'networks'))
 class PageAdminNetworks(PageBase):
     """Admin networks page."""

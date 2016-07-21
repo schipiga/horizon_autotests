@@ -22,7 +22,7 @@ from waiting import wait
 
 from horizon_autotests import EVENT_TIMEOUT
 
-from .fixtures._config import SHARED_NETWORK_NAME, USER_NAME, USER_PASSWD
+from .fixtures._config import INTERNAL_NETWORK_NAME, USER_NAME, USER_PASSWD
 from .fixtures._utils import generate_ids
 
 
@@ -124,7 +124,7 @@ class TestAdminOnly(object):
         """Verify that admin can launch volume as instance."""
         instance_name = next(generate_ids('instance'))
         volumes_steps.launch_volume_as_instance(
-            volume.name, instance_name, network_name=SHARED_NETWORK_NAME)
+            volume.name, instance_name, network_name=INTERNAL_NETWORK_NAME)
 
         with instances_steps.page_instances().table_instances.row(
                 name=instance_name) as row:

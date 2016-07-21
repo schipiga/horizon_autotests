@@ -27,7 +27,8 @@ VIRTUAL_DISPLAY = os.environ.get('VIRTUAL_DISPLAY')
 DEFAULT_ADMIN_NAME, DEFAULT_ADMIN_PASSWD, DEFAULT_ADMIN_PROJECT = ['admin'] * 3
 ADMIN_NAME, ADMIN_PASSWD, ADMIN_PROJECT = list(generate_ids('admin', count=3))
 USER_NAME, USER_PASSWD, USER_PROJECT = list(generate_ids('user', count=3))
-SHARED_NETWORK_NAME = next(generate_ids('network', length=15))
+FLOATING_NETWORK_NAME = 'admin_floating_net'
+INTERNAL_NETWORK_NAME = 'admin_internal_net'
 
 TEST_REPORTS_DIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..', 'test_reports'))

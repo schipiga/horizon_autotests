@@ -129,6 +129,30 @@ class NetworksSteps(BaseSteps):
                 network_address=network_address).wait_for_presence()
 
     @pom.timeit('Step')
+    def admin_update_network(self, network_name, new_network_name=False,
+                             shared=False, check=True):
+        """Step to update network as admin."""
+        page_networks = self.page_admin_networks()
+        page_networks.table_networks.row(
+            name=network_name).dropdown_menu.item_default.click()
+
+        with page_networks.form_update_network as form:
+            if new_network_name:
+                form.field_name.value = new_network_name
+
+            if shared:
+                form.checkbox_shared.select()
+            else:
+                form.checkbox_shared.unselect()
+
+            form.submit()
+
+        if check:
+            self.close_notification('success')
+            page_networks.table_networks.row(
+                name=new_network_name or network_name).wait_for_presence()
+
+    @pom.timeit('Step')
     def admin_delete_network(self, network_name, check=True):
         """Step to delete network as admin."""
         page_networks = self.page_admin_networks()

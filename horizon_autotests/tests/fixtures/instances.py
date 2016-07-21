@@ -21,7 +21,7 @@ import pytest
 
 from horizon_autotests.steps import InstancesSteps
 
-from ._config import SHARED_NETWORK_NAME
+from ._config import INTERNAL_NETWORK_NAME
 from ._utils import AttrDict, generate_ids
 
 __all__ = [
@@ -36,10 +36,11 @@ def create_instance(instances_steps):
     """Create instances."""
     instances = []
 
-    def _create_instance(instance_name, count=1):
+    def _create_instance(instance_name, network_name=INTERNAL_NETWORK_NAME,
+                         count=1):
         _instances = []
         instance_names = instances_steps.create_instance(
-            instance_name, network_name=SHARED_NETWORK_NAME, count=count)
+            instance_name, network_name=network_name, count=count)
 
         for name in instance_names:
             instance = AttrDict(name=name)
@@ -66,7 +67,7 @@ def instance(instances_steps):
     instance_name = next(generate_ids('instance'))
 
     instances_steps.create_instance(
-        instance_name, network_name=SHARED_NETWORK_NAME)
+        instance_name, network_name=INTERNAL_NETWORK_NAME)
     instance = AttrDict(name=instance_name)
 
     yield instance
