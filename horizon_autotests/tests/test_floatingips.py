@@ -20,11 +20,11 @@ Floating IP tests.
 import pytest
 
 
-@pytest.mark.usefixtures('admin_only')
-class TestAdminOnly(object):
-    """Tests for admin only."""
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
+    """Tests for anyone."""
 
     def test_floating_ip_associate(self, instance, floating_ip,
                                    floating_ips_steps):
-        """Verify that admin can associate floating IP."""
+        """Verify that user can associate floating IP."""
         floating_ips_steps.associate_floating_ip(floating_ip.ip, instance.name)

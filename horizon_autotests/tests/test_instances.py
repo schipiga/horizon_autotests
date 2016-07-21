@@ -22,9 +22,9 @@ import pytest
 from .fixtures._utils import generate_ids
 
 
-@pytest.mark.usefixtures('admin_only')
-class TestAdminOnly(object):
-    """Tests for admin only."""
+@pytest.mark.usefixtures('any_one')
+class TestAnyOne(object):
+    """Tests for anyone."""
 
     @pytest.mark.parametrize('instances_count', [2, 1])
     def test_delete_instances(self, instances_count, create_instance):

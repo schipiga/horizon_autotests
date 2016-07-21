@@ -158,11 +158,6 @@ class TestAnyOne(object):
             page.button_public_images.click()
             page.table_images.row(name='TestVM').wait_for_presence()
 
-
-@pytest.mark.usefixtures('admin_only')
-class TestAdminOnly(object):
-    """Tests for admin only."""
-
     def test_launch_instance_from_image(self, image, images_steps,
                                         instances_steps):
         """Verify that user can launch instance from image."""
@@ -170,13 +165,6 @@ class TestAdminOnly(object):
         images_steps.launch_instance(image.name, instance_name,
                                      network_name=INTERNAL_NETWORK_NAME)
 
-        with instances_steps.page_instances().table_instances.row(
-                name=instance_name) as row:
-            row.wait_for_presence()
-
-            with row.cell('status') as cell:
-                wait(lambda: cell.value != 'Build',
-                     timeout_seconds=EVENT_TIMEOUT, sleep_seconds=0.1)
-                assert cell.value == 'Active'
-
+        instances_steps.page_instances().table_instances.row(
+            name=instance_name).wait_for_status('Active')
         instances_steps.delete_instance(instance_name)

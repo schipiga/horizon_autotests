@@ -109,6 +109,17 @@ class TestAnyOne(object):
         """Verify that user can extend volume size."""
         volumes_steps.extend_volume(volume.name)
 
+    def test_launch_volume_as_instance(self, volume, instances_steps,
+                                       volumes_steps):
+        """Verify that admin can launch volume as instance."""
+        instance_name = next(generate_ids('instance'))
+        volumes_steps.launch_volume_as_instance(
+            volume.name, instance_name, network_name=INTERNAL_NETWORK_NAME)
+
+        instances_steps.page_instances().table_instances.row(
+            name=instance_name).wait_for_status('Active')
+        instances_steps.delete_instance(instance_name)
+
 
 @pytest.mark.usefixtures('admin_only')
 class TestAdminOnly(object):
@@ -118,24 +129,6 @@ class TestAdminOnly(object):
         """Verify that admin can change volume status."""
         volumes_steps.change_volume_status(volume.name, 'Error')
         volumes_steps.change_volume_status(volume.name, 'Available')
-
-    def test_launch_volume_as_instance(self, volume, instances_steps,
-                                       volumes_steps):
-        """Verify that admin can launch volume as instance."""
-        instance_name = next(generate_ids('instance'))
-        volumes_steps.launch_volume_as_instance(
-            volume.name, instance_name, network_name=INTERNAL_NETWORK_NAME)
-
-        with instances_steps.page_instances().table_instances.row(
-                name=instance_name) as row:
-            row.wait_for_presence()
-
-            with row.cell('status') as cell:
-                wait(lambda: cell.value != 'Build',
-                     timeout_seconds=EVENT_TIMEOUT, sleep_seconds=0.1)
-                assert cell.value == 'Active'
-
-        instances_steps.delete_instance(instance_name)
 
     def test_manage_volume_attachments(self, volume, instance, volumes_steps):
         """Verify that admin can manage volume attachments."""
