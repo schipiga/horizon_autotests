@@ -19,7 +19,7 @@ Tests config.
 
 import os
 
-from .utils import generate_ids
+from ._utils import generate_ids
 
 DASHBOARD_URL = os.environ['DASHBOARD_URL']
 VIRTUAL_DISPLAY = os.environ.get('VIRTUAL_DISPLAY')
