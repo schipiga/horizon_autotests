@@ -20,8 +20,11 @@ Fixtures aggregator.
 import os
 import shutil
 
+import pytest
+
 from .fixtures import *  # noqa
 from .fixtures._config import TEST_REPORTS_DIR, XVFB_LOCK
+from .fixtures._utils import slugify
 
 
 def pytest_configure(config):
@@ -32,3 +35,19 @@ def pytest_configure(config):
             shutil.rmtree(TEST_REPORTS_DIR)
         if os.path.exists(XVFB_LOCK):
             os.remove(XVFB_LOCK)
+
+
+@pytest.mark.hookwrapper
+def pytest_runtest_makereport(item, call):
+    """Pytest hook to delete test report if it is passed."""
+    if not hasattr(item, 'is_passed'):
+        item.is_passed = True
+
+    outcome = yield
+    rep = outcome.get_result()
+
+    if not rep.passed:
+        item.is_passed = False
+
+    if rep.when == 'teardown' and item.is_passed:
+        shutil.rmtree(os.path.join(TEST_REPORTS_DIR, slugify(item.name)))

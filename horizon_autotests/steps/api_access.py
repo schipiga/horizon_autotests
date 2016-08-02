@@ -48,7 +48,7 @@ class ApiAccessSteps(BaseSteps):
                  timeout_seconds=30, sleep_seconds=0.1)
             content = open(self._rc_path).read()
 
-            assert 'OS_AUTH_URL='.format(self._auth_url) in content
+            assert 'OS_AUTH_URL={}'.format(self._auth_url) in content
             assert 'OS_USERNAME="{}"'.format(self._username) in content
             assert 'OS_TENANT_NAME="{}"'.format(self._project_name) in content
             assert 'OS_TENANT_ID={}'.format(self._project_id) in content
@@ -67,7 +67,7 @@ class ApiAccessSteps(BaseSteps):
                  timeout_seconds=30, sleep_seconds=0.1)
             content = open(self._rc_path).read()
 
-            assert 'OS_AUTH_URL='.format(self._auth_url) in content
+            assert 'OS_AUTH_URL={}'.format(self._auth_url) in content
             assert 'OS_USERNAME="{}"'.format(self._username) in content
             assert 'OS_PROJECT_NAME="{}"'.format(self._project_name) in content
             assert 'OS_PROJECT_ID={}'.format(self._project_id) in content

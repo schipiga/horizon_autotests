@@ -186,4 +186,4 @@ def create_backups(volume, volumes_steps):
     yield _create_backups
 
     if backups:
-        volumes_steps.delete_backups(*[b.name for b in backups])
+        volumes_steps.delete_backups([b.name for b in backups])

@@ -18,9 +18,6 @@ Volumes tests.
 # limitations under the License.
 
 import pytest
-from waiting import wait
-
-from horizon_autotests import EVENT_TIMEOUT
 
 from .fixtures._config import INTERNAL_NETWORK_NAME, USER_NAME, USER_PASSWD
 from .fixtures._utils import generate_ids
