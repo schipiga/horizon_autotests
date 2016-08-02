@@ -26,6 +26,7 @@ from .fixtures._config import ADMIN_NAME, ADMIN_PASSWD
 
 @pytest.yield_fixture
 def new_user_account(user, auth_steps):
+    """Fixture to log in new user account."""
     auth_steps.logout()
     auth_steps.login(user.name, user.password)
 
@@ -46,8 +47,8 @@ class TestAdminOnly(object):
             assert urlparse(menu.item_help.href).netloc == "docs.openstack.org"
             menu.click()
 
-    def test_change_user_password(self, horizon, user, new_user_account,
-                                  auth_steps, settings_steps):
+    def test_change_own_password(self, horizon, user, new_user_account,
+                                 auth_steps, settings_steps):
         """Verify that user can change it's password."""
         new_password = 'new-' + user.password
         with user.put(password=new_password):
@@ -58,8 +59,8 @@ class TestAdminOnly(object):
 
         auth_steps.login(user.name, user.password)
 
-    def test_change_user_settings(self, horizon, new_user_account,
-                                  update_settings, settings_steps):
+    def test_change_own_settings(self, horizon, new_user_account,
+                                 update_settings, settings_steps):
         """Verify that user can change his settings."""
         new_settings = {
             'lang': 'British English (en-gb)',

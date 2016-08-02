@@ -20,8 +20,6 @@ Image tests.
 import pytest
 from waiting import wait
 
-from horizon_autotests import EVENT_TIMEOUT
-
 from .fixtures._config import INTERNAL_NETWORK_NAME
 from .fixtures._utils import generate_ids, generate_files, get_size
 
